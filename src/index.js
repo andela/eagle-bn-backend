@@ -11,6 +11,6 @@ const server = app.listen(process.env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on port ${server.address().port}`);
 });
-setupSwagger(app, 3000);
+setupSwagger(app, server.address().port);
 
 export default app;
