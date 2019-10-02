@@ -12,6 +12,7 @@
     ]
   },
   "scripts": {
+    "dev": "nodemon --exec babel-node ./src/index"
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov ./node_modules/.bin/mocha  ./src/tests/* --require @babel/register --timeout 5000 --exit",
     "start": "node ./src/index.js",
     "lint": "eslint ./src/**/*.js"
@@ -46,13 +47,26 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "request": "^2.87.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "swagger-jsdoc": "^3.4.0",
+    "swagger-ui-express": "^4.1.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "babel-loader": "^8.0.6",
+    "babel-watch": "^7.0.0",
     "eslint": "^6.5.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "husky": "^3.0.7"
+    "husky": "^3.0.7",
+    "nodemon": "^1.19.3"
   },
   "husky": {
     "hooks": {
