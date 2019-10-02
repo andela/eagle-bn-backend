@@ -14,7 +14,7 @@
     "start": "babel-node ./src/index.js",
     "db-migrate": "sequelize db:migrate --env production",
     "db-migrate:dev": "sequelize db:migrate --env development",
-    "db-seeder:dev":"sequelize db:seed:all --env development",
+    "db-seeder:dev": "sequelize db:seed:all --env development",
     "db-migrate:test": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
     "lint": "eslint ./src/**/*.js"
   },
