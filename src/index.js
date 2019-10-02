@@ -1,9 +1,12 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 import setupSwagger from './utils/swaggerDefinition';
 
 const app = express();
+
+dotenv.config();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
