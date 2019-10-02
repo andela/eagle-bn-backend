@@ -2,8 +2,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import setupSwagger from './utils/swaggerDefinition';
+// eslint-disable-next-line import/order
+import dotenv from 'dotenv';
 
 const app = express();
+
+dotenv.config();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
