@@ -11,6 +11,7 @@
   "scripts": {
     "start": "babel-node ./src/index.js",
     "dev": "nodemon --exec babel-node ./src/index",
+    "prod": "nodemon --exec babel-node ./src/index",
     "test": "NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov ./node_modules/.bin/mocha  ./src/tests/* --require @babel/register --timeout 5000 --exit",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "db-migrate": "sequelize db:migrate --env production",
