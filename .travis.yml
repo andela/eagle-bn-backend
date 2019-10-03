@@ -23,3 +23,5 @@ before_script:
   - npm run db-migrate:test
 script:
   - npm test
+after_success:
+  - npm run coveralls
