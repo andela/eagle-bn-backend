@@ -1,0 +1,25 @@
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
+env:
+  global:
+    - PORT=3030
+    - PRIVATE_KEY=45erkjherht45495783
+    - TEST_DB=postgres://postgres@127.0.0.1:5432/eagle
+language: node_js
+node_js:
+  - "stable"
+branches:
+  only:
+    - develop
+install:
+  - npm install
+cache:
+  directories:
+    - node_modules
+before_script:
+  - psql -c 'create database eagle;' -U postgres
+  - npm run db-migrate:test
+script:
+  - npm test
