@@ -11,8 +11,5 @@ Make company global travel and accommodation easy and convenient for the strong 
 
 ---
 ## Deployment
-this will be deployed on heroku, To access the app on the cloud while it has been deployed use this link, 
-
-```
+this will be deployed on heroku, To access the app on the cloud while it has been deployed use this link,
  [Production URL](eagle-bn-backend.herokuapp.com)
-```
