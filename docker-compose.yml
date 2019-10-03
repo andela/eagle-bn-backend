@@ -1,0 +1,22 @@
+version: "3"
+services:
+  app:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      DATABASE-URL: ${TEST-DB}
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    volumes:
+      - .:/app/
+      - /app/node_modules
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: ${DB-USER-NAME}
+      POSTGRES_PASSWORD: ${DB-PASS}
+      POSTGRES_DB: ${DATABASE-URL}
