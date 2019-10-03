@@ -10,13 +10,7 @@ dotenv.config();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// need to be added after app.use(routers) to handle request not found
-app.use('*', (req, res) => {
-  res.status(404).json({
-    status: 404,
-    error: `${req.method}=${req.protocol}://${req.hostname}${req.path} not found`,
-  });
-});
+
 
 const server = app.listen(process.env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
@@ -25,4 +19,11 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 setupSwagger(app, server.address().port);
 
+// need to be added after app.use(routers) to handle request not found
+app.use('*', (req, res) => {
+  res.status(404).json({
+    status: 404,
+    error: `${req.method}=${req.protocol}://${req.hostname}${req.path} not found`,
+  });
+});
 export default server;
