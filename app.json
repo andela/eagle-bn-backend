@@ -1,11 +1,7 @@
 {
   "name": "eagle-bn-backend",
   "scripts": {},
-  "env": {
-    "INHERIT_THIS_CONFIG_VAR": {
-      "required": true
-    }
-  },
+  "env": {},
   "formation": {
     "web": {
       "quantity": 1
