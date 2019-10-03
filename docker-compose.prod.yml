@@ -7,8 +7,6 @@ services:
     environment:
       NODE_ENV: production
       DATABASE-URL: ${TEST-DB}
-    ports:
-      - "3000:3000"
     command: npm run prod
     volumes:
       - .:/app/
