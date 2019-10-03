@@ -4,7 +4,7 @@ addons:
   postgresql: "9.6"
 env:
   global:
-    - PORT=3030
+    - PORT=3000
     - PRIVATE_KEY=45erkjherht45495783
     - TEST_DB=postgres://postgres@127.0.0.1:5432/eagle
 language: node_js
