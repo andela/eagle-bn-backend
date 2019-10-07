@@ -6,7 +6,7 @@ services:
       - postgres
     environment:
       NODE_ENV: development
-      DATABASE-URL: ${TEST-DB}
+      DATABASE-URL: ${TEST_DB}
     command: npm run dev
     volumes:
       - .:/app/
