@@ -17,7 +17,9 @@
     "db-migrate:dev": "sequelize db:migrate --env development",
     "db-seeder:dev": "sequelize db:seed:all --env development",
     "db-migrate:test": "sequelize db:migrate:undo:all --env test && sequelize db:migrate --env test",
-    "lint": "eslint ./src/**/*.js"
+    "lint": "eslint ./src/**/*.js",
+    "dockerDev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
+    "dockerProd": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
