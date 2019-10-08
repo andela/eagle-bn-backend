@@ -80,6 +80,6 @@ const app = express.Router();
  *         description: login faild. invalid data !!
  */
 app.post('/signup', signupValidator, UserMiddle.checkuserExist, userController.signup);
-app.post('/login', userController.login);
+app.post('/login', UserMiddle.checkloginEntries, userController.login);
 
 export default app;
