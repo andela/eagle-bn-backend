@@ -45,6 +45,41 @@ const app = express.Router();
  *       409:
  *         description: An account with the same email exists
  */
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     description: Login
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *      - in: body
+ *        name: user
+ *        description: The user to login with email and password
+ *        schema:
+ *          type: object
+ *          required:
+ *            - email
+ *            - password
+ *          properties:
+ *            email:
+ *              type: string
+ *            password:
+ *              type: string
+ *     responses:
+ *       201:
+ *         description: User logged successfuly
+ *         schema:
+ *           type: object
+ *           properties:
+ *             data:
+ *               $ref: '#/definitions/login'
+ *             msg:
+ *               type: string
+ *       401:
+ *         description: login faild. invalid data !!
+ */
 app.post('/signup', signupValidator, UserMiddle.checkuserExist, userController.signup);
+app.post('/login', userController.login);
 
 export default app;

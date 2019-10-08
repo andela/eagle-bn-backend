@@ -18,7 +18,7 @@
     "start": "babel-node ./src/index.js",
     "dev": "nodemon --exec babel-node ./src/index",
     "test": "npm run db-migrate:test && NODE_ENV=test nyc --reporter=html --reporter=text --reporter=lcov ./node_modules/.bin/mocha  ./src/tests/* --require @babel/register --timeout 5000 --exit",
-   "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "db-migrate": "sequelize db:migrate --env production",
     "db-migrate:dev": "sequelize db:migrate --env development",
     "db-seeder:dev": "sequelize db:seed:all --env development",
