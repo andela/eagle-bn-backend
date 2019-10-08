@@ -42,6 +42,15 @@ class Validate {
     return this;
   }
 
+  alpha() {
+    if ((!this.error) && (!this.val.match(/[a-zA-Z]{2}/))) {
+      this.status = 400;
+      this.error = `${this.key} should be alphabetic and have 2 character minimum`;
+      return this;
+    }
+    return this;
+  }
+
   alphaNum() {
     if ((!this.error) && (!this.val.match(/[a-zA-Z]+/) || !this.val.match(/[0-9]+/) || !this.val.match(/[#*@!&]+/))) {
       this.status = 400;
