@@ -1,10 +1,16 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import { describe, it } from 'mocha';
+import User from '../controllers/userController';
+import OAuthCallback from '../utils/OAuthCallback';
 import myserver from '../index';
 import mock from './mockData/loginMockData';
+import google from './mockData/profile';
 
 chai.use(chaiHttp);
+chai.use(sinonChai);
 const { expect } = chai;
 
 describe('login', () => {
@@ -64,5 +70,38 @@ describe('login', () => {
         expect(res.body.msg).to.equal('Both email and password are required');
         done();
       });
+  });
+});
+
+describe('Oauthentication CallBack', () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+  it('Should return status 201', async () => {
+    const req = {
+      user: {
+        username: 'Crispy N. Christian',
+        email: 'crispy@mail.com',
+        isverified: true
+      }
+    };
+
+    const res = { status() {}, json() {}, };
+    sinon.stub(res, 'status').returnsThis();
+    await User.OauthLogin(req, res);
+    expect(res.status).to.have.been.calledWith(201);
+  });
+
+  it('OAuthCallback should return User object', async (done) => {
+    const accessToken = 'xx-xx-xx';
+    const refreshToken = 'xx-xx-xx';
+    const cb = sinon.spy();
+    OAuthCallback(accessToken, refreshToken, google, cb);
+    expect(cb.withArgs({
+      username: 'Crispy N. Christian',
+      email: 'nshimyumukizachristian@gmail.com',
+      isverified: true
+    }));
+    done();
   });
 });
