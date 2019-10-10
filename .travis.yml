@@ -2,6 +2,9 @@ services:
   - postgresql
 addons:
   postgresql: "9.6"
+env:
+  global:
+    - PRIVATE_KEY=kjefw373784
 language: node_js
 node_js:
   - "stable"

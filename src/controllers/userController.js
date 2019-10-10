@@ -1,7 +1,8 @@
-/* eslint-disable require-jsdoc */
 import helpers from '../utils/helper';
 import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
+import mail from '../utils/email';
+import string from '../utils/stringHelper';
 
 const User = {
   async signup(req, res) {
@@ -16,9 +17,12 @@ const User = {
     const userData = response.get({ plain: true });
     userData.password = undefined;
     const token = helpers.createToken(userData.id, email, false);
-    const data = { ...userData, token };
+    // send verification email the user,
+    mail(email, process.env.EMAIL_SENDER, 'email verification', string.emailBody(req, token));
+    const data = { ...userData };
     return sendResult(res, 201, 'Account created successfully', data);
   },
+
   async login(req, res) {
     const { email, password } = req.body;
     const userInfo = await db.Users.findOne({
@@ -42,6 +46,23 @@ const User = {
       return sendResult(res, 201, 'User logged successfully', data);
     }
     return sendResult(res, 400, 'The email and/or password is invalid');
+  },
+
+  async verifyEmail(req, res) {
+    try {
+      const user = await helpers.verifyToken(helpers.getToken(req));
+      if (!user || user.error || !(user.userId) || !(user.email)) return sendResult(res, 401, 'invalid token, try to check your email again');
+      await db.Users.update(
+        { isverified: true },
+        {
+        // eslint-disable-next-line radix
+          where: { id: user.userId },
+        },
+      );
+      return sendResult(res, 200, 'email verified! try to login with your existing account');
+    } catch (error) {
+      return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
+    }
   },
 };
 export default User;

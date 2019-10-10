@@ -30,6 +30,8 @@ const app = express.Router();
  *              type: string
  *            password:
  *              type: string
+ *            confirmPassword:
+ *              type: string
  *     responses:
  *       201:
  *         description: Account created successfuly
@@ -45,6 +47,7 @@ const app = express.Router();
  *       409:
  *         description: An account with the same email exists
  */
+
 /**
  * @swagger
  * /users/login:
@@ -79,7 +82,31 @@ const app = express.Router();
  *       401:
  *         description: login faild. invalid data !!
  */
+
+/**
+ * @swagger
+ * /users/verify/{token}:
+ *   get:
+ *     description: verify email
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *      - in: path
+ *        name: token
+ *        description: The token
+ *     responses:
+ *       200:
+ *         description: email verified successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             msg:
+ *               type: string
+ *       400:
+ *         description: Wrong data sent
+ */
 app.post('/signup', signupValidator, UserMiddle.checkuserExist, userController.signup);
 app.post('/login', UserMiddle.checkloginEntries, userController.login);
+app.get('/verify/:token', userController.verifyEmail);
 
 export default app;
