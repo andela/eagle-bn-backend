@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import msgHelper from '../utils/emailHelper';
 
 const transporter = nodemailer.createTransport({
   service: process.env.MAIL_SERVICE,
@@ -10,4 +11,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export default transporter;
+const msg = (user, helper) => {
+  const from = process.env.MAIL_SERVICE;
+  const { subject, html } = msgHelper(user, helper);
+  return { from, subject, html };
+};
+
+export { msg, transporter };

@@ -1,4 +1,4 @@
-import transporter from '../config';
+import { transporter } from '../config';
 
 export default async (to, from, subject, html) => transporter.sendMail(
   {
