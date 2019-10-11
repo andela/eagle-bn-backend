@@ -13,7 +13,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/api/v1', routes);
 
-
 const server = app.listen(process.env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on port ${server.address().port}`);

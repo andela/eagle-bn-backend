@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('signup', () => {
-  it('should return a 201 status, a jwt token and user data when', (done) => {
+  it('should return a 201 status', (done) => {
     chai.request(app)
       .post('/api/v1/users/signup')
       .send(mockData[0])
@@ -16,7 +16,6 @@ describe('signup', () => {
         expect(res.status).to.equal(201);
         expect(res.body.msg).to.equal('Account created successfully');
         expect(res.body.data.email).to.equal(mockData[0].email);
-        expect(res.body.data).to.have.property('token');
         done();
       });
   });
