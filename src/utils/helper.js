@@ -40,6 +40,15 @@ const helper = {
   getToken(req) {
     return (req.headers['x-access-token'] || req.headers.authorization
     || req.headers.Authorization || req.body.token || req.params.token);
-  }
+  },
+
+  decodeToken(token) {
+    const data = jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
+      if (err) return { error: err.message };
+      return decoded;
+    });
+    return data;
+  },
 };
+
 export default helper;

@@ -68,6 +68,15 @@ class Validate {
     }
     return this;
   }
+
+  confirmPass() {
+    if (this.val !== this.data.confirmPassword) {
+      this.status = 400;
+      this.error = `${this.key} provided do not match`;
+      return this;
+    }
+    return this;
+  }
 }
 
 
