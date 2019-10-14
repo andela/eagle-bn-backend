@@ -1,10 +1,14 @@
 import express from 'express';
+import passport from 'passport';
+import '../config/passport';
 import userController from '../controllers/userController';
 import signupValidator from '../validation/signupValidation';
 import email from '../controllers/email';
 import UserMiddle from '../middlewares/userMiddlware';
 
 const app = express.Router();
+
+app.use(passport.initialize());
 
 /**
  * @swagger
@@ -48,7 +52,6 @@ const app = express.Router();
  *       409:
  *         description: An account with the same email exists
  */
-
 /**
  * @swagger
  * /users/login:
@@ -83,7 +86,6 @@ const app = express.Router();
  *       401:
  *         description: login faild. invalid data !!
  */
-
 /**
  * @swagger
  * /users/verify/{token}:
@@ -134,7 +136,8 @@ const app = express.Router();
  *               type: string
  *       400:
  *         description: bad request
- *//**
+ */
+/**
  * @swagger
  * /users/reset-password:
  *   patch:
@@ -167,10 +170,90 @@ const app = express.Router();
  *       400:
  *         description: bad request
  */
+/**
+*@swagger
+* /users/auth/facebook:
+*    post:
+*      description: ''
+*      summary: google login
+*      tags:
+*      - Social Login
+*      operationId: GooglePost
+*      deprecated: false
+*      produces:
+*      - application/json
+*      parameters:
+*      - name: Content-Type
+*        in: header
+*        required: true
+*        type: string
+*        description: ''
+*      - name: Body
+*        in: body
+*        required: true
+*        description: ''
+*        schema:
+*          $ref: '#/definitions/facebookloginrequest'
+*      responses:
+*        200:
+*          description: ''
+*          headers: {}
+*facebookloginrequest:
+*    title: facebookloginrequest
+*    example:
+*      access_token: string
+*    type: object
+*    properties:
+*      access_token:
+*        type: string
+*    required:
+*    - access_token
+*/
+/**
+*@swagger
+* /users/auth/google:
+*    post:
+*      description: 'TODO: Add Description'
+*      summary: google login
+*      tags:
+*      - Google Login
+*      operationId: GooglePost
+*      deprecated: false
+*      produces:
+*      - application/json
+*      parameters:
+*      - name: Content-Type
+*        in: header
+*        required: true
+*        type: string
+*        description: ''
+*      - name: Body
+*        in: body
+*        required: true
+*        description: ''
+*        schema:
+*          $ref: '#/definitions/googleloginrequest'
+*      responses:
+*        200:
+*          description: ''
+*          headers: {}
+*definitions:
+*    googleloginrequest:
+*      title: googleloginrequest
+*      example:
+*        access_token: string
+*      type: object
+*      properties:
+*        access_token:
+*          type: string
+*      required:
+*      - access_token
+*/
 app.post('/signup', signupValidator, UserMiddle.checkuserExist, userController.signup);
 app.post('/login', UserMiddle.checkloginEntries, userController.login);
 app.get('/verify/:token', userController.verifyEmail);
 app.post('/reset-password', UserMiddle.validateEmail, UserMiddle.getUserbyEmail, email.sendReset);
 app.patch('/reset-password/:token', UserMiddle.validatePass, email.resetPass);
-
+app.post('/auth/facebook', passport.authenticate('facebook-token'), userController.OauthLogin);
+app.post('/auth/google', passport.authenticate('google-plus-token'), userController.OauthLogin);
 export default app;

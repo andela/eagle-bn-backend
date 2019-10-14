@@ -64,5 +64,21 @@ const User = {
       return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
     }
   },
+  async OauthLogin(req, res) {
+    const [data] = await db.Users.findOrCreate({
+      where: { email: req.user.email },
+      defaults: req.user
+    });
+    const {
+      id, username, email, isverified
+    } = data;
+    return sendResult(res, 201, 'User logged successfully', {
+      id,
+      username,
+      email,
+      token: helpers.createToken(id, email, isverified)
+    });
+  },
+
 };
 export default User;
