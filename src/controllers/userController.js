@@ -1,0 +1,95 @@
+/* eslint-disable object-curly-newline */
+import helpers from '../utils/helper';
+import db from '../database/models/index';
+import sendResult from '../utils/sendResult';
+import string from '../utils/stringHelper';
+import { transporter } from '../config';
+
+const User = {
+  async signup(req, res) {
+    const { username, password, email } = req.body;
+
+    const response = await db.Users.create({
+      email,
+      password: helpers.hashPassword(password),
+      username
+    });
+
+    const userData = response.get({ plain: true });
+    userData.password = undefined;
+    const token = helpers.createToken(userData.id, email, false);
+    // send verification email the user,
+    await transporter.sendMail({ to: email, from: process.env.EMAIL_SENDER, subject: 'email verification', html: string.emailBody(req, token) });
+    const data = { ...userData };
+    return sendResult(res, 201, 'Account created successfully', data);
+  },
+
+  async login(req, res) {
+    const { email, password } = req.body;
+    const userInfo = await db.Users.findOne({
+      where: {
+        email
+      },
+      raw: true,
+    });
+    if (!userInfo) return sendResult(res, 400, 'The email and/or password is invalid');
+    const comfirmPass = helpers.comparePassword(password, userInfo.password);
+    if (comfirmPass) {
+      const {
+        id, isverified, role, username
+      } = userInfo;
+      const token = helpers.createToken(id, email, isverified, role);
+      const data = {
+        userid: id, username, email, isverified, token
+      };
+      if (!isverified) {
+        return sendResult(res, 400, 'Please verify your account first');
+      }
+      return sendResult(res, 201, 'User logged successfully', data);
+    }
+    return sendResult(res, 400, 'The email and/or password is invalid');
+  },
+
+  async verifyEmail(req, res) {
+    try {
+      const user = await helpers.verifyToken(helpers.getToken(req));
+      if (!user || user.error || !(user.userId) || !(user.email)) return sendResult(res, 401, 'invalid token, try to check your email again');
+      await db.Users.update(
+        { isverified: true },
+        {
+        // eslint-disable-next-line radix
+          where: { id: user.userId },
+        },
+      );
+      return sendResult(res, 200, 'email verified! try to login with your existing account');
+    } catch (error) {
+      return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
+    }
+  },
+  async OauthLogin(req, res) {
+    const [data] = await db.Users.findOrCreate({
+      where: { email: req.user.email },
+      defaults: req.user
+    });
+    const {
+      id, username, email, isverified
+    } = data;
+    return sendResult(res, 201, 'User logged successfully', {
+      id,
+      username,
+      email,
+      token: helpers.createToken(id, email, isverified)
+    });
+  },
+
+  async updateProfile(req, res) {
+    const { email, ...updateData } = { ...req.body, avatar: req.imgLink };
+    const user = await db.Users.update(
+      updateData, { where: { email: req.user.email }, returning: true, plain: true }
+    );
+    const { password, ...data } = user[1].dataValues;
+    return sendResult(res, 200, 'Profile updated successfully', data);
+  },
+
+};
+export default User;

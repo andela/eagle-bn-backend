@@ -3,25 +3,82 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Users', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+        allowNull: false,autoIncrement: true,
+         primaryKey: true, type: Sequelize.INTEGER 
+        },
+      username: { 
+        type: Sequelize.STRING,
+          allowNull: false, 
+        },
+      password: { 
+        type: Sequelize.STRING,
+         allowNull: true,
+       },
+      email: { 
+        type: Sequelize.STRING, 
+        allowNull: false, 
+        unique: true, },
+      role: {
+        type: Sequelize.STRING,
+        allowNull: true, 
       },
-      example: {
+      isverified: { 
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: false 
+      },
+      phone: {
+        allowNull: true,
         type: Sequelize.STRING
       },
-      createdAt: {
-        allowNull: false,
+      gender: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      dob: {
+        allowNull: true,
         type: Sequelize.DATE
       },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
+      address: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      city: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      state: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      language: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      currency: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      avatar: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      company: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      department: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      createdAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
+      updatedAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Users', {
+      force: true,
+      cascade: true,
+  });
   }
 };

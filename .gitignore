@@ -94,3 +94,8 @@ typings/
 .dynamodb/
 
 # End of https://www.gitignore.io/api/node
+
+# temp folder 
+src/temp
+.DS_Store
+src/.DS_Store
