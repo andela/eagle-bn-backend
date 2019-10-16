@@ -1,8 +1,9 @@
+/* eslint-disable object-curly-newline */
 import helpers from '../utils/helper';
 import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
-import mail from '../utils/email';
 import string from '../utils/stringHelper';
+import { transporter } from '../config';
 
 const User = {
   async signup(req, res) {
@@ -18,7 +19,7 @@ const User = {
     userData.password = undefined;
     const token = helpers.createToken(userData.id, email, false);
     // send verification email the user,
-    mail(email, process.env.EMAIL_SENDER, 'email verification', string.emailBody(req, token));
+    await transporter.sendMail({ to: email, from: process.env.EMAIL_SENDER, subject: 'email verification', html: string.emailBody(req, token) });
     const data = { ...userData };
     return sendResult(res, 201, 'Account created successfully', data);
   },
@@ -29,6 +30,7 @@ const User = {
       where: {
         email
       },
+      raw: true,
     });
     if (!userInfo) return sendResult(res, 400, 'The email and/or password is invalid');
     const comfirmPass = helpers.comparePassword(password, userInfo.password);
