@@ -51,7 +51,8 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     username: DataTypes.STRING,
-    isverified: DataTypes.BOOLEAN
+    isverified: DataTypes.BOOLEAN,
+    role: DataTypes.STRING,
   }, { freezeTableName: true });
   User.associate = function(models) {
     // associations can be defined here

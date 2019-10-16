@@ -1,6 +1,7 @@
 import sendResult from '../utils/sendResult';
 import db from '../database/models/index';
 import Check from '../utils/validator';
+import helper from '../utils/helper';
 
 const User = {
   async checkuserExist(req, res, next) {
@@ -38,6 +39,18 @@ const User = {
       ? sendResult(res, 400, password.error)
       : next();
   },
+
+  checkToken(req, res, next) {
+    const token = helper.getToken(req);
+    const data = helper.verifyToken(token);
+
+    if (data.error) {
+      return sendResult(res, 401, 'You are not authorized');
+    }
+
+    req.userData = data;
+    return next();
+  }
 };
 
 export default User;

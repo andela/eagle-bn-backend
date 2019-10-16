@@ -7,6 +7,7 @@ module.exports = {
       email: 'alexismajyambere@gmail.com',
       password: helpers.hashPassword('12345678UUi@'),
       isverified: true,
+      role:'host',
       createdAt: new Date(),
       updatedAt: new Date()
     }])

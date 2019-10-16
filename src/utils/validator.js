@@ -51,6 +51,15 @@ class Validate {
     return this;
   }
 
+  num() {
+    if ((!this.error) && (!this.val.match(/[0-9]{1}/))) {
+      this.status = 400;
+      this.error = `${this.key} should be a number`;
+      return this;
+    }
+    return this;
+  }
+
   alphaNum() {
     if ((!this.error) && (!this.val.match(/[a-zA-Z]+/) || !this.val.match(/[0-9]+/) || !this.val.match(/[#*@!&]+/))) {
       this.status = 400;
