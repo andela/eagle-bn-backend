@@ -35,10 +35,10 @@ const User = {
     if (!userInfo) return sendResult(res, 400, 'The email and/or password is invalid');
     const comfirmPass = helpers.comparePassword(password, userInfo.password);
     if (comfirmPass) {
-      const token = helpers.createToken(userInfo.id, userInfo.email, userInfo.isverified);
       const {
-        id, username, isverified
+        id, isverified, role, username
       } = userInfo;
+      const token = helpers.createToken(id, email, isverified, role);
       const data = {
         userid: id, username, email, isverified, token
       };

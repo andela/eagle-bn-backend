@@ -3,12 +3,13 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 const helper = {
-  createToken(userId, email, verified) {
+  createToken(userId, email, verified, role) {
     return jwt.sign(
       {
         userId,
         email,
-        verified
+        verified,
+        role,
       },
       process.env.PRIVATE_KEY,
       {
