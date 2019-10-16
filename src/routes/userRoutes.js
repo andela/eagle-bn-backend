@@ -1,10 +1,12 @@
 import express from 'express';
 import passport from 'passport';
-import '../config/passport';
+import fileUpload from 'express-fileupload';
+import path from 'path';
 import userController from '../controllers/userController';
-import signupValidator from '../validation/signupValidation';
 import email from '../controllers/email';
 import UserMiddle from '../middlewares/userMiddlware';
+import valid from '../validation';
+import '../config/passport';
 
 const app = express.Router();
 
@@ -249,11 +251,58 @@ app.use(passport.initialize());
 *      required:
 *      - access_token
 */
-app.post('/signup', signupValidator, UserMiddle.checkuserExist, userController.signup);
+/**
+ * @swagger
+ * /users/update-profile:
+ *   patch:
+ *     description: update profile
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *      - in: body
+ *        name: user
+ *        description: The user to be created
+ *        schema:
+ *          type: object
+ *          properties:
+ *            country:
+ *              type: string
+ *            city:
+ *              type: string
+ *            state:
+ *              type: string
+ *            language:
+ *              type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             data:
+ *               $ref: '#/definitions/User'
+ *             msg:
+ *               type: string
+ *       400:
+ *         description: Wrong data sent
+ */
+
+const uploadfile = fileUpload({
+  useTempFiles: true,
+  tempFileDir: path.join(__dirname, '../temp'),
+});
+
+const { verifyToken, cloudUpload, getUserbyEmail } = UserMiddle;
+const { updateProfile, getProfile } = userController;
+
+app.post('/signup', valid.signup, UserMiddle.checkuserExist, userController.signup);
 app.post('/login', UserMiddle.checkloginEntries, userController.login);
 app.get('/verify/:token', userController.verifyEmail);
 app.post('/reset-password', UserMiddle.validateEmail, UserMiddle.getUserbyEmail, email.sendReset);
 app.patch('/reset-password/:token', UserMiddle.validatePass, email.resetPass);
 app.post('/auth/facebook', passport.authenticate('facebook-token'), userController.OauthLogin);
 app.post('/auth/google', passport.authenticate('google-plus-token'), userController.OauthLogin);
+app.get('/profile', verifyToken, getUserbyEmail, getProfile);
+app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updateProfile);
+
 export default app;

@@ -82,5 +82,23 @@ const User = {
     });
   },
 
+  async updateProfile(req, res) {
+    const { email, role, ...updateData } = {
+      ...req.body, avatar: req.imgLink, password: helpers.hashPassword(req.body.password)
+    };
+
+    const user = await db.Users.update(updateData, {
+      where: { email: req.user.email }, returning: true, raw: true
+    });
+
+    const { password, ...data } = user[1][0];
+    return sendResult(res, 200, 'Profile updated successfully', data);
+  },
+
+  async getProfile(req, res) {
+    const { password, ...data } = req.user;
+    return sendResult(res, 200, 'my profile', data);
+  }
+
 };
 export default User;

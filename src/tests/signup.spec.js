@@ -55,7 +55,7 @@ describe('signup', () => {
       .send(mockData[3])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('password length should be greater than 7');
+        expect(res.body.msg).to.equal('password should have 1 special character and alphanumeric');
         done();
       });
   });
@@ -65,7 +65,7 @@ describe('signup', () => {
       .send(mockData[4])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('password should be alphanumeric');
+        expect(res.body.msg).to.equal('password provided do not match');
         done();
       });
   });
@@ -85,7 +85,7 @@ describe('signup', () => {
       .send(mockData[6])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('confirmPassword is required');
+        expect(res.body.msg).to.equal('password provided do not match');
         done();
       });
   });
@@ -95,7 +95,7 @@ describe('signup', () => {
       .send(mockData[7])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('passwords do not match');
+        expect(res.body.msg).to.equal('password provided do not match');
         done();
       });
   });

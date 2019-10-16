@@ -20,6 +20,7 @@ describe('Password Reset', () => {
       .post('/api/v1/users/reset-password')
       .send({ email: 'rswaib@gmail.com' })
       .end((err, res) => {
+        res.should.have.status(201);
         res.body.should.be.a('object');
         res.body.should.have.property('msg').eql('password reset instructions sent to rswaib@gmail.com');
         done();

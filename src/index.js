@@ -35,4 +35,5 @@ app.use('*', (req, res) => {
     error: `${req.method}=${req.protocol}://${req.hostname}${req.path} not found`,
   });
 });
+
 export default server;
