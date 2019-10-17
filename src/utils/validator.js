@@ -10,11 +10,9 @@ class Validate {
   }
 
   str() {
-    if (typeof this.val !== 'string') {
+    if (this.val && typeof JSON.stringify(this.val) !== 'string') {
       this.status = 400;
-      this.error = `${this.key} should be a string`;
-      this.val = JSON.stringify(this.val);
-      return this;
+      throw new Error()`${this.key} should be a string`;
     }
     return this;
   }
@@ -22,67 +20,67 @@ class Validate {
   req() {
     if (!this.data.hasOwnProperty(this.key) || !this.val) {
       this.status = 400;
-      this.error = `${this.key} is required`;
-      return this;
+      throw new Error(`${this.key} is required`);
     }
     return this;
   }
 
   min(len) {
-    if (!this.val) {
+    if (this.val && this.val.length < len) {
       this.status = 400;
-      this.error = `${this.key} is required`;
-      return this;
-    }
-    if (this.val.length < len) {
-      this.status = 400;
-      this.error = `${this.key} length should be greater than ${len - 1}`;
-      return this;
+      throw new Error(`${this.key} length should be greater than ${len - 1}`);
     }
     return this;
   }
 
   alpha() {
-    if ((!this.error) && (!this.val.match(/[a-zA-Z]{2}/))) {
+    if (this.val && (!this.error) && (!this.val.match(/[a-zA-Z]{2}/))) {
       this.status = 400;
-      this.error = `${this.key} should be alphabetic and have 2 character minimum`;
-      return this;
+      throw new Error(`${this.key} should be alphabetic and have 2 character minimum`);
     }
     return this;
   }
 
   num() {
-    if ((!this.error) && (!this.val.match(/[0-9]{1}/))) {
+    if (this.val && (!this.error) && (!this.val.match(/[0-9]{1}/))) {
       this.status = 400;
-      this.error = `${this.key} should be a number`;
-      return this;
+      throw new Error(`${this.key} should be a number`);
     }
     return this;
   }
 
   alphaNum() {
-    if ((!this.error) && (!this.val.match(/[a-zA-Z]+/) || !this.val.match(/[0-9]+/) || !this.val.match(/[#*@!&]+/))) {
-      this.status = 400;
-      this.error = `${this.key} should be alphanumeric`;
-      return this;
+    if (this.val && (!this.val.match(/^[a-zA-Z0-9]+$/))) {
+      throw new Error(`${this.key} should be alphanumeric`);
     }
     return this;
   }
 
   email() {
-    if ((!this.error) && (!this.val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/))) {
-      this.status = 400;
-      this.error = `Invalid ${this.key} address`;
-      return this;
+    if (this.val && (!this.error) && (!this.val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/))) {
+      throw new Error(`Invalid ${this.key} address`);
     }
     return this;
   }
 
-  confirmPass() {
-    if (this.val !== this.data.confirmPassword) {
+  confirm() {
+    if (this.val && this.val !== this.data.confirmPassword) {
+      throw new Error(`${this.key} provided do not match`);
+    }
+    return this;
+  }
+
+  gender() {
+    if (this.val && !this.val.match(/^(Male|Female|MALE|FEMALE|male|female)$/)) {
       this.status = 400;
-      this.error = `${this.key} provided do not match`;
-      return this;
+      throw new Error(`${this.key} is invalid`);
+    }
+    return this;
+  }
+
+  withSpec() {
+    if (this.val && (!this.val.match(/[a-zA-Z0-9]+/) || !this.val.match(/[#*@!&]+/))) {
+      throw new Error(`${this.key} should have 1 special character and alphanumeric`);
     }
     return this;
   }

@@ -53,6 +53,14 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     isverified: DataTypes.BOOLEAN,
     role: DataTypes.STRING,
+    phone: DataTypes.STRING,
+    gender: DataTypes.STRING,
+    dob: DataTypes.DATE,
+    address: DataTypes.STRING,
+    city: DataTypes.STRING,
+    state: DataTypes.STRING,
+    avatar: DataTypes.STRING,
+    department: DataTypes.STRING
   }, { freezeTableName: true });
   User.associate = function(models) {
     // associations can be defined here

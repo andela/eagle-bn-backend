@@ -18,6 +18,7 @@
       "curly": ["error", "multi-line"],
       "no-unused-expressions": "off",
       "import/no-dynamic-require": 0,
+      "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
       "eol-last": 1,
       "import/no-unresolved": [2, { "commonjs": true }],
       "no-shadow": ["error", { "allow": ["req", "res", "err"] }],

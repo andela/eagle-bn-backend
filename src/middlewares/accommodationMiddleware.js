@@ -1,22 +1,6 @@
 import sendResult from '../utils/sendResult';
-import Check from '../utils/validator';
 
 const Accommodation = {
-  validateAccommodation(req, res, next) {
-    const valid = [
-      new Check({ description: req }).str().req().min(5),
-      new Check({ address: req }).str().req().min(5),
-      new Check({ availableSpace: req }).str().req().min(5),
-      new Check({ cost: req }).req().num(),
-      new Check({ services: req }).str().req().min(5),
-      new Check({ amenities: req }).str().req().min(5),
-    ];
-    // eslint-disable-next-line arrow-parens
-    const invalid = valid.find(e => e.error);
-    if (invalid) return sendResult(res, 400, invalid.error);
-    return next();
-  },
-
   checkUserSupplier(req, res, next) {
     const { userData } = req;
     if (userData.role === 'host') return next();
