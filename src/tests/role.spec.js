@@ -135,3 +135,44 @@ describe('Get all the user with their roles', () => {
       });
   });
 });
+
+describe('Add new role by admin ', () => {
+  it('Should return error when missing fields', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/role')
+      .end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+  it('Should return error when not admin', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/role')
+      .send({ role_name: 'rswhqweb@gmail.com', role_value: 'admin' })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+  it('Should return error when it\'s an admin', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/role')
+      .set('Authorization', helper.createToken(2, 'eagle@gmail.com', true, 'host'))
+      .send({ role_name: 'Officer', role_value: 'office' })
+      .end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
+  });
+  it('Should return an object when role creates or retrieved', (done) => {
+    chai.request(app)
+      .post('/api/v1/users/role')
+      .set('Authorization', helper.createToken(2, 'alexismajyambere@gmail.com', true, 'admin'))
+      .send({ role_name: 'Officer', role_value: 'office' })
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
+});
