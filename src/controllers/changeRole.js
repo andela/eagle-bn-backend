@@ -23,7 +23,6 @@ const changeRole = async (req, res) => {
     new_role: req.body.new_role
   };
   return sendResult(res, 200, data);
-  // });
 };
 
 export default changeRole;

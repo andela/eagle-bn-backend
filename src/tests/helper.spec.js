@@ -1,9 +1,11 @@
 import chai from 'chai';
 import helpers from '../utils/helper';
+import findUser from '../utils/queries';
 
 const { expect } = chai;
 const plainPassword = 'lemoissonW';
 const hashedPass = helpers.hashPassword(plainPassword);
+
 
 describe('helper functions', () => {
   it('it should return correct hash result', (done) => {
@@ -13,8 +15,17 @@ describe('helper functions', () => {
     expect(helpers.comparePassword('lelel', hashedPass)).to.equal(false);
     done();
   });
-  it('should return a jwt token when called', (done) => {
+  it('should return a jwt token when called', async (done) => {
     expect(helpers.createToken(1, 'lll@gmail.com', '')).to.not.equal(undefined);
     done();
+  });
+});
+
+describe('queries function', () => {
+  it('returns object', async () => {
+    const req = {
+      body: { new_role: 'host' }
+    };
+    expect(await findUser(req)).to.be.an('object');
   });
 });
