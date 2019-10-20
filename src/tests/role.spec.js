@@ -121,3 +121,17 @@ describe('PUT /users/role', () => {
       });
   });
 });
+
+
+describe('Get all the user with their roles', () => {
+  it('Should return all user', (done) => {
+    chai.request(app)
+      .get('/api/v1/users/roles')
+      .set('Authorizaton', helper.createToken(2, 'alexismajyambere@gmail.com', true, 'admin'))
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.should.have.property('status').eql(200);
+        done();
+      });
+  });
+});

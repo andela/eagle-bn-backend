@@ -7,6 +7,7 @@ import email from '../controllers/email';
 import checkRole from '../validation/checkRoles';
 import checkEmail from '../middlewares/checkEmail';
 import changeRole from '../controllers/changeRole';
+import allUser from '../controllers/allRoles';
 import checkAdmin from '../middlewares/checkAdmin';
 import UserMiddle from '../middlewares/userMiddlware';
 import valid from '../validation';
@@ -360,6 +361,7 @@ app.post('/auth/google', passport.authenticate('google-plus-token'), userControl
 app.get('/profile', verifyToken, getUserbyEmail, getProfile);
 app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updateProfile);
 app.put('/role', checkRole, checkAdmin, UserMiddle.getUserbyEmail, checkEmail, isUserVerified, changeRole);
+app.get('/roles', allUser);
 
 export default app;
 
