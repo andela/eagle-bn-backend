@@ -4,6 +4,15 @@ module.exports = {
   up: (queryInterface, Sequelize) => Promise.all([
     queryInterface.bulkInsert('Users', [{
       username: 'alexis',
+      email: 'manager@gmail.com',
+      password: helpers.hashPassword('12345678UUi@'),
+      isverified: true,
+      role:'manager',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }]),
+    queryInterface.bulkInsert('Users', [{
+      username: 'alexis',
       email: 'alexismajyambere@gmail.com',
       password: helpers.hashPassword('12345678UUi@'),
       isverified: true,
