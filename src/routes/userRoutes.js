@@ -4,13 +4,9 @@ import fileUpload from 'express-fileupload';
 import path from 'path';
 import userController from '../controllers/userController';
 import email from '../controllers/email';
-import { checkRole, newRole } from '../validation/checkRoles';
-import checkEmail from '../middlewares/checkEmail';
-import changeRole from '../controllers/changeRole';
-import addRole from '../controllers/addRole';
-import allUser from '../controllers/allRoles';
-import checkAdmin from '../utils/checkAdmin';
-import checkAdminRole from '../middlewares/checkAdminRole';
+import checkRole from '../validation/checkRoles';
+import role from '../controllers/role';
+import checkAdmin from '../middlewares/checkAdminRole';
 import UserMiddle from '../middlewares/userMiddlware';
 import valid from '../validation';
 import '../config/passport';
@@ -362,9 +358,8 @@ app.post('/auth/facebook', passport.authenticate('facebook-token'), userControll
 app.post('/auth/google', passport.authenticate('google-plus-token'), userController.OauthLogin);
 app.get('/profile', verifyToken, getUserbyEmail, getProfile);
 app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updateProfile);
-app.put('/role', checkRole, checkAdminRole, UserMiddle.getUserbyEmail, checkEmail, isUserVerified, changeRole);
-app.get('/roles', allUser);
-app.post('/role', newRole, checkAdmin, addRole);
+app.put('/role', checkRole, checkAdmin, UserMiddle.getUserbyEmail, isUserVerified, role.changeRole);
+app.get('/roles', checkAdmin, role.allRole);
 
 export default app;
 

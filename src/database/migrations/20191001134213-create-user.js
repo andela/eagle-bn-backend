@@ -65,17 +65,6 @@ module.exports = {
       },
       createdAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
       updatedAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-      RoleId: {
-        type: 'integer',
-        onDelete: 'CASCADE',
-        allowNull: true,
-        defaultValue: 5,
-        references: {
-          model: 'Roles',
-          key: 'id',
-          onDelete: 'SET NULL'
-        },
-      }
     });
   },
   down: (queryInterface, Sequelize) => {
