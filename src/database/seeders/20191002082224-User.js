@@ -3,7 +3,7 @@ import helpers from '../../utils/helper';
 module.exports = {
   up: (queryInterface, Sequelize) => Promise.all([
     queryInterface.bulkInsert('Users', [{
-      username: 'alexis',
+      fullname: 'alexis',
       email: 'alexismajyambere@gmail.com',
       password: helpers.hashPassword('12345678UUi@'),
       isverified: true,
@@ -11,7 +11,7 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     },{
-      username: 'admin',
+      fullname: 'admin',
       email: 'andelaeagle@gmail.com',
       password: helpers.hashPassword('eagle123!'),
       isverified: true,
@@ -19,7 +19,7 @@ module.exports = {
       updatedAt: new Date(),
       RoleId:1
     },{
-      username: 'requester',
+      fullname: 'requester',
       email: 'requester@gmail.com',
       password: helpers.hashPassword('eagle123!'),
       isverified: true,
@@ -27,7 +27,7 @@ module.exports = {
       updatedAt: new Date(),
       RoleId:5
     },{
-      username: 'dummy',
+      fullname: 'dummy',
       email: 'dummy@gmail.com',
       password: helpers.hashPassword('eagle123!'),
       isverified: false,

@@ -37,9 +37,9 @@ const User = {
     const comfirmPass = helpers.comparePassword(password, userInfo.password);
     if (comfirmPass) {
       const {
-        id, isverified, fullname
+        id, isverified, Role, fullname
       } = userInfo;
-      const token = helpers.createToken(id, email, isverified, userInfo.Role.roleValue);
+      const token = helpers.createToken(id, email, isverified, Role.roleValue);
       const data = {
         userid: id, fullname, email, isverified, token
       };
