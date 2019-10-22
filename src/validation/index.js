@@ -44,6 +44,16 @@ const validator = {
     }
   },
 
+  tripValidation(req, res, next) {
+    let { status } = req.params;
+    status = status.toLowerCase();
+    if (status !== 'approve' && status !== 'reject') {
+      return sendResult(res, 400, 'invalid request');
+    }
+    if (status === 'approve') req.params.status = 'approved';
+    if (status === 'reject') req.params.status = 'rejected';
+    return next();
+  }
 };
 
 export default validator;

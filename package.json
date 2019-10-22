@@ -7,7 +7,8 @@
     "require": [
       "@babel/register",
       "@babel/polyfill"
-    ],"reporter": [
+    ],
+    "reporter": [
       "lcov",
       "text"
     ],

@@ -34,7 +34,16 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date(),
       RoleId:5
-    }])
+    },
+    {
+      username: 'manager',
+      email: 'manager@gmail.com',
+      password: helpers.hashPassword('eagle123!'),
+      isverified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      RoleId: 4,
+  }])
   ]),
   down: (queryInterface, Sequelize) => Promise.all([
     queryInterface.bulkDelete('Users', null, {})
