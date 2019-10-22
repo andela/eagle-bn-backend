@@ -5,7 +5,7 @@ module.exports = {
         'lineManager',
         {
             type: Sequelize.INTEGER,
-            defaultValue: 1
+            defaultValue: 5
         }
       );
     },

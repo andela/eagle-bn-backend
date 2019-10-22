@@ -52,7 +52,6 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     username: DataTypes.STRING,
     isverified: DataTypes.BOOLEAN,
-    role: DataTypes.STRING,
     phone: DataTypes.STRING,
     gender: DataTypes.STRING,
     dob: DataTypes.DATE,
@@ -61,10 +60,16 @@ module.exports = (sequelize, DataTypes) => {
     state: DataTypes.STRING,
     avatar: DataTypes.STRING,
     department: DataTypes.STRING,
-    lineManager: DataTypes.INTEGER
+    lineManager: DataTypes.INTEGER,
+    RoleId: DataTypes.INTEGER,
   }, { freezeTableName: true });
   User.associate = function(models) {
-    // associations can be defined here
+    User.belongsTo(models.Roles, {
+        foreignKey: {
+          allowNull: true,
+        },
+        onDelete: 'SET NULL',
+    })
   };
   return User;
 };
