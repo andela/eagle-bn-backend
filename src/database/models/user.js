@@ -60,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
     state: DataTypes.STRING,
     avatar: DataTypes.STRING,
     department: DataTypes.STRING,
+    lineManager: DataTypes.INTEGER,
     RoleId: DataTypes.INTEGER,
   }, { freezeTableName: true });
   User.associate = function(models) {
