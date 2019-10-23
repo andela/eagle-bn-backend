@@ -1,9 +1,19 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Trips = sequelize.define('Trips', {
-    departureTime: { type: DataTypes.DATE, allowNull: false },
-    destination: { type: DataTypes.STRING, allowNull: false },
+    departureTime: { type: DataTypes.STRING, allowNull: false },
+    country: { type: DataTypes.STRING, allowNull: false },
+    city: { type: DataTypes.STRING, allowNull: false },
     reason: { type: DataTypes.TEXT,  allowNull: false },
+    accommodationId: {
+      type: 'integer',
+      onDelete: 'CASCADE',
+      allowNull: true,
+      references: {
+        model: 'Accommodations',
+        key: 'id',
+      },
+    },
   }, { freezeTableName: true });
   Trips.associate = function(models) {
     Trips.belongsTo(models.Requests, {
@@ -12,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE',
     });
-
   };
   return Trips;
 };

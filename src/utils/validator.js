@@ -17,6 +17,14 @@ class Validate {
     return this;
   }
 
+  array() {
+    if (this.val && !(this.val instanceof Array)) {
+      this.status = 400;
+      throw new Error()`${this.key} should be an array`;
+    }
+    return this;
+  }
+
   req() {
     if (!this.data.hasOwnProperty(this.key) || !this.val) {
       this.status = 400;

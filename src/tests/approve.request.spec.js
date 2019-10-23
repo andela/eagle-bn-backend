@@ -6,7 +6,6 @@ import helpers from '../utils/helper';
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
 describe('approve/reject request', () => {
   it('it should return 200 and updated request data', (done) => {
     chai.request(app)
@@ -25,6 +24,16 @@ describe('approve/reject request', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.data.id).to.equal(1);
+        done();
+      });
+  });
+  it('should return a 400 status and request with id llll', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/lll')
+      .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('request Id should be integer');
         done();
       });
   });
@@ -55,6 +64,16 @@ describe('approve/reject request', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.data.length).to.equal(1);
+        done();
+      });
+  });
+  it('should return a 400 status', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/managers/oo?status=pending')
+      .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('manager Id should be integer');
         done();
       });
   });
@@ -109,7 +128,7 @@ describe('approve/reject request', () => {
         done();
       });
   });
-  it('it should return 400 when invalid route is provided', (done) => {
+  it('it should return 404 when invalid route is provided', (done) => {
     chai.request(app)
       .patch('/api/v1/requests/2/lllelele')
       .set('Authorization', helpers.createToken(5, 'admin@gmail.com', true, 'manager'))

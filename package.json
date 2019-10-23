@@ -1,7 +1,7 @@
 {
   "name": "barefoot-nomad",
   "version": "1.0.0",
-  "description": "A Social platform for the creative at heart",
+  "description": "Make company global travel and accommodation easy and convenient",
   "main": "index.js",
   "nyc": {
     "require": [
@@ -59,6 +59,8 @@
     "jsonwebtoken": "^8.3.0",
     "method-override": "^3.0.0",
     "mocha": "^6.2.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
     "morgan": "^1.9.1",
     "nock": "^11.4.0",
     "nodemailer": "^6.3.1",
@@ -77,6 +79,7 @@
     "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
     "sinon-express-mock": "^2.2.1",
+    "string-similarity": "^3.0.0",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.1"
   },

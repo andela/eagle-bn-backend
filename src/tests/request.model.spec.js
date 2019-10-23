@@ -11,11 +11,10 @@ describe('get requests test', () => {
   it('get all requests, should return a 200 status', (done) => {
     chai.request(app)
       .get('/api/v1/requests/')
-      .set('Authorization', helper.createToken(2, 'alexismajyambere@gmail.com', true))
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.msg).to.equal('Requests');
-        expect(res.body.data.length).to.equal(2);
         done();
       });
   });
@@ -25,17 +24,17 @@ describe('get requests test', () => {
       .set('Authorization', 'wefhkwefkwjebfkjewfkj')
       .end((err, res) => {
         expect(res.status).to.equal(401);
-        expect(res.body.msg).to.equal('Invalid Token');
+        expect(res.body.msg).to.equal('You are not authorized');
         done();
       });
   });
-  it('should return a 400 status when user is not verified', (done) => {
+  it('should return a 401 status when token is invalid', (done) => {
     chai.request(app)
       .get('/api/v1/requests/')
-      .set('Authorization', helper.createToken(1, 'alexis@gmail.com', false))
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'admin'))
       .end((err, res) => {
-        expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('The user is not verified');
+        expect(res.status).to.equal(401);
+        expect(res.body.msg).to.equal('you are not authorized');
         done();
       });
   });

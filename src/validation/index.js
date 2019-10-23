@@ -1,5 +1,7 @@
+import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
+import { checkStringInArray, checkDate, checkCountry } from './trips';
 
 const validator = {
   profile(req, res, next) {
@@ -53,7 +55,51 @@ const validator = {
     if (status === 'approve') req.params.status = 'approved';
     if (status === 'reject') req.params.status = 'rejected';
     return next();
+  },
+
+  singleReqValid(req, res, next) {
+    const { requestId } = req.params;
+    if (requestId.match(/[0-9]{1}/)) next();
+    else return sendResult(res, 400, 'request Id should be integer');
+  },
+
+  managerValid(req, res, next) {
+    const { managerId } = req.params;
+    if (managerId.match(/[0-9]{1}/)) next();
+    else return sendResult(res, 400, 'manager Id should be integer');
+  },
+
+  request(req, res, next) {
+    req.error = {};
+    try {
+      new Check({ timeZone: req }).str().req().min(1);
+      new Check({ trips: req }).array().req().min(1);
+      new Check({ country: req }).str().req().min(2);
+      new Check({ city: req }).str().req().min(1);
+      // VALIDATE USER'S TIMEZONE
+      const validTZ = checkStringInArray(moment.tz.names(), req.body.timeZone, 10);
+      if (validTZ instanceof Array) {
+        req.error.timeZone = JSON.stringify(['did you mean?', validTZ]);
+        throw new Error();
+      }
+      // VALIDATE RETURNTIME
+      if (req.body.returnDate) {
+        checkDate(req, req.body.returnDate, req.body.timeZone);
+      }
+      // VALIDATE COUNTRY
+      const country = checkCountry(req.body.country);
+      if (!country) {
+        req.error.country = 'invalid country';
+      } else {
+        req.body.country = country;
+      }
+      next();
+    } catch (err) {
+      const message = (Object.keys(req.error).length === 0) ? err.message : req.error;
+      return sendResult(res, 400, message);
+    }
   }
+
 };
 
 export default validator;
