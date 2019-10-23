@@ -34,6 +34,14 @@ describe('Update/delete an accommodation tests', () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('msg');
         expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('data');
+        expect(res.body.data.address).to.equal('kigali');
+        expect(res.body.data.cost).to.equal(200000);
+        expect(res.body.data.description).to.equal('the first hotel in region');
+        expect(res.body.data.name).to.equal('hotel');
+        expect(res.body.data.availableSpace).to.equal('rooms and pool');
+        expect(res.body.data.services).to.equal('gym, breakfast');
+        expect(res.body.data.amenities).to.equal('wifi, tv');
         done();
       });
   });
@@ -67,6 +75,9 @@ describe('Update/delete an accommodation tests', () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('msg');
         expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('data');
+        expect(res.body.data.address).to.equal('kigali');
+        expect(res.body.data.name).to.equal('hotel');
         done();
       });
   });
@@ -112,7 +123,6 @@ describe('Update/delete an accommodation tests', () => {
       .set('Authorization', helper.createToken(2, 'alexis2@gmail.com', true, 'host'))
       .send(mock[0])
       .end((err, res) => {
-        console.log(res.body);
         expect(res.status).to.equal(401);
         expect(res.body).to.have.property('msg');
         expect(res.body).to.have.property('status');
@@ -139,6 +149,8 @@ describe('Update/delete an accommodation tests', () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('msg');
         expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('data');
+        expect(res.body.data).to.equal(null);
         done();
       });
   });

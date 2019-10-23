@@ -81,15 +81,15 @@ const fUpload = fileUpload({
 });
 
 const {
-  checkUserSupplier, isSupplierAccommodation, checkForImages, checkForImagesUpdate
+  isSupplierAccommodation, checkForImages, checkForImagesUpdate
 } = accMidd;
 const { checkToken } = userMidd;
 const {
   addAccommodation, getAccommodation, deleteAccommodation, editAccommodation
 } = accommodationCont;
 
-app.patch('/:id', fUpload, checkToken, checkUserSupplier, isSupplierAccommodation, checkForImagesUpdate, valid.editAccommodation, editAccommodation);
-app.delete('/:id', checkToken, checkUserSupplier, isSupplierAccommodation, deleteAccommodation);
+app.patch('/:id', fUpload, checkToken, roles.checkHost, isSupplierAccommodation, checkForImagesUpdate, valid.editAccommodation, editAccommodation);
+app.delete('/:id', checkToken, roles.checkHost, isSupplierAccommodation, deleteAccommodation);
 app.post('/', fUpload, checkToken, roles.checkHost, valid.accommodation, checkForImages, addAccommodation);
 app.get('/', checkToken, accMidd.checkViewAccommodation, getAccommodation);
 

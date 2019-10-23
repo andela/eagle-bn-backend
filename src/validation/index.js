@@ -34,6 +34,7 @@ const validator = {
 
   accommodation(req, res, next) {
     try {
+      new Check({ name: req }).str().req().min(5);
       new Check({ description: req }).str().req().min(5);
       new Check({ address: req }).str().req().min(5);
       new Check({ availableSpace: req }).str().req().min(5);

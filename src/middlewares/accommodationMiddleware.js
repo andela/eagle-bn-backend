@@ -15,12 +15,6 @@ const checkForWrongFile = (files, req, res, next) => {
 };
 
 const Accommodation = {
-  checkUserSupplier(req, res, next) {
-    const { userData } = req;
-    if (userData.role === 'host') return next();
-    return sendResult(res, 401, 'You are not authorized');
-  },
-
   async isSupplierAccommodation(req, res, next) {
     try {
       const accomUser = await db.Accommodations.findOne({

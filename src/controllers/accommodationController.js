@@ -86,7 +86,14 @@ const Accommodation = {
     await db.Accommodations.destroy({
       where: { id: req.params.id, },
     });
-    return sendResult(res, 200, 'The accommodation facility data has been deleted');
+    const returnAccommo = await db.Accommodations.findOne({
+      where: { id: req.params.id, },
+      raw: true,
+    });
+
+    if (!returnAccommo) {
+      return sendResult(res, 200, 'The accommodation facility data has been deleted', returnAccommo);
+    }
   },
 
 };
