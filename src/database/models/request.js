@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
     Requests.hasOne(models.Trips);
+    Requests.hasMany(models.Comments, {
+      foreignKey: 'requestId',
+      targetKey: 'id',
+    });
+
   };
   return Requests;
 };
