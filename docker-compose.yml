@@ -5,9 +5,6 @@ services:
     ports:
       - "3000:3000"
     command: npm run dev
-    volumes:x
-      - .:/app/
-      - /app/node_modules
   postgres:
     image: postgres:latest
     ports:

@@ -1,9 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Requests = sequelize.define('Requests', {
-    returnTime: { type: DataTypes.DATE },
-    address: { type: DataTypes.STRING, allowNull: false },
-    status: { type: DataTypes.STRING,  defaultValue: 'pending' },
+    returnTime: { type: DataTypes.STRING },
+    country: { type: DataTypes.STRING, allowNull: false },
+    city: { type: DataTypes.STRING, allowNull: false },
+    status: { type: DataTypes.STRING, defaultValue: 'pending' },
+    timeZone: { type: DataTypes.STRING, allowNull: false },
   }, { freezeTableName: true });
   Requests.associate = function(models) {
     Requests.belongsTo(models.Users, {
@@ -12,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: 'CASCADE',
     });
-
+    Requests.hasOne(models.Trips);
   };
   return Requests;
 };

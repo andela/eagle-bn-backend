@@ -28,11 +28,11 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 setupSwagger(app, server.address().port);
 
-// need to be added after app.use(routers) to handle request not found
+// should be added after all routes
 app.use('*', (req, res) => {
   res.status(404).json({
     status: 404,
-    error: `${req.method}=${req.protocol}://${req.hostname}${req.path} not found`,
+    error: `${req.method}=${req.protocol}://${req.headers.host}${req.originalUrl} not found`,
   });
 });
 

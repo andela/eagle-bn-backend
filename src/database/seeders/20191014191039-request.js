@@ -2,15 +2,19 @@
 module.exports = {
   up: (queryInterface, Sequelize) => Promise.all([
     queryInterface.bulkInsert('Requests', [{ // two-way trip
-      UserId: 2,
-      address: 'kigali',
+      UserId: 3,
+      country: 'RW',
+      city: 'kigali-ngali',
+      timeZone: 'africa/kigali',
       returnTime: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     },
   { // one-way trip
-    UserId: 2,
-    address: 1,
+    UserId: 3,
+    country: 'RW',
+    city: 'kigali-ngali',
+    timeZone: 'africa/kigali',
     createdAt: new Date(),
     updatedAt: new Date()
   }])
@@ -19,3 +23,4 @@ module.exports = {
     queryInterface.bulkDelete('Requests', null, {})
   ])
 };
+

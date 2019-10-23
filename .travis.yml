@@ -7,7 +7,7 @@ env:
     - PRIVATE_KEY=kjefw373784
 language: node_js
 node_js:
-  - "stable"
+  - "10"
 branches:
   only:
     - develop
