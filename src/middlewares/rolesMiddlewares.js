@@ -12,5 +12,10 @@ const roles = {
     if (req.userData.role === 'host') return next();
     return notAuthorized(res);
   },
+
+  checkRequester(req, res, next) {
+    if (req.userData.role === 'requester') return next();
+    return notAuthorized(res);
+  }
 };
 export default roles;

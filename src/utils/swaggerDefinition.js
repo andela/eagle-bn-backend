@@ -21,7 +21,7 @@ const setupSwagger = (app) => {
   };
   const options = {
     swaggerDefinition,
-    apis: ['./src/routes/**/*.js', './src/database/models/**/*.js'],
+    apis: ['./src/routes/**/*.js', './src/database/models/**/*.js', './src/swagger/**/*.js'],
   };
   const swaggerSpec = swaggerJsdoc(options);
 

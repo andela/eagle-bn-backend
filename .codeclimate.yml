@@ -1,5 +1,15 @@
+checks:
+  method-lines:
+    config:
+      threshold: 40
+  method-complexity:
+    enabled: false
+  similar-code:
+    enabled: false
+  identical-code:
+    enabled: false
 exclude_patterns:
 - "src/tests/"
 - "src/database/"
 - "src/utils/"
-
+- "**/**/index.js"

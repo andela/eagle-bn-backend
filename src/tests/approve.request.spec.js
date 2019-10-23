@@ -89,7 +89,7 @@ describe('approve/reject request', () => {
         done();
       });
   });
-  it('it should return 400 when invalid route is provided', (done) => {
+  it('it should return 404 when invalid route is provided', (done) => {
     chai.request(app)
       .patch('/api/v1/requests/2/lllelele')
       .set('Authorization', helpers.createToken(5, 'admin@gmail.com', true, 'manager'))

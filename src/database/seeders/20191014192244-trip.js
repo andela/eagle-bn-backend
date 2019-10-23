@@ -4,14 +4,16 @@ module.exports = {
     queryInterface.bulkInsert('Trips', [{
       RequestId: 1,
       reason: 'I just like that place',
-      destination: 'Kampala',
+      country: 'UG',
+      city: 'Kampala',
       departureTime: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     },
   {
     RequestId: 1,
-    destination: 'Nairobi',
+    country: 'KE',
+    city: 'Nairobi',
     reason: 'I do not have any reason',
     departureTime: new Date(),
     createdAt: new Date(),
@@ -19,7 +21,8 @@ module.exports = {
   },
   {
     RequestId: 2,
-    destination: 'lagos',
+    country: 'NG',
+    city: 'lagos',
     reason: 'I do not have any reason',
     departureTime: new Date(),
     createdAt: new Date(),
