@@ -11,9 +11,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const msg = (user, helper) => {
+const msg = (user, url, title, message, actionMsg) => {
   const from = process.env.MAIL_SERVICE;
-  const { subject, html } = msgHelper(user, helper);
+  const { subject, html } = msgHelper(user, url, title, message, actionMsg);
   return { from, subject, html };
 };
 

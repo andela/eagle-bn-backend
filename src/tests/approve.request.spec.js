@@ -18,6 +18,26 @@ describe('approve/reject request', () => {
         done();
       });
   });
+  it('should return a 200 status and request with id 1', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1')
+      .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.data.id).to.equal(1);
+        done();
+      });
+  });
+  it('should return a 401 status when user don\'t own request', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1')
+      .set('Authorization', helpers.createToken(4, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body.msg).to.equal('you are not authorized');
+        done();
+      });
+  });
   it('should return a 200 status and request list', (done) => {
     chai.request(app)
       .get('/api/v1/requests/managers/5')

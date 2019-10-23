@@ -74,13 +74,16 @@ const app = express.Router();
  *         description: The request is already approved/rejected
  */
 
-const { checkExistingTrip, checkLineManager, checkManagerId } = reqMidd;
+const {
+  checkExistingTrip, checkLineManager, checkManagerId, checkTripOwner
+} = reqMidd;
 const { changeRequestStatus, getManagerRequests } = requestController;
 const { checkManager } = roles;
 const { checkToken } = userMidd;
 const { tripValidation } = valid;
 
 app.get('/', isUserVerified, requestController.getRequest);
+app.get('/:requestId', checkToken, checkExistingTrip, checkTripOwner, requestController.getSingleRequest);
 app.get('/managers/:managerId', checkToken, checkManager, checkManagerId, getManagerRequests);
 app.patch('/:requestId/:status', checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);
 
