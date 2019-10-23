@@ -10,6 +10,7 @@ module.exports = {
         model: 'Users',
         key: 'id',
       },},
+      name: { type: Sequelize.STRING, allowNull: true, },
       description: { type: Sequelize.STRING, allowNull: false, },
       address: { type: Sequelize.STRING, allowNull: false },
       availableSpace: { type: Sequelize.STRING, allowNull: false },

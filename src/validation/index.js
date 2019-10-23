@@ -85,8 +85,23 @@ const validator = {
       const message = (Object.keys(req.error).length === 0) ? err.message : req.error;
       return sendResult(res, 400, message);
     }
-  }
+  },
 
+  editAccommodation(req, res, next) {
+    const valid = [
+      new Check({ name: req }).str().min(5),
+      new Check({ description: req }).str().min(5),
+      new Check({ address: req }).str().min(5),
+      new Check({ availableSpace: req }).str().min(5),
+      new Check({ cost: req }).num(),
+      new Check({ services: req }).str().min(5),
+      new Check({ amenities: req }).str().min(5),
+    ];
+    // eslint-disable-next-line arrow-parens
+    const invalid = valid.find(e => e.error);
+    if (invalid) return sendResult(res, 400, invalid.error);
+    return next();
+  },
 };
 
 export default validator;
