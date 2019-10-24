@@ -27,7 +27,7 @@ const role = {
     return sendResult(res, 200, data);
   },
   allRole: async (req, res) => {
-    const allUser = await db.Users.findAll({ attributes: ['id', 'username', 'email'], include: [{ model: db.Roles, attributes: { exclude: ['createdAt', 'updatedAt'] } }] });
+    const allUser = await db.Users.findAll({ attributes: ['id', 'fullname', 'email'], include: [{ model: db.Roles, attributes: { exclude: ['createdAt', 'updatedAt'] } }] });
     return sendResult(res, 200, 'User information', allUser);
   },
 

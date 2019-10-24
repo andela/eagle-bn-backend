@@ -80,7 +80,7 @@ describe('Oauthentication CallBack', () => {
   it('Should return status 201', async () => {
     const req = {
       user: {
-        username: 'Crispy N. Christian',
+        fullname: 'Crispy N. Christian',
         email: 'crispy@mail.com',
         isverified: true
       }
@@ -98,7 +98,7 @@ describe('Oauthentication CallBack', () => {
     const cb = sinon.spy();
     OAuthCallback(accessToken, refreshToken, google, cb);
     expect(cb.withArgs({
-      username: 'Crispy N. Christian',
+      fullname: 'Crispy N. Christian',
       email: 'nshimyumukizachristian@gmail.com',
       isverified: true
     }));

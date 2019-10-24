@@ -3,4 +3,5 @@ const sendResult = async (res, status, msg, data) => res.status(status).json({
   msg,
   data
 });
+
 export default sendResult;

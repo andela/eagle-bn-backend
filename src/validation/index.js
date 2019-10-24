@@ -6,7 +6,7 @@ import { checkStringInArray, checkDate, checkCountry } from './trips';
 const validator = {
   profile(req, res, next) {
     try {
-      new Check({ username: req }).str().alphaNum();
+      new Check({ fullname: req }).str().alphaNum();
       new Check({ password: req }).str().withSpec().confirm();
       new Check({ gender: req }).str().gender();
       new Check({ dob: req }).str().alphaNum();
@@ -23,7 +23,7 @@ const validator = {
   signup(req, res, next) {
     try {
       new Check({ email: req }).req().email();
-      new Check({ username: req }).req().min(2).alpha();
+      new Check({ fullname: req }).req().min(2).alpha();
       new Check({ password: req }).req().withSpec().min(8)
         .confirm();
       next();
