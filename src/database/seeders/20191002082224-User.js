@@ -36,7 +36,7 @@ module.exports = {
       RoleId:5
     },
     {
-      username: 'manager',
+      fullname: 'manager',
       email: 'manager@gmail.com',
       password: helpers.hashPassword('eagle123!'),
       isverified: true,
