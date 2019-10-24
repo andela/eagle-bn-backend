@@ -10,9 +10,9 @@ const { expect } = chai;
 describe('/POST comment', () => {
   it('it should return 401 when request id does not exist', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/')
+      .post('/api/v1/requests/100/comments')
       .set('Authorization', helpers.createToken(5, 'admin@gmail.com', true, 'manager'))
-      .send({ comment: 'new Comment', requestId: 100 })
+      .send({ comment: 'new Comment' })
       .end((err, res) => {
         expect(res.status).to.equal(404);
         done();
@@ -20,7 +20,7 @@ describe('/POST comment', () => {
   });
   it('it should return 201 and create new comment data', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/')
+      .post('/api/v1/requests/1/comments')
       .set('Authorization', helpers.createToken(5, 'admin@gmail.com', true, 'manager'))
       .send({ comment: 'new Comment', requestId: 1 })
       .end((err, res) => {
@@ -31,20 +31,19 @@ describe('/POST comment', () => {
   });
   it('should return a 400 if one field is missing', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/')
-      .send({ comment: 'new Comment' })
+      .post('/api/v1/requests/1/comments')
       .set('Authorization', helpers.createToken(2, 'admin@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(400);
         expect(res.body.status).to.equal(400);
-        expect(res.body.msg).to.equal('requestId is required');
+        expect(res.body.msg).to.equal('comment is required');
         done();
       });
   });
   it('should return a 400 when you are not owner of the request or manager', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/')
-      .send({ comment: 'new Comment', requestId: 1 })
+      .post('/api/v1/requests/1/comments')
+      .send({ comment: 'new Comment' })
       .set('Authorization', helpers.createToken(2, 'admin@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(401);
@@ -57,8 +56,7 @@ describe('/POST comment', () => {
 describe('GET /comment', () => {
   it('should return a 201 when you are owner of the request or manager', (done) => {
     chai.request(app)
-      .get('/api/v1/comments/1')
-      .send({ comment: 'new Comment' })
+      .get('/api/v1/requests/1/comments')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(201);
@@ -68,7 +66,7 @@ describe('GET /comment', () => {
   });
   it('should return a 201 when you are owner of the request or manager you want to see the thread', (done) => {
     chai.request(app)
-      .get('/api/v1/comments/1')
+      .get('/api/v1/requests/1/comments')
       .set('Authorization', helpers.createToken(5, 'manager@gmail.com', true, 'manager'))
       .end((err, res) => {
         expect(res.status).to.equal(201);
@@ -78,7 +76,7 @@ describe('GET /comment', () => {
   });
   it('it should return 401 when request id does not exist', (done) => {
     chai.request(app)
-      .get('/api/v1/comments/100')
+      .get('/api/v1/requests/100/comments')
       .set('Authorization', helpers.createToken(5, 'admin@gmail.com', true, 'manager'))
       .end((err, res) => {
         expect(res.status).to.equal(404);

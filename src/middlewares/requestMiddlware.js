@@ -11,19 +11,7 @@ const requestMidd = {
     }
     return sendResult(res, 404, 'no request with such an id');
   },
-  async checkExistingRequest(req, res, next) {
-    let requestid;
 
-    if (req.body.requestId) requestid = req.body.requestId;
-    else requestid = req.params.requestId;
-
-    const request = await db.Requests.findOne({ where: { id: requestid } });
-    if (request) {
-      req.requestDetails = request;
-      return next();
-    }
-    return sendResult(res, 404, 'no request with such an id');
-  },
   async checkLineManager(req, res, next) {
     const { request } = req;
     const { userData } = req;

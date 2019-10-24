@@ -6,7 +6,7 @@ const comment = {
     const newComment = await db.Comments.create({
       comment: req.body.comment,
       userId: req.userData.userId,
-      requestId: req.body.requestId,
+      requestId: req.params.requestId,
     });
     sendResult(res, 201, 'Comment Created', newComment);
   },
