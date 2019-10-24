@@ -118,13 +118,11 @@ const validator = {
   },
   addCommentValidation: async (req, res, next) => {
     try {
+      new Check({ requestId: req }).str().req().min(1);
       new Check({ comment: req }).str().req().min(5);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
-    const { requestId } = req.params;
-    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
-
     next();
   },
   viewCommentValidation: async (req, res, next) => {

@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
         targetKey: 'id',
       });
-      Comments.belongsTo(models.Requests, {
+    Comments.belongsTo(models.Requests, {
         foreignKey: 'requestId',
         targetKey: 'id',
       });

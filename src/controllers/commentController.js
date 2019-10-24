@@ -6,7 +6,7 @@ const comment = {
     const newComment = await db.Comments.create({
       comment: req.body.comment,
       userId: req.userData.userId,
-      requestId: req.params.requestId,
+      requestId: req.body.requestId,
     });
     sendResult(res, 201, 'Comment Created', newComment);
   },
@@ -17,7 +17,7 @@ const comment = {
         model: db.Comments, attributes: { exclude: ['createdAt', 'updatedAt'] }
       }]
     });
-    sendResult(res, 201, 'Comment Created', comments);
+    sendResult(res, 201, '', comments);
   }
 };
 

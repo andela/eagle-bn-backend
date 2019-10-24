@@ -3,10 +3,18 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Comments',{
-      id: {allowNull: false,autoIncrement: true, primaryKey: true, type: Sequelize.INTEGER },
-      comment: {type:Sequelize.STRING, allowNull:false},
+      id: {
+        allowNull: false,
+        autoIncrement: true, 
+        primaryKey: true, 
+        type: Sequelize.INTEGER 
+      },
+      comment: {
+        type:Sequelize.STRING, 
+        allowNull:false
+      },
       userId: {
-        type: 'integer',
+        type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
         references: {
@@ -15,7 +23,7 @@ module.exports = {
         }
       },
       requestId: {
-        type: 'integer',
+        type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
         references: {
@@ -23,8 +31,16 @@ module.exports = {
           key: 'id',
         }
       },
-      createdAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-      updatedAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
+      createdAt: { 
+        allowNull: false, 
+        type: Sequelize.DATE, 
+        defaultValue: Sequelize.NOW 
+      },
+      updatedAt: { 
+        allowNull: false, 
+        type: Sequelize.DATE, 
+        defaultValue: Sequelize.NOW 
+      },
     })
   },
 
