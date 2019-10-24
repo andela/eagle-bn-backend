@@ -35,6 +35,7 @@ describe('accommodation tests', () => {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .field('address', 'Kigali, rwanda')
       .field('description', 'great house')
+      .field('name', 'hotel')
       .field('cost', '40000')
       .field('availableSpace', '2 rooms')
       .field('services', 'swimming pool')
@@ -55,6 +56,7 @@ describe('accommodation tests', () => {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .field('address', 'Kigali, rwanda')
       .field('description', 'great house')
+      .field('name', 'hotel')
       .field('cost', '40000')
       .field('availableSpace', '2 rooms')
       .field('services', 'swimming pool')
@@ -96,6 +98,7 @@ describe('accommodation tests', () => {
       .set('Authorization', Utoken)
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .field('description', 'great house')
+      .field('name', 'hotel')
       .field('cost', '40000')
       .field('availableSpace', '2 rooms')
       .field('services', 'swimming pool')
@@ -115,6 +118,7 @@ describe('accommodation tests', () => {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .field('address', 'Kigali, rwanda')
       .field('description', 'great house')
+      .field('name', 'hotel')
       .field('cost', 'llllll')
       .field('availableSpace', '2 rooms')
       .field('services', 'swimming pool')
@@ -134,6 +138,7 @@ describe('accommodation tests', () => {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .field('address', 'Kigali, rwanda')
       .field('description', 'great house')
+      .field('name', 'hotel')
       .field('cost', '40000')
       .field('availableSpace', '2 rooms')
       .field('services', 'swimming pool')
@@ -152,6 +157,7 @@ describe('accommodation tests', () => {
       .set('Content-Type', 'application/form-data')
       .field('address', 'Kigali, rwanda')
       .field('description', 'great house')
+      .field('name', 'hotel')
       .field('cost', '40000')
       .field('availableSpace', '2 rooms')
       .field('services', 'swimming pool')
@@ -164,24 +170,24 @@ describe('accommodation tests', () => {
       });
   });
 
-  it('should return 200 status and 2 accommodation', (done) => {
+  it('should return 200 status and 3 accommodation', (done) => {
     chai.request(app)
       .get('/api/v1/accommodations')
       .set('Authorization', Utoken)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equals(2);
+        expect(res.body.data.length).to.equals(3);
         done();
       });
   });
 
-  it('should return 200 status and 2 accommodation when user is TAdmin', (done) => {
+  it('should return 200 status and 3 accommodation when user is TAdmin', (done) => {
     chai.request(app)
       .get('/api/v1/accommodations')
       .set('Authorization', helper.createToken(2, 'mmmm@gmail.com', true, 'TAdmin'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equals(2);
+        expect(res.body.data.length).to.equals(3);
         done();
       });
   });

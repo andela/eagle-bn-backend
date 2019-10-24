@@ -80,10 +80,16 @@ const fUpload = fileUpload({
   tempFileDir: path.join(__dirname, '../temp'),
 });
 
-const { checkForImages } = accMidd;
+const {
+  isSupplierAccommodation, checkForImages, checkForImagesUpdate
+} = accMidd;
 const { checkToken } = userMidd;
-const { addAccommodation, getAccommodation } = accommodationCont;
+const {
+  addAccommodation, getAccommodation, deleteAccommodation, editAccommodation
+} = accommodationCont;
 
+app.patch('/:id', fUpload, checkToken, roles.checkHost, isSupplierAccommodation, checkForImagesUpdate, valid.editAccommodation, editAccommodation);
+app.delete('/:id', checkToken, roles.checkHost, isSupplierAccommodation, deleteAccommodation);
 app.post('/', fUpload, checkToken, roles.checkHost, valid.accommodation, checkForImages, addAccommodation);
 app.get('/', checkToken, accMidd.checkViewAccommodation, getAccommodation);
 
