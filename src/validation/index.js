@@ -57,6 +57,19 @@ const validator = {
     if (status === 'reject') req.params.status = 'rejected';
     return next();
   },
+
+  singleReqValid(req, res, next) {
+    const { requestId } = req.params;
+    if (requestId.match(/[0-9]{1}/)) next();
+    else return sendResult(res, 400, 'request Id should be integer');
+  },
+
+  managerValid(req, res, next) {
+    const { managerId } = req.params;
+    if (managerId.match(/[0-9]{1}/)) next();
+    else return sendResult(res, 400, 'manager Id should be integer');
+  },
+
   request(req, res, next) {
     req.error = {};
     try {

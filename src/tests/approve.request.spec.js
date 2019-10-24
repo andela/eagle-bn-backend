@@ -6,7 +6,6 @@ import helpers from '../utils/helper';
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
 describe('approve/reject request', () => {
   it('it should return 200 and updated request data', (done) => {
     chai.request(app)
@@ -15,6 +14,36 @@ describe('approve/reject request', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.data.status).to.equal('approved');
+        done();
+      });
+  });
+  it('should return a 200 status and request with id 1', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1')
+      .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.data.id).to.equal(1);
+        done();
+      });
+  });
+  it('should return a 400 status and request with id llll', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/lll')
+      .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('request Id should be integer');
+        done();
+      });
+  });
+  it('should return a 401 status when user don\'t own request', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1')
+      .set('Authorization', helpers.createToken(4, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        expect(res.body.msg).to.equal('you are not authorized');
         done();
       });
   });
@@ -35,6 +64,16 @@ describe('approve/reject request', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.data.length).to.equal(1);
+        done();
+      });
+  });
+  it('should return a 400 status', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/managers/oo?status=pending')
+      .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('manager Id should be integer');
         done();
       });
   });

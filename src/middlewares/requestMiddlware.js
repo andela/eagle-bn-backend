@@ -16,7 +16,10 @@ const requestMidd = {
     const { request } = req;
     const { userData } = req;
     const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
-    if (user.lineManager === userData.userId) return next();
+    if (user.lineManager === userData.userId) {
+      req.user = user;
+      return next();
+    }
     return sendResult(res, 401, 'you are not managing this request');
   },
 
@@ -24,6 +27,14 @@ const requestMidd = {
     const { managerId } = req.params;
     const { userData } = req;
     if (userData.userId.toString() === managerId) return next();
+    return sendResult(res, 401, 'you are not authorized');
+  },
+
+  async checkTripOwner(req, res, next) {
+    const { request } = req;
+    const { userId } = req.userData;
+    const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
+    if (user.lineManager === userId || user.id === userId) return next();
     return sendResult(res, 401, 'you are not authorized');
   }
 };
