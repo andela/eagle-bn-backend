@@ -127,6 +127,11 @@ const validator = {
 
     next();
   },
+  viewCommentValidation: async (req, res, next) => {
+    const { requestId } = req.params;
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+    next();
+  },
 };
 
 export default validator;

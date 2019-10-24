@@ -17,10 +17,12 @@ const roles = {
     if (req.userData.role === 'requester') return next();
     return notAuthorized(res);
   },
-  async commentCheckUser(req, res, next) {
-    const Owner = await db.Requests.findOne({ where: { id: req.params.requestId }, attributes: ['UserId'] }, { raw: true });
-    if (req.userData.role === 'manager' || Owner.UserId === req.userData.userId) return next();
-    return notAuthorized(res);
-  },
+  async checkTripOwner(req, res, next) {
+    const { request } = req;
+    const { userId } = req.userData;
+    const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
+    if (user.lineManager === userId || user.id === userId) return next();
+    return sendResult(res, 401, 'you are not authorized');
+  }
 };
 export default roles;

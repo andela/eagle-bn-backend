@@ -7,22 +7,20 @@ module.exports = {
       comment: {type:Sequelize.STRING, allowNull:false},
       userId: {
         type: 'integer',
-        allowNull: true,
+        allowNull: false,
         defaultValue: 0,
         references: {
           model: 'Users',
           key: 'id',
-          onDelete: 'SET NULL'
         }
       },
       requestId: {
         type: 'integer',
-        allowNull: true,
+        allowNull: false,
         defaultValue: 0,
         references: {
           model: 'Requests',
           key: 'id',
-          onDelete: 'SET NULL'
         }
       },
       createdAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.NOW },
