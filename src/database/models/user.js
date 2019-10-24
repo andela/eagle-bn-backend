@@ -62,6 +62,7 @@ module.exports = (sequelize, DataTypes) => {
     department: DataTypes.STRING,
     lineManager: DataTypes.INTEGER,
     RoleId: DataTypes.INTEGER,
+    rememberMe: DataTypes.BOOLEAN,
   }, { freezeTableName: true });
   User.associate = function(models) {
     User.belongsTo(models.Roles, {
