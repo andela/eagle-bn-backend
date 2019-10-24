@@ -45,7 +45,7 @@ describe('signup', () => {
       .send(mockData[2])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('username is required');
+        expect(res.body.msg).to.equal('fullname is required');
         done();
       });
   });
@@ -105,7 +105,7 @@ describe('signup', () => {
       .send(mockData[8])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('username should be alphabetic and have 2 character minimum');
+        expect(res.body.msg).to.equal('fullname should be alphabetic and have 2 character minimum');
         done();
       });
   });

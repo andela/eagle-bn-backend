@@ -7,12 +7,12 @@ import { transporter } from '../config';
 
 const User = {
   async signup(req, res) {
-    const { username, password, email } = req.body;
+    const { fullname, password, email } = req.body;
 
     const response = await db.Users.create({
       email,
       password: helpers.hashPassword(password),
-      username
+      fullname
     });
     const Role = await db.Roles.findOne({ where: response.dataValues.RoleId });
 
@@ -37,11 +37,11 @@ const User = {
     const comfirmPass = helpers.comparePassword(password, userInfo.password);
     if (comfirmPass) {
       const {
-        id, isverified, username
+        id, isverified, Role, fullname
       } = userInfo;
-      const token = helpers.createToken(id, email, isverified, userInfo.Role.roleValue);
+      const token = helpers.createToken(id, email, isverified, Role.roleValue);
       const data = {
-        userid: id, username, email, isverified, token
+        userid: id, fullname, email, isverified, token
       };
       if (!isverified) {
         return sendResult(res, 400, 'Please verify your account first');
@@ -73,11 +73,11 @@ const User = {
       defaults: req.user
     });
     const {
-      id, username, email, isverified
+      id, fullname, email, isverified
     } = data;
     return sendResult(res, 201, 'User logged successfully', {
       id,
-      username,
+      fullname,
       email,
       token: helpers.createToken(id, email, isverified)
     });

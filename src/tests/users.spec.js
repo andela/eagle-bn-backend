@@ -166,11 +166,11 @@ describe('Password Reset', () => {
       .patch('/api/v1/users/profile')
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com'))
       .set('Content-Type', 'multipart/form-data')
-      .field({ username: '?' })
+      .field({ fullname: '?' })
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('username should be alphanumeric');
+        res.body.should.have.property('msg').eql('fullname should be alphanumeric');
         done();
       });
   });
