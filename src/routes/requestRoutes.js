@@ -8,16 +8,21 @@ import roles from '../middlewares/rolesMiddlewares';
 
 const app = express.Router();
 
-const { checkExistingTrip, checkLineManager, checkManagerId } = reqMidd;
-const { changeRequestStatus, getManagerRequests } = requestController;
+const { checkExistingTrip, checkLineManager, checkManagerId, checkTripOwner } = reqMidd;
+const { changeRequestStatus, getManagerRequests, search } = requestController;
 const { checkManager, checkRequester } = roles;
-const { checkToken } = userMidd;
-const { tripValidation } = valid;
+const { tripValidation, singleReqValid, managerValid, searchValidate } = valid;
+const { checkToken, verifyToken } = userMidd;
 
+
+app.get('/search', verifyToken, searchValidate, search);
+app.get('/:requestId', singleReqValid, checkToken, checkExistingTrip, checkTripOwner, requestController.getSingleRequest);
 app.get('/', checkToken, checkRequester, requestController.getRequest);
-/* eslint-disable max-len */
 app.post('/', checkToken, checkRequester, valid.request, validateTrips, validateAccommodation, requestController.postRequest);
+app.get('/managers/:managerId', managerValid, checkToken, checkManager, checkManagerId, getManagerRequests);
+app.patch('/:requestId/:status', singleReqValid, checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);
 app.get('/managers/:managerId', checkToken, checkManager, checkManagerId, getManagerRequests);
 app.patch('/:requestId/:status', checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);
+
 
 export default app;

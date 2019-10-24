@@ -1,7 +1,20 @@
 /* eslint-disable no-restricted-syntax */
 import db from '../database/models';
 import sendResult from '../utils/sendResult';
+import { msg, transporter } from '../config';
 import allRequest from '../utils/requestUtils';
+import requestData from '../utils/getReqWithTrip';
+
+const sendMail = (req, res, newRequest) => {
+  const title = `Request ${newRequest.status}`;
+  const url = `/api/v1/requests/${newRequest.id}`;
+  const actionMsg = 'View request';
+  const emailMsg = `Your viewing this message because your request has been ${newRequest.status} at Barefoot nomard`;
+  const message = { ...msg(req, url, title, emailMsg, actionMsg), to: req.user.email };
+  transporter.sendMail(message, () => {
+    sendResult(res, 200, 'updated successfully', newRequest);
+  });
+};
 
 const Request = {
   async getRequest(req, res) {
@@ -51,9 +64,13 @@ const Request = {
     const { request } = req;
     if (request.status === 'pending') {
       const newRequest = await request.update({ status });
-      return sendResult(res, 200, 'updated successfully', newRequest);
+      return sendMail(req, res, newRequest);
     }
     return sendResult(res, 403, 'this request is already approved/rejected');
+  },
+
+  async getSingleRequest(req, res) {
+    sendResult(res, 200, 'request data', req.request);
   },
 
   async getManagerRequests(req, res) {
@@ -72,7 +89,23 @@ const Request = {
       });
     }
     sendResult(res, 200, 'request list', requests);
+  },
+
+  async search(req, res) {
+    const { trips, requests } = requestData(req);
+    const trip = trips();
+    const reqs = requests();
+    if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
+      reqs.UserId = req.user.userId;
+    }
+    const request = await db.Requests.findAll({
+      where: reqs,
+      include: [{ model: db.Trips, where: trip, required: true }]
+    });
+
+    return sendResult(res, 200, 'Search results', request);
   }
+
 };
 
 export default Request;
