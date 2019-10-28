@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'RequestId',
       targetKey: 'id',
     });
+    Requests.hasMany(models.Comments, {
+      foreignKey: 'requestId',
+      targetKey: 'id',
+    });
+
   };
   return Requests;
 };

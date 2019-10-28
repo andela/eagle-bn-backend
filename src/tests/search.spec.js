@@ -7,7 +7,7 @@ import helpers from '../utils/helper';
 chai.use(chaiHttp);
 chai.should();
 describe('Search functionality', () => {
-  it('Should search in database', (done) => {
+  it('Should return all search results for admin', (done) => {
     chai.request(app)
       .get('/api/v1/requests/search?status=pending')
       .set('Authorization', helpers.createToken(1, 'andelaeagle@gmail.com', true, 'admin'))
@@ -18,7 +18,7 @@ describe('Search functionality', () => {
         done();
       });
   });
-  it('Should search as requester', (done) => {
+  it('Should return pending results for tech admin', (done) => {
     chai.request(app)
       .get('/api/v1/requests/search?status=pending')
       .set('Authorization', helpers.createToken(3, 'rswaib@gmail.com', true, 'Tadmin'))
@@ -29,18 +29,7 @@ describe('Search functionality', () => {
         done();
       });
   });
-  it('Should search as requester', (done) => {
-    chai.request(app)
-      .get('/api/v1/requests/search?status=pending')
-      .set('Authorization', helpers.createToken(3, 'rswaib@gmail.com', true, 'manager'))
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('Search results');
-        done();
-      });
-  });
-  it('Should search in database', (done) => {
+  it('Should return search results for a requester', (done) => {
     chai.request(app)
       .get('/api/v1/requests/search?status=pending&from=2030-10-23')
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
@@ -49,7 +38,7 @@ describe('Search functionality', () => {
         done();
       });
   });
-  it('Should search in database', (done) => {
+  it('Should check if token is provided', (done) => {
     chai.request(app)
       .get('/api/v1/requests/search?status=pending&from=2030-10-23')
       .end((err, res) => {
@@ -59,7 +48,7 @@ describe('Search functionality', () => {
         done();
       });
   });
-  it('Should  check for invalid fields', (done) => {
+  it('Should  check for invalid query fields', (done) => {
     chai.request(app)
       .get('/api/v1/requests/search?status=pending&from=2030-10-23&tigo=us')
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
@@ -72,7 +61,7 @@ describe('Search functionality', () => {
   });
   it('Should search in database pending', (done) => {
     chai.request(app)
-      .get('/api/v1/requests/search?status=pending&reason=I do&departureTime=2019-10-24&to=2019-10-24&returnTime=2019-10-24')
+      .get('/api/v1/requests/search?origin=RW&status=pending&departureTime=2019-10-24&to=2019-10-24&returnTime=2019-10-24')
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
       .end((err, res) => {
         res.body.should.be.a('object');
@@ -82,7 +71,7 @@ describe('Search functionality', () => {
   });
   it('Should search in database pending', (done) => {
     chai.request(app)
-      .get('/api/v1/requests/search?status=pending&reason=I do&from=2019-10-24&to=2019-10-24&returnTime=2019-10-24')
+      .get('/api/v1/requests/search?id=1&UserId=3&status=pending&from=2019-10-24&to=2019-10-24&returnTime=2019-10-24&destination=UG')
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
       .end((err, res) => {
         res.body.should.be.a('object');

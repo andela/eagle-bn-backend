@@ -92,15 +92,13 @@ const Request = {
   },
 
   async search(req, res) {
-    const { trips, requests } = requestData(req);
-    const trip = trips();
-    const reqs = requests();
+    const { tripData, reqData } = requestData(req);
     if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
-      reqs.UserId = req.user.userId;
+      reqData.UserId = req.user.userId;
     }
     const request = await db.Requests.findAll({
-      where: reqs,
-      include: [{ model: db.Trips, where: trip, required: true }]
+      where: reqData,
+      include: [{ model: db.Trips, where: tripData, required: true }]
     });
 
     return sendResult(res, 200, 'Search results', request);

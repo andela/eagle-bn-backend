@@ -153,6 +153,21 @@ const validator = {
     if (invalid) return sendResult(res, 400, invalid.error);
     return next();
   },
+  addCommentValidation: async (req, res, next) => {
+    const { requestId } = req.params;
+    try {
+      new Check({ comment: req }).str().req().min(5);
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+    next();
+  },
+  viewCommentValidation: async (req, res, next) => {
+    const { requestId } = req.params;
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+    next();
+  },
 };
 
 export default validator;
