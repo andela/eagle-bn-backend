@@ -2,6 +2,7 @@ import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
 import { checkStringInArray, checkDate, checkCountry } from './trips';
+import currencies from '../utils/currencies.json';
 
 const validator = {
   profile(req, res, next) {
@@ -130,6 +131,29 @@ const validator = {
     const { requestId } = req.params;
     if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
     next();
+  },
+
+  currencyValidation: async (req, res, next) => {
+    try {
+      new Check({ from: req }).str().req().eql(3);
+      new Check({ to: req }).str().req().eql(3);
+      new Check({ money: req }).double().req();
+      let found = 0;
+      // CHECK IF THE CURRENCIES PROVIDED EXIST
+      Object.keys(currencies).forEach(element => {
+        if (element === req.body.from.toLocaleUpperCase()) found += 1;
+        if (element === req.body.to.toLocaleUpperCase()) found += 1;
+      });
+      if (found < 2) throw new Error('one or both currencies are invalid');
+      req.body.from = req.body.from.toLocaleUpperCase();
+      req.body.to = req.body.to.toLocaleUpperCase();
+      // SAFEST WAY TO CONVERT STRING TO INTEGERS(DOUBLE,REAL)👇
+      req.body.money = -(0 - (req.body.money));
+
+      next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
   },
 };
 
