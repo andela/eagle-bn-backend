@@ -2,6 +2,7 @@ import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
 import { checkStringInArray, checkDate, checkCountry } from './trips';
+import currencies from '../utils/currencies.json';
 
 const validator = {
   profile(req, res, next) {
@@ -38,9 +39,17 @@ const validator = {
       new Check({ description: req }).str().req().min(5);
       new Check({ address: req }).str().req().min(5);
       new Check({ availableSpace: req }).str().req().min(5);
-      new Check({ cost: req }).req().num();
+      new Check({ cost: req }).req().double();
+      new Check({ currency: req }).str().eql(3);
       new Check({ services: req }).str().req().min(5);
       new Check({ amenities: req }).str().req().min(5);
+      req.body.cost = parseFloat(req.body.cost);
+      if (req.body.currency) {
+        const found = Object.keys(currencies)
+          .find(element => element === req.body.currency.toLocaleUpperCase());
+        if (!found) throw new Error('Unsupported Currency');
+        req.body.currency = req.body.currency.toLocaleUpperCase();
+      }
       next();
     } catch (error) {
       return sendResult(res, 400, error.message);
@@ -102,20 +111,30 @@ const validator = {
   },
 
   editAccommodation(req, res, next) {
-    const valid = [
-      new Check({ name: req }).str().min(5),
-      new Check({ description: req }).str().min(5),
-      new Check({ address: req }).str().min(5),
-      new Check({ availableSpace: req }).str().min(5),
-      new Check({ cost: req }).num(),
-      new Check({ services: req }).str().min(5),
-      new Check({ amenities: req }).str().min(5),
-    ];
-    // eslint-disable-next-line arrow-parens
-    const invalid = valid.find(e => e.error);
-    if (invalid) return sendResult(res, 400, invalid.error);
-    return next();
+    try {
+      new Check({ name: req }).str().min(5);
+      new Check({ description: req }).str().min(5);
+      new Check({ address: req }).str().min(5);
+      new Check({ availableSpace: req }).str().min(5);
+      new Check({ cost: req }).double();
+      new Check({ services: req }).str().min(5);
+      new Check({ amenities: req }).str().min(5);
+      new Check({ currency: req }).str().eql(3);
+      if (req.body.currency) {
+        const found = Object.keys(currencies)
+          .find(element => element === req.body.currency.toLocaleUpperCase());
+        if (!found) throw new Error('Unsupported Currency');
+        req.body.currency = req.body.currency.toLocaleUpperCase();
+      }
+      if (req.body.cost) {
+        req.body.cost = parseFloat(req.body.cost);
+      }
+      next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
   },
+
   addCommentValidation: async (req, res, next) => {
     const { requestId } = req.params;
     try {

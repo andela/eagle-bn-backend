@@ -126,7 +126,7 @@ describe('accommodation tests', () => {
       .attach('images', img, 'preview.png')
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equals('cost should be a number');
+        expect(res.body.msg).to.equals('cost should be a positive double number');
         done();
       });
   });
@@ -198,6 +198,26 @@ describe('accommodation tests', () => {
       .set('Authorization', helper.createToken(2, 'mmmm@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(401);
+        done();
+      });
+  });
+  it('should return 400 currency is invalid', (done) => {
+    chai.request(app)
+      .post('/api/v1/accommodations')
+      .set('Authorization', Utoken)
+      .set('Content-Type', 'application/form-data')
+      .field('address', 'Kigali, rwanda')
+      .field('description', 'great house')
+      .field('name', 'hotel')
+      .field('cost', '40000')
+      .field('currency', 'man')
+      .field('availableSpace', '2 rooms')
+      .field('services', 'swimming pool')
+      .field('amenities', 'free wifi')
+      .attach('images', img, 'preview.png')
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equals('Unsupported Currency');
         done();
       });
   });

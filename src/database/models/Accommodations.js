@@ -38,6 +38,7 @@
  *       - services
  *       - cost
  *       - amenities
+ *       - currency
  *     properties:
  *       userId:
  *         type: integer
@@ -52,6 +53,8 @@
  *       services:
  *         type: string
  *       cost:
+ *         type: integer
+ *       currency:
  *         type: integer
  *       amenities:
  *         type: string
@@ -69,7 +72,12 @@ module.exports = (sequelize, DataTypes) => {
     availableSpace: DataTypes.STRING,
     cost: DataTypes.DOUBLE,
     services: DataTypes.STRING,
-    amenities: DataTypes.STRING
+    amenities: DataTypes.STRING,
+    currency: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'USD',
+    }
   }, { freezeTableName: true });
   Accommodation.associate = function(models) {
       Accommodation.belongsTo(models.Users, {
