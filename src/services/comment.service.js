@@ -2,13 +2,17 @@ import db from '../database/models/index';
 
 const CommentService = {
 
-  async checkComment(id) {
+  async getComment(id) {
     const result = await db.Comments.findOne({ where: { id },
       raw: true });
     return result;
   },
-  async deleteComment(id) {
-    const result = await db.Comments.update({ isDeleted: 1 }, { where: { id } });
+  async trashComment(id) {
+    const result = await db.Comments.update(
+      {
+        deletedAt: new Date().toLocaleString() },
+      { where: { id } }
+    );
     return result;
   },
   async updateComment(id, comment) {

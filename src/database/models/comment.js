@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Comments = sequelize.define('Comments', {
     comment: { type: DataTypes.STRING, allowNull: false },
-    isDeleted: {type: DataTypes.INTEGER,allowNull: false, defaultValue: 0 }
+    deletedAt: {type: DataTypes.DATE,allowNull: true, }
   }, { freezeTableName: true });
   Comments.associate = function(models) {
     Comments.belongsTo(models.Users, {

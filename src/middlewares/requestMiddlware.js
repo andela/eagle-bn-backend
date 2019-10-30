@@ -1,7 +1,7 @@
 import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import RequestService from '../services/request.service';
-import CommentServices from '../services/comment.service';
+import CommentService from '../services/comment.service';
 
 const requestMidd = {
   async checkExistingTrip(req, res, next) {
@@ -59,15 +59,13 @@ const requestMidd = {
     next();
   },
   async checkCommentOwner(req, res, next) {
-    const checkComment = await CommentServices.checkComment(req.params.commentId);
+    const getComment = await CommentService.getComment(req.params.commentId);
 
-    if (!checkComment) return sendResult(res, 404, 'Comment does not exist');
+    if (!getComment) return sendResult(res, 404, 'Comment does not exist');
 
-    if (checkComment.userId !== req.userData.userId) return sendResult(res, 401, 'You are not Authorized, You are not the owner of the comment');
+    if (getComment.userId !== req.userData.userId) return sendResult(res, 401, 'You are not Authorized, You are not the owner of the comment');
 
-    if (checkComment.isDeleted === 1) return sendResult(res, 401, 'The Comment has already been deleted');
-
-    req.comment = checkComment;
+    if (getComment.deletedAt !== null) return sendResult(res, 401, 'The Comment has already been deleted');
 
     next();
   }

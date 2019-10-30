@@ -228,7 +228,7 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
-  EditCommentValidation: async (req, res, next) => {
+  editCommentValidation: async (req, res, next) => {
     const { requestId, commentId } = req.params;
     try {
       new Check({ comment: req }).str().req().min(5);
