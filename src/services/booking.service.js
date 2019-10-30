@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import db from '../database/models/index';
 
-export default {
+const BookingService = {
 
   async getBookingById(id) {
     const result = await db.Bookings.findOne({
@@ -11,26 +11,26 @@ export default {
     return result;
   },
 
-  async getBookingReview(BookingId) {
-    const result = await db.BookingReviews.findOne({
+  async getRating(BookingId) {
+    const result = await db.Ratings.findOne({
       where: { BookingId },
     });
     return result;
   },
 
-  async addReview(newData, BookingId) {
-    const existingReview = await this.getBookingReview(BookingId);
+  async setRating(newData, BookingId) {
+    const existingRating = await this.getRating(BookingId);
     let result;
-    if (existingReview) result = existingReview.update(newData);
+    if (existingRating) result = existingRating.update(newData);
     else {
-      result = db.BookingReviews.create({
+      result = db.Ratings.create({
         BookingId, ...newData
       });
     }
     return result;
   },
   async getAverageAccommodationRating(AccommodationId) {
-    const result = await db.BookingReviews.findAll({
+    const result = await db.Ratings.findAll({
       attributes: [[Sequelize.fn('avg', Sequelize.col('rating')), 'averageRating']],
       include: [{ model: db.Bookings, where: { AccommodationId }, attributes: [] }],
       raw: true,
@@ -38,7 +38,7 @@ export default {
     return result;
   },
   async getAccommodationFeedback(AccommodationId) {
-    const result = await db.BookingReviews.findAll({
+    const result = await db.Ratings.findAll({
       attributes: ['feedback', 'id'],
       include: [{ model: db.Bookings,
         where: { AccommodationId },
@@ -51,4 +51,4 @@ export default {
     return result;
   }
 };
-
+export default BookingService;

@@ -69,7 +69,11 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: true,
         },
         onDelete: 'SET NULL',
-    })
+    });
+    User.hasMany(models.Notifications, {
+      foreignKey: 'userId',
+      targetKey: 'id',
+    });
   };
   return User;
 };

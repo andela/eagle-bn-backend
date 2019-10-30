@@ -4,6 +4,11 @@ import sendResult from '../utils/sendResult';
 import { checkStringInArray, checkDate, checkCountry } from './trips';
 import currencies from '../utils/currencies.json';
 
+const isNumeric = (num, name, res, next) => {
+  if (num.match(/^[0-9]{1,}$/)) return next();
+  return sendResult(res, 400, `${name} should be integer`);
+};
+
 const validator = {
   profile(req, res, next) {
     try {
@@ -68,15 +73,11 @@ const validator = {
   },
 
   singleReqValid(req, res, next) {
-    const { requestId } = req.params;
-    if (requestId.match(/[0-9]{1}/)) next();
-    else return sendResult(res, 400, 'request Id should be integer');
+    return isNumeric(req.params.requestId, 'request Id', res, next);
   },
 
   managerValid(req, res, next) {
-    const { managerId } = req.params;
-    if (managerId.match(/[0-9]{1}/)) next();
-    else return sendResult(res, 400, 'manager Id should be integer');
+    return isNumeric(req.params.managerId, 'manager Id', res, next);
   },
 
   request(req, res, next) {
@@ -154,23 +155,20 @@ const validator = {
     try {
       new Check({ rating: req }).num().req();
       new Check({ feedback: req }).str().req();
-      if (!req.params.id.match(/^[0-9]{1,}$/)) throw new Error('id should be numeric');
       const rate = Number.parseInt(req.body.rating, 10);
-      if (rate >= 0 && rate <= 5) return next();
-      return sendResult(res, 400, 'the rating should be between 0 and 5');
+      if (!(rate >= 0 && rate <= 5)) return sendResult(res, 400, 'the rating should be between 0 and 5');
+      return isNumeric(req.params.id, 'booking id', res, next);
     } catch (err) {
       return sendResult(res, 400, err.message);
     }
   },
-  reviewDateValidation: async (req, res, next) => {
+  reviewDateValidation(req, res, next) {
     const { booking } = req;
     if (booking.start < Date.now()) return next();
     return sendResult(res, 400, 'You can\'t review an accommodation before your booking starting date');
   },
-  getReviewvalidation: async (req, res, next) => {
-    const { id } = req.params;
-    if (!id.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'id should be numeric');
-    return next();
+  getReviewvalidation(req, res, next) {
+    return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
   },
 };
 

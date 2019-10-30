@@ -1,16 +1,16 @@
 import express from 'express';
-import bookingsController from '../controllers/bookings.controller';
-import bookingMiddleware from '../middlewares/booking.middleware';
-import userMiddleware from '../middlewares/userMiddlware';
+import BookingsController from '../controllers/bookings.controller';
+import BookingMiddleware from '../middlewares/booking.middleware';
+import UserMiddleware from '../middlewares/userMiddlware';
 import validation from '../validation';
 
 const app = express.Router();
 
-const { checkToken } = userMiddleware;
-const { checkUserBooking } = bookingMiddleware;
-const { reviewAccommodation } = bookingsController;
+const { checkToken } = UserMiddleware;
+const { checkUserBooking } = BookingMiddleware;
+const { setAccommodationRating } = BookingsController;
 const { reviewDateValidation, reviewValidation } = validation;
 
-app.patch('/:id/review', reviewValidation, checkToken, checkUserBooking, reviewDateValidation, reviewAccommodation);
+app.patch('/:id/rate', reviewValidation, checkToken, checkUserBooking, reviewDateValidation, setAccommodationRating);
 
 export default app;

@@ -1,26 +1,23 @@
-import bookingService from '../services/booking.service';
+import BookingService from '../services/booking.service';
 import sendResult from '../utils/sendResult';
 
-export default {
-  async reviewAccommodation(req, res) {
+const BookingsController = {
+  async setAccommodationRating(req, res) {
     const { feedback, rating } = req.body;
     const { id } = req.params;
 
-    const result = await bookingService.addReview({ feedback, rating }, id);
-    return sendResult(res, 200, 'updated booking', result);
+    const result = await BookingService.setRating({ feedback, rating }, id);
+    return sendResult(res, 200, 'rating', result);
   },
 
-  async getAverageRating(req, res) {
-    const { id } = req.params;
+  async getRating(req, res) {
+    const { accommodationId } = req.params;
 
-    const result = await bookingService.getAverageAccommodationRating(id);
-    return sendResult(res, 200, 'Average rating', result);
+    const result = await BookingService.getAverageAccommodationRating(accommodationId);
+    const { averageRating } = result[0];
+    const feedbackList = await BookingService.getAccommodationFeedback(accommodationId);
+    return sendResult(res, 200, 'Accommodation rating', { averageRating, feedbackList });
   },
-
-  async getAccommodationFeedbacks(req, res) {
-    const { id } = req.params;
-
-    const result = await bookingService.getAccommodationFeedback(id);
-    return sendResult(res, 200, 'Feedbacks', result);
-  }
 };
+
+export default BookingsController;

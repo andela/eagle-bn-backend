@@ -1,16 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const bookingReview = sequelize.define('BookingReviews', {
+  const Rating = sequelize.define('Ratings', {
     BookingId: DataTypes.INTEGER,
     feedback: DataTypes.STRING,
     rating: DataTypes.INTEGER
   }, {});
-  bookingReview.associate = function(models) {
-     bookingReview.belongsTo(models.Bookings, {
+  Rating.associate = function(models) {
+     Rating.belongsTo(models.Bookings, {
     foreignKey: {
       allowNull: false,
     },
     });
   };
-  return bookingReview;
+  return Rating;
 };
