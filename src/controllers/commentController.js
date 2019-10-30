@@ -1,5 +1,6 @@
 import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
+import CommentServices from '../services/comment.service';
 
 const comment = {
   addComment: async (req, res) => {
@@ -23,6 +24,14 @@ const comment = {
       }]
     });
     sendResult(res, 201, '', comments);
+  },
+  updateComment: async (req, res) => {
+    await CommentServices.updateComment(req.params.commentId, req.body.comment);
+    sendResult(res, 201, '', 'Comment Updated Successful');
+  },
+  deleteComment: async (req, res) => {
+    await CommentServices.deleteComment(req.params.commentId);
+    sendResult(res, 201, '', 'Comment Deleted');
   }
 };
 

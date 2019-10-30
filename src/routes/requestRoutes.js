@@ -10,19 +10,28 @@ import comment from '../controllers/commentController';
 
 const app = express.Router();
 
-const { checkExistingTrip, checkLineManager, checkManagerId, checkTripOwner, } = reqMidd;
+
+const {
+  checkExistingTrip,
+  checkLineManager,
+  checkManagerId,
+  checkTripOwner,
+  checkCommentOwner } = reqMidd;
 const { changeRequestStatus, getManagerRequests, search } = requestController;
+
 const { checkManager, checkRequester } = roles;
 const { checkToken, verifyToken } = userMidd;
 const {
   addCommentValidation,
+  EditCommentValidation,
   viewCommentValidation,
+  deleteCommentValidation,
   tripValidation,
   singleReqValid,
   managerValid,
   searchValidate,
 } = valid;
-const { addComment, viewComment } = comment;
+const { addComment, viewComment, updateComment, deleteComment } = comment;
 
 
 app.get('/search', verifyToken, searchValidate, search);
@@ -35,4 +44,6 @@ app.post('/:requestId/comments', addCommentValidation, checkToken, checkExisting
 app.get('/:requestId/comments', viewCommentValidation, checkToken, checkExistingTrip, checkTripOwner, viewComment);
 app.put('/:requestId/:tripId', verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, reqMidd.checkIfTripExists, updateValidateTrips, validateTripsData, requestController.updateRequest);
 
+app.put('/:requestId/comments/:commentId', EditCommentValidation, checkToken, checkExistingTrip, checkTripOwner, checkCommentOwner, updateComment);
+app.delete('/:requestId/comments/:commentId', deleteCommentValidation, checkToken, checkExistingTrip, checkTripOwner, checkCommentOwner, deleteComment);
 export default app;
