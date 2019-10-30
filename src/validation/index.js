@@ -131,6 +131,23 @@ const validator = {
     if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
     next();
   },
+  reviewValidation: async (req, res, next) => {
+    try {
+      new Check({ rating: req }).num().req();
+      new Check({ feedback: req }).str().req();
+      if (!req.params.id.match(/^[0-9]{1,}$/)) throw new Error('id should be numeric');
+      const rate = Number.parseInt(req.body.rating, 10);
+      if (rate >= 0 && rate <= 5) return next();
+      return sendResult(res, 400, 'the rating should be between 0 and 5');
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
+  reviewDateValidation: async (req, res, next) => {
+    const { booking } = req;
+    if (booking.start < Date.now()) return next();
+    return sendResult(res, 400, 'You can\'t review an accommodation before your booking starting date');
+  },
 };
 
 export default validator;

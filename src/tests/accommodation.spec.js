@@ -170,13 +170,13 @@ describe('accommodation tests', () => {
       });
   });
 
-  it('should return 200 status and 3 accommodation', (done) => {
+  it('should return 200 status and 4 accommodation', (done) => {
     chai.request(app)
       .get('/api/v1/accommodations')
       .set('Authorization', Utoken)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equals(3);
+        expect(res.body.data.length).to.equals(5);
         done();
       });
   });
@@ -187,7 +187,7 @@ describe('accommodation tests', () => {
       .set('Authorization', helper.createToken(2, 'mmmm@gmail.com', true, 'TAdmin'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equals(3);
+        expect(res.body.data.length).to.equals(5);
         done();
       });
   });

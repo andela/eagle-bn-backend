@@ -143,7 +143,7 @@ describe('Update/delete an accommodation tests', () => {
   });
   it('It should return a 200 status, when an accommodation has been deleted', (done) => {
     chai.request(myserver)
-      .delete('/api/v1/accommodations/1')
+      .delete('/api/v1/accommodations/3')
       .set('Authorization', loggedtoken)
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -156,7 +156,7 @@ describe('Update/delete an accommodation tests', () => {
   });
   it('It should return a 401 status, when the token is not provided to delete', (done) => {
     chai.request(myserver)
-      .delete('/api/v1/accommodations/1')
+      .delete('/api/v1/accommodations/3')
       .end((err, res) => {
         expect(res.status).to.equal(401);
         expect(res.body).to.have.property('msg');

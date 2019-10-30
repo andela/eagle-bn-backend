@@ -1,11 +1,12 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
-import accommodationCont from '../controllers/accommodationController';
+import accommodationController from '../controllers/accommodationController';
 import accMidd from '../middlewares/accommodationMiddleware';
 import userMidd from '../middlewares/userMiddlware';
 import valid from '../validation';
 import roles from '../middlewares/rolesMiddlewares';
+import bookingsController from '../controllers/bookings.controller';
 
 const app = express.Router();
 
@@ -81,16 +82,18 @@ const fUpload = fileUpload({
 });
 
 const {
-  isSupplierAccommodation, checkForImages, checkForImagesUpdate
+  isSupplierAccommodation, checkForImages, checkForImagesUpdate,
 } = accMidd;
 const { checkToken } = userMidd;
 const {
-  addAccommodation, getAccommodation, deleteAccommodation, editAccommodation
-} = accommodationCont;
+  addAccommodation, getAccommodation, deleteAccommodation, editAccommodation,
+} = accommodationController;
 
 app.patch('/:id', fUpload, checkToken, roles.checkHost, isSupplierAccommodation, checkForImagesUpdate, valid.editAccommodation, editAccommodation);
 app.delete('/:id', checkToken, roles.checkHost, isSupplierAccommodation, deleteAccommodation);
 app.post('/', fUpload, checkToken, roles.checkHost, valid.accommodation, checkForImages, addAccommodation);
 app.get('/', checkToken, accMidd.checkViewAccommodation, getAccommodation);
+app.get('/:id/rating', bookingsController.getAverageRating);
+app.get('/:id/feedbacks', bookingsController.getAccommodationFeedbacks);
 
 export default app;
