@@ -92,6 +92,22 @@ class Validate {
     }
     return this;
   }
+
+  eql(len) {
+    if (this.val && this.val.length !== len) {
+      this.status = 400;
+      throw new Error(`${this.key} length should equal to ${len}`);
+    }
+    return this;
+  }
+
+  double() {
+    if (this.val && (!this.error) && (!/^[0-9]{1,}\.{0,}[0-9]{0,}$/.test(this.val))) {
+      this.status = 400;
+      throw new Error(`${this.key} should be a positive double number`);
+    }
+    return this;
+  }
 }
 
 

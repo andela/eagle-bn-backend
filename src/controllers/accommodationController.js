@@ -31,7 +31,7 @@ const uploadImages = (req, res, data, msg) => {
 const Accommodation = {
   async addAccommodation(req, res) {
     const {
-      description, address, availableSpace, cost, amenities, services
+      description, address, availableSpace, cost, amenities, services, currency
     } = req.body;
     const { userId } = req.userData;
     const response = await db.Accommodations.create({
@@ -42,6 +42,7 @@ const Accommodation = {
       services,
       userid: userId,
       availableSpace,
+      currency: (currency) || 'USD',
     });
     const accommodation = response.get({ plain: true });
     uploadImages(req, res, accommodation);

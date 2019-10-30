@@ -95,4 +95,12 @@ describe('review accomodation', () => {
         done();
       });
   });
+  it('it should return 400 when provided id is not numeric', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/lelel/rating')
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        done();
+      });
+  });
 });

@@ -93,7 +93,7 @@ app.patch('/:id', fUpload, checkToken, roles.checkHost, isSupplierAccommodation,
 app.delete('/:id', checkToken, roles.checkHost, isSupplierAccommodation, deleteAccommodation);
 app.post('/', fUpload, checkToken, roles.checkHost, valid.accommodation, checkForImages, addAccommodation);
 app.get('/', checkToken, accMidd.checkViewAccommodation, getAccommodation);
-app.get('/:id/rating', bookingsController.getAverageRating);
-app.get('/:id/feedbacks', bookingsController.getAccommodationFeedbacks);
+app.get('/:id/rating', valid.getReviewvalidation, bookingsController.getAverageRating);
+app.get('/:id/feedbacks', valid.getReviewvalidation, bookingsController.getAccommodationFeedbacks);
 
 export default app;
