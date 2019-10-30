@@ -10,21 +10,23 @@ import comment from '../controllers/commentController';
 const app = express.Router();
 
 const { checkExistingTrip, checkLineManager, checkManagerId, checkTripOwner } = reqMidd;
-const { changeRequestStatus, getManagerRequests } = requestController;
+const { changeRequestStatus, getManagerRequests, search } = requestController;
 const { checkManager, checkRequester } = roles;
-const { checkToken } = userMidd;
+const { checkToken, verifyToken } = userMidd;
 const {
   addCommentValidation,
   viewCommentValidation,
   tripValidation,
   singleReqValid,
-  managerValid
+  managerValid,
+  searchValidate
 } = valid;
 const { addComment, viewComment } = comment;
 
+
+app.get('/search', verifyToken, searchValidate, search);
 app.get('/:requestId', singleReqValid, checkToken, checkExistingTrip, checkTripOwner, requestController.getSingleRequest);
 app.get('/', checkToken, checkRequester, requestController.getRequest);
-/* eslint-disable max-len */
 app.post('/', checkToken, checkRequester, valid.request, validateTrips, validateAccommodation, requestController.postRequest);
 app.get('/managers/:managerId', managerValid, checkToken, checkManager, checkManagerId, getManagerRequests);
 app.patch('/:requestId/:status', singleReqValid, checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);

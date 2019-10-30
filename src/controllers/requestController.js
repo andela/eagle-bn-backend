@@ -3,6 +3,7 @@ import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import { msg, transporter } from '../config';
 import allRequest from '../utils/requestUtils';
+import requestData from '../utils/getReqWithTrip';
 
 const sendMail = (req, res, newRequest) => {
   const title = `Request ${newRequest.status}`;
@@ -88,7 +89,21 @@ const Request = {
       });
     }
     sendResult(res, 200, 'request list', requests);
+  },
+
+  async search(req, res) {
+    const { tripData, reqData } = requestData(req);
+    if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
+      reqData.UserId = req.user.userId;
+    }
+    const request = await db.Requests.findAll({
+      where: reqData,
+      include: [{ model: db.Trips, where: tripData, required: true }]
+    });
+
+    return sendResult(res, 200, 'Search results', request);
   }
+
 };
 
 export default Request;

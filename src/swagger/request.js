@@ -140,3 +140,39 @@
  *       403:
  *         description: The request is already approved/rejected
  */
+/**
+ * @swagger
+ * /requests/search?status=pending:
+ *   get:
+ *     description: user should be able to search in the query
+ *     tags:
+ *      - search Requests
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *      - in: header
+ *        name: Authorization
+ *        description: The token
+ *      - in: query
+ *        name: request data
+ *        schema:
+ *          type: string
+ *            - status
+ *          properties:
+ *            description:
+ *              status: string
+ *            address:
+ *              requestId: int
+ *     responses:
+ *       200:
+ *         description: request data
+ *         schema:
+ *           type: object
+ *           properties:
+ *             msg:
+ *               type: string
+ *       400:
+ *         description: Wrong data sents
+ *       401:
+ *         description: You are not authorized
+ */

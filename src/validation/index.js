@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-prototype-builtins */
 import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
@@ -107,6 +109,41 @@ const validator = {
     } catch (err) {
       const message = (Object.keys(req.error).length === 0) ? err.message : req.error;
       return sendResult(res, 400, message);
+    }
+  },
+
+  searchValidate(req, res, next) {
+    try {
+      new Check({ description: req }).str().min(1);
+      new Check({ UserId: req }).num();
+      new Check({ destination: req }).str();
+      new Check({ origin: req }).str();
+      new Check({ duration: req }).str().min(5);
+      new Check({ status: req }).str().min(5);
+      new Check({ departureTime: req }).str();
+      new Check({ id: req }).num();
+      const {
+        id, origin, UserId, status, destination, reason,
+        departureTime, from, to, returnTime,
+      } = req.query;
+      const allData = { id,
+        origin,
+        UserId,
+        status,
+        destination,
+        reason,
+        departureTime,
+        from,
+        to,
+        returnTime };
+      Object.keys(req.query).map(key => {
+        if (!allData.hasOwnProperty(key) || !allData[key]) {
+          throw new Error(`${key} is invalid parameter`);
+        }
+      });
+      next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
     }
   },
 
