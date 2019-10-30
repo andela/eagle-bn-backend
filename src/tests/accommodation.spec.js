@@ -169,35 +169,30 @@ describe('accommodation tests', () => {
         done();
       });
   });
-
-  it('should return 200 status and 4 accommodation', (done) => {
+  it('should return 200 status and all accommodations', (done) => {
     chai.request(app)
       .get('/api/v1/accommodations')
-      .set('Authorization', Utoken)
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equals(5);
+        expect(res.body.msg).to.equals('Accommodations facilities');
         done();
       });
   });
-
-  it('should return 200 status and 3 accommodation when user is TAdmin', (done) => {
+  it('should return 200 status and one accommodation by id', (done) => {
     chai.request(app)
-      .get('/api/v1/accommodations')
-      .set('Authorization', helper.createToken(2, 'mmmm@gmail.com', true, 'TAdmin'))
+      .get('/api/v1/accommodations/1')
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equals(5);
+        expect(res.body.msg).to.equals('Accommodation facility');
         done();
       });
   });
-
-  it('should return 401 when user not Travel Admin or Acc supplier', (done) => {
+  it('should return 200 status and accommodations list by availability', (done) => {
     chai.request(app)
-      .get('/api/v1/accommodations')
-      .set('Authorization', helper.createToken(2, 'mmmm@gmail.com', true, 'requester'))
+      .get('/api/v1/accommodations/search?isAvailable=true')
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('Accommodations facilities');
         done();
       });
   });

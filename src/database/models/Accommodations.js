@@ -73,6 +73,11 @@ module.exports = (sequelize, DataTypes) => {
     cost: DataTypes.DOUBLE,
     services: DataTypes.STRING,
     amenities: DataTypes.STRING,
+    isAvailable: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
     currency: {
       type: DataTypes.STRING,
       allowNull: false,

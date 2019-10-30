@@ -11,6 +11,7 @@ module.exports = {
       cost: '200000',
       services: 'wifi, breakfast',
       amenities: '',
+      isAvailable: true,
       createdAt: new Date(),
       updatedAt: new Date()
     }]),
@@ -23,6 +24,7 @@ module.exports = {
       cost: '200000',
       services: 'wifi, breakfast',
       amenities: '',
+      isAvailable: true,
       createdAt: new Date(),
       updatedAt: new Date()
     }]),
@@ -35,6 +37,7 @@ module.exports = {
       cost: '200000',
       services: 'wifi, breakfast',
       amenities: '',
+      isAvailable: true,
       createdAt: new Date(),
       updatedAt: new Date()
     }])
