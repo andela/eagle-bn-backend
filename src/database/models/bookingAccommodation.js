@@ -22,7 +22,12 @@ module.exports = (sequelize, DataTypes) => {
      foreignKey: {
     allowNull: false,
    },
-    })
+    });
+    booking.hasOne(models.Ratings, {
+      foreignKey: {
+     allowNull: false,
+    },
+     })
   };
   return booking;
 };
