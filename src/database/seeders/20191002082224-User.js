@@ -8,6 +8,7 @@ module.exports = {
       password: helpers.hashPassword('12345678UUi@'),
       isverified: true,
       RoleId:6,
+      rememberMe: false,
       createdAt: new Date(),
       updatedAt: new Date()
     },{
@@ -17,7 +18,8 @@ module.exports = {
       isverified: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-      RoleId:1
+      RoleId:1,
+      rememberMe: false
     },{
       fullname: 'requester',
       email: 'requester@gmail.com',
@@ -25,7 +27,8 @@ module.exports = {
       isverified: true,
       createdAt: new Date(),
       updatedAt: new Date(),
-      RoleId:5
+      RoleId:5,
+      rememberMe: false
     },{
       fullname: 'dummy',
       email: 'dummy@gmail.com',
@@ -33,7 +36,8 @@ module.exports = {
       isverified: false,
       createdAt: new Date(),
       updatedAt: new Date(),
-      RoleId:5
+      RoleId:5,
+      rememberMe: false
     },
     {
       fullname: 'manager',
@@ -43,6 +47,7 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date(),
       RoleId: 4,
+      rememberMe: false
   }])
   ]),
   down: (queryInterface, Sequelize) => Promise.all([

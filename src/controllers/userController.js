@@ -18,7 +18,7 @@ const User = {
 
     const userData = response.get({ plain: true });
     userData.password = undefined;
-    const token = helpers.createToken(userData.id, email, false);
+    const token = helpers.createToken(userData.id, email, false, false);
     // send verification email the user,
     await transporter.sendMail({ to: email, from: process.env.EMAIL_SENDER, subject: 'email verification', html: string.emailBody(req, token) });
     const data = { ...userData, Role: Role.roleValue };
@@ -37,9 +37,9 @@ const User = {
     const comfirmPass = helpers.comparePassword(password, userInfo.password);
     if (comfirmPass) {
       const {
-        id, isverified, Role, fullname
+        id, isverified, Role, fullname, rememberMe
       } = userInfo;
-      const token = helpers.createToken(id, email, isverified, Role.roleValue);
+      const token = helpers.createToken(id, email, isverified, Role.roleValue, rememberMe);
       const data = {
         userid: id, fullname, email, isverified, token
       };
@@ -73,13 +73,13 @@ const User = {
       defaults: req.user
     });
     const {
-      id, fullname, email, isverified
+      id, fullname, email, isverified, rememberMe
     } = data;
     return sendResult(res, 201, 'User logged successfully', {
       id,
       fullname,
       email,
-      token: helpers.createToken(id, email, isverified)
+      token: helpers.createToken(id, email, isverified, rememberMe)
     });
   },
 
