@@ -1,4 +1,5 @@
 import chai from 'chai';
+import moment from 'moment';
 import chaiHttp from 'chai-http';
 import { describe, it } from 'mocha';
 import app from '../index';
@@ -112,6 +113,83 @@ describe('review accomodation', () => {
       .get('/api/v1/accommodations/lelel/rating')
       .end((err, res) => {
         expect(res.status).to.equal(400);
+        done();
+      });
+  });
+  it('it should return 201 when booking is created', (done) => {
+    chai.request(app)
+      .post('/api/v1/bookings/')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ accommodationId: 1, tripId: 1, start: moment('2020/1/1', 'YYYY/MM/DD').toDate(), end: moment('2020/2/2', 'YYYY/MM/DD').toDate(), numberOfSpace: 3 })
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        done();
+      });
+  });
+  it('it should return 200 when getting a booking', (done) => {
+    chai.request(app)
+      .get('/api/v1/bookings/1')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
+  });
+  it('it should return 404 when booking does not exist', (done) => {
+    chai.request(app)
+      .get('/api/v1/bookings/100')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+  it('it should return 404 when user is not the owner of booking', (done) => {
+    chai.request(app)
+      .get('/api/v1/bookings/1')
+      .set('Authorization', helper.createToken(4, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+  it('it should return 404 when trip does not exist', (done) => {
+    chai.request(app)
+      .post('/api/v1/bookings/')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ accommodationId: 1, tripId: 10, start: moment('2020/1/1', 'YYYY/MM/DD').toDate(), end: moment('2020/2/2', 'YYYY/MM/DD').toDate(), numberOfSpace: 3 })
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+  it('it should return 404 when accommodation does not exist', (done) => {
+    chai.request(app)
+      .post('/api/v1/bookings/')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ accommodationId: 10, tripId: 10, start: '1/1/2020', end: '2/2/2020', numberOfSpace: 3 })
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        done();
+      });
+  });
+  it('it should return 401 when you do not own the trip', (done) => {
+    chai.request(app)
+      .post('/api/v1/bookings/')
+      .set('Authorization', helper.createToken(4, 'requester@gmail.com', true, 'requester'))
+      .send({ accommodationId: 1, tripId: 1, start: '1/1/2020', end: '2/2/2020', numberOfSpace: 3 })
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+  });
+  it('it should return 404 when accommodation is not available', (done) => {
+    chai.request(app)
+      .post('/api/v1/bookings/')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ numberOfSpace: 2, accommodationId: 4, tripId: 1, start: moment('2020/1/1', 'YYYY/MM/DD').toDate(), end: moment('2020/2/2', 'YYYY/MM/DD').toDate() })
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         done();
       });
   });

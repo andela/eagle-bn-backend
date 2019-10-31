@@ -11,6 +11,14 @@ const BookingMiddleware = {
       return next();
     }
     return sendResult(res, 404, 'You have never booked this accomodation');
+  },
+
+  async bookingExist(req, res, next) {
+    const { id } = req.params;
+    if (await BookingService.getBookingById(id)) {
+      return next();
+    }
+    return sendResult(res, 404, 'The Booking is not found');
   }
 };
 

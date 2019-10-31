@@ -40,7 +40,8 @@ const User = {
       const {
         id, isverified, Role, fullname, rememberMe
       } = userInfo;
-      const token = helpers.createToken(id, email, isverified, Role.roleValue, rememberMe);
+      // eslint-disable-next-line max-len
+      const token = helpers.createToken(id, email, isverified, Role.roleValue, rememberMe, fullname);
       const data = {
         userid: id, fullname, email, isverified, token
       };
@@ -80,7 +81,7 @@ const User = {
       id,
       fullname,
       email,
-      token: helpers.createToken(id, email, isverified, rememberMe)
+      token: helpers.createToken(id, email, isverified, rememberMe, fullname)
     });
   },
 

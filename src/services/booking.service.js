@@ -11,6 +11,11 @@ const BookingService = {
     return result;
   },
 
+  async createBooking(booking) {
+    const result = await db.Bookings.create(booking, { raw: true });
+    return result.get({ plain: true });
+  },
+
   async getRating(BookingId) {
     const result = await db.Ratings.findOne({
       where: { BookingId },
@@ -54,6 +59,6 @@ const BookingService = {
       authorId: element.Booking.UserId
     }));
     return formatedResult;
-  }
+  },
 };
 export default BookingService;

@@ -228,6 +228,7 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
+
   editCommentValidation: async (req, res, next) => {
     const { requestId, commentId } = req.params;
     try {
@@ -249,6 +250,25 @@ const validator = {
     if (!commentId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'commentId should be a number');
 
     next();
+  },
+
+  getBookingValidation(req, res, next) {
+    return isNumeric(req.params.id, 'Booking ID', res, next);
+  },
+
+  validateBooking(req, res, next) {
+    try {
+      new Check({ accommodationId: req }).num().req();
+      new Check({ tripId: req }).num().req();
+      new Check({ numberOfSpace: req }).num().req();
+      new Check({ start: req }).dateGreaterThan(Date.now()).req();
+      new Check({ end: req }).dateGreaterThan(new Date(req.body.start)).req();
+      req.body.TripId = req.body.tripId;
+      req.body.AccommodationId = req.body.accommodationId;
+      next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
   }
 };
 

@@ -33,6 +33,14 @@ const requestMidd = {
   },
 
   async checkTripOwner(req, res, next) {
+    const { userId } = req.userData;
+    const { TripId } = req.body;
+    const user = await RequestService.getTripOwner(TripId);
+    if (user === userId) return next();
+    return sendResult(res, 401, 'you are not authorized');
+  },
+
+  async checkRequestOwner(req, res, next) {
     const { request } = req;
     const { userId } = req.userData;
     const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
@@ -41,7 +49,7 @@ const requestMidd = {
   },
 
   async checkIfTripExists(req, res, next) {
-    const condition = { id: req.params.tripId };
+    const condition = { id: req.params.tripId || req.body.TripId };
     const trip = await RequestService.getOnetrip(condition);
     if (trip) {
       req.trip = trip;
