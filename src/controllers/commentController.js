@@ -13,8 +13,13 @@ const comment = {
   viewComment: async (req, res) => {
     const comments = await db.Requests.findOne({
       where: { id: req.params.requestId },
+      attributes: { exclude: ['updatedAt'] },
       include: [{
-        model: db.Comments, attributes: { exclude: ['createdAt', 'updatedAt'] }
+        model: db.Comments,
+        attributes: { exclude: ['id', 'updatedAt', 'requestId', 'userId'] },
+        include: [{
+          model: db.Users, attributes: ['fullname']
+        }]
       }]
     });
     sendResult(res, 201, '', comments);
