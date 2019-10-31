@@ -37,7 +37,7 @@ describe('Password Reset', () => {
         done();
       });
   });
-  it('Should succesfully reset tyhe passwword', (done) => {
+  it('Should successfully reset tyhe passwword', (done) => {
     chai.request(app)
       .patch(`/api/v1/users/reset-password/${helpers.createToken(1, 'rswaib@gmail.com')}`)
       .send(data.user1)

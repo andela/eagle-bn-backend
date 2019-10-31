@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-prototype-builtins */
 import moment from 'moment-timezone';
@@ -206,6 +207,26 @@ const validator = {
   },
   getReviewvalidation(req, res, next) {
     return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
+  },
+
+  updateRequest(req, res, next) {
+    const { returnTime } = req.body;
+    const { departureTime } = req.body.trip;
+    try {
+      new Check({ timeZone: req }).str().min(1);
+      new Check({ trips: req }).array().min(1);
+      new Check({ country: req }).str().min(2);
+      new Check({ city: req }).str().min(1);
+      new Check({ requestId: req }).num().min(1);
+      new Check({ tripId: req }).num().min(1);
+      new Check({ returnTime: req }).date();
+      if (returnTime || departureTime) {
+        req.body.timeZone = new Date(returnTime || departureTime).toString().split('(')[1].replace(/[\(\)]/g, '');
+      }
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
   },
 };
 
