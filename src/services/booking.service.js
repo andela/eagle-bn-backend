@@ -46,9 +46,14 @@ const BookingService = {
         include: [
           { model: db.Users, attributes: ['fullname'] }
         ] }],
-      raw: true,
     });
-    return result;
+    const formatedResult = result.map(element => ({
+      feedbackId: element.id,
+      feedback: element.feedback,
+      author: element.Booking.User.fullname,
+      authorId: element.Booking.UserId
+    }));
+    return formatedResult;
   }
 };
 export default BookingService;

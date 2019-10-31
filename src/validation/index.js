@@ -190,7 +190,7 @@ const validator = {
   },
   reviewValidation: async (req, res, next) => {
     try {
-      new Check({ rating: req }).num().req();
+      new Check({ rating: req }).integer().req();
       new Check({ feedback: req }).str().req();
       const rate = Number.parseInt(req.body.rating, 10);
       if (!(rate >= 0 && rate <= 5)) return sendResult(res, 400, 'the rating should be between 0 and 5');
