@@ -1,9 +1,11 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-restricted-syntax */
 import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import { msg, transporter } from '../config';
 import allRequest from '../utils/requestUtils';
 import requestData from '../utils/getReqWithTrip';
+import RequestService from '../services/request.service';
 
 const sendMail = (req, res, newRequest) => {
   const title = `Request ${newRequest.status}`;
@@ -108,7 +110,31 @@ const Request = {
     });
 
     return sendResult(res, 200, 'Search results', request);
-  }
+  },
+
+  async updateRequest(req, res) {
+    const { country, city, returnTime, reason, trip } = req.body;
+    const { requestId, tripId } = req.params;
+    let request = { country, city, returnTime: new Date(returnTime).toLocaleString() };
+    let trips = {
+      country: trip.country,
+      city: trip.city,
+      departureTime: new Date(trip.departureTime).toLocaleString(),
+      reason
+    };
+    const reqData = allRequest.getProvidedData(request);
+    const tripData = allRequest.getProvidedData(trips);
+    if (reqData) {
+      const condition = { id: requestId, UserId: req.user.id, status: 'pending' };
+      request = await RequestService.updateRequest(reqData, condition);
+    }
+    if (tripData) {
+      const condition = { id: tripId };
+      trips = await RequestService.updateTrip(tripData, condition);
+      request[1].trip = trips[1];
+    }
+    return sendResult(res, 200, 'request update successful', request[1]);
+  },
 
 };
 

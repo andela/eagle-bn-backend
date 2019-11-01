@@ -1,7 +1,8 @@
+
 import express from 'express';
 import requestController from '../controllers/requestController';
 import valid from '../validation';
-import { validateTrips, validateAccommodation } from '../validation/trips';
+import { validateTrips, validateAccommodation, updateValidateTrips, validateTripsData } from '../validation/trips';
 import reqMidd from '../middlewares/requestMiddlware';
 import userMidd from '../middlewares/userMiddlware';
 import roles from '../middlewares/rolesMiddlewares';
@@ -9,7 +10,7 @@ import comment from '../controllers/commentController';
 
 const app = express.Router();
 
-const { checkExistingTrip, checkLineManager, checkManagerId, checkTripOwner } = reqMidd;
+const { checkExistingTrip, checkLineManager, checkManagerId, checkTripOwner, } = reqMidd;
 const { changeRequestStatus, getManagerRequests, search } = requestController;
 const { checkManager, checkRequester } = roles;
 const { checkToken, verifyToken } = userMidd;
@@ -19,7 +20,7 @@ const {
   tripValidation,
   singleReqValid,
   managerValid,
-  searchValidate
+  searchValidate,
 } = valid;
 const { addComment, viewComment } = comment;
 
@@ -32,5 +33,6 @@ app.get('/managers/:managerId', managerValid, checkToken, checkManager, checkMan
 app.patch('/:requestId/:status', singleReqValid, checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);
 app.post('/:requestId/comments', addCommentValidation, checkToken, checkExistingTrip, checkTripOwner, addComment);
 app.get('/:requestId/comments', viewCommentValidation, checkToken, checkExistingTrip, checkTripOwner, viewComment);
+app.put('/:requestId/:tripId', verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, reqMidd.checkIfTripExists, updateValidateTrips, validateTripsData, requestController.updateRequest);
 
 export default app;

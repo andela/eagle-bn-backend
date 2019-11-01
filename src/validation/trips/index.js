@@ -1,12 +1,17 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-loop-func */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-await-in-loop */
 import moment from 'moment';
 import 'moment-timezone';
+import locations from 'countrycitystatejson';
 import places from '../../services/countries.json';
 import { allScores, highScores } from '../../services';
 import resSend from '../../utils/sendResult';
 import db from '../../database/models';
+import helper from '../../utils/requestUtils';
 
 export const checkStringInArray = (array, string, n) => ((array.find(element => element.toLocaleLowerCase()
   === string.toLocaleLowerCase()))
@@ -101,5 +106,56 @@ export const validateTrips = async (req, res, next) => {
   } catch (err) {
     const message = (Object.keys(req.error).length === 0) ? err.message : req.error;
     return resSend(res, 400, message);
+  }
+};
+
+export const updateValidateTrips = async (req, res, next) => {
+  try {
+    const { country, city } = req.body;
+    const origin = locations.getCountryByShort(country.toUpperCase());
+    const { suggestions, error, names } = helper.getCityData(origin.states, city);
+    if (error) {
+      return resSend(res, 400, error, { suggestions });
+    }
+    if (!names.find(place => place === city.toLocaleLowerCase())) {
+      return resSend(res, 400, `we dint find ${city} in  ${origin.name}`);
+    }
+    // same destination validation
+    if ((req.body.city || req.body.trip.city)
+    && (req.body.city.toLocaleLowerCase() || req.request.city)
+    === (req.body.trip.city.toLocaleLowerCase() || req.trip.city)) {
+      throw new Error('trips to the same city not allowed');
+    }
+
+    if ((req.body.returnTime || req.body.trip.departureTime)
+    && new Date(req.body.returnTime || req.request.returnTime)
+    <= new Date(req.body.trip.departureTime || req.request.returnTime)) {
+      throw new Error('returnTime can not be less than OR equal to departureTime');
+    }
+    next();
+  } catch (err) {
+    return resSend(res, 400, err.message);
+  }
+};
+
+export const validateTripsData = async (req, res, next) => {
+  try {
+    const { country, city, departureTime } = req.body.trip;
+    // check date
+    if (departureTime && !departureTime.match(/[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/)) {
+      return resSend(res, 400, 'date fomart is invalid try: YYYY-M-D');
+    }
+    const destination = locations.getCountryByShort(country.toUpperCase());
+    const { suggestions, error, names } = helper.getCityData(destination.states, city);
+    if (error) {
+      return resSend(res, 400, error, { suggestions });
+    }
+
+    if (!names.find(place => place === city.toLocaleLowerCase())) {
+      return resSend(res, 400, `we dint find ${city} in  ${destination.name}`);
+    }
+    next();
+  } catch (err) {
+    return resSend(res, 400, err.message);
   }
 };
