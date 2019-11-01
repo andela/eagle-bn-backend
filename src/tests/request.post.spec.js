@@ -8,7 +8,7 @@ import requests from './mockData/request';
 chai.use(chaiHttp);
 const { expect } = chai;
 
-describe('create request', () => {
+describe('create request and new request notifications', () => {
   it('create request, should return a 201 status', (done) => {
     chai.request(app)
       .post('/api/v1/requests/')
@@ -46,6 +46,52 @@ describe('create request', () => {
       .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(400);
+        done();
+      });
+  });
+  it('should return a 200 status when manager is getting notifications', (done) => {
+    chai.request(app)
+      .get('/api/v1/notifications')
+      .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.data.length).to.equal(3);
+        done();
+      });
+  });
+  it('should return a 401 status when manager is not the owner of the notification', (done) => {
+    chai.request(app)
+      .get('/api/v1/notifications/1')
+      .set('Authorization', helper.createToken(3, 'manager@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(401);
+        done();
+      });
+  });
+  it('should return a 200 by getting single notification', (done) => {
+    chai.request(app)
+      .get('/api/v1/notifications/1')
+      .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
+  });
+  it('should return a 200 status when notification is updated to read', (done) => {
+    chai.request(app)
+      .patch('/api/v1/notifications/1/read')
+      .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
+  });
+  it('should return a 404 status when notification is not found', (done) => {
+    chai.request(app)
+      .get('/api/v1/notifications/op')
+      .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         done();
       });
   });

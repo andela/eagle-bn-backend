@@ -196,4 +196,13 @@ describe('Password Reset', () => {
         done();
       });
   });
+  it('Should return 200 when a user is unscbribed to emails', (done) => {
+    chai.request(app)
+      .get(`/api/v1/users/email/unsubscribe/${helpers.createToken(1, 'requester@gmail.com')}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        done();
+      });
+  });
 });
