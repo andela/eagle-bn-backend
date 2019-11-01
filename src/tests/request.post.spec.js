@@ -19,6 +19,16 @@ describe('create request', () => {
         done();
       });
   });
+  it('create request and remember personal data, should return a 201 status', (done) => {
+    chai.request(app)
+      .post('/api/v1/requests/')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester', true))
+      .send(requests[0])
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        done();
+      });
+  });
   it('should return a 400 status when timeZone is invalid', (done) => {
     chai.request(app)
       .post('/api/v1/requests/')

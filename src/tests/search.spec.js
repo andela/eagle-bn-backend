@@ -69,9 +69,29 @@ describe('Search functionality', () => {
         done();
       });
   });
-  it('Should search in database pending', (done) => {
+  it('Should search for status pending', (done) => {
     chai.request(app)
-      .get('/api/v1/requests/search?id=1&UserId=3&status=pending&from=2019-10-24&to=2019-10-24&returnTime=2019-10-24&destination=UG')
+      .get('/api/v1/requests/search?status=pending')
+      .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('Oops no results found');
+        done();
+      });
+  });
+  it('Should search for the period', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/search?from=2030-10-23&to=2019-10-24')
+      .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('Oops no results found');
+        done();
+      });
+  });
+  it('Should search for destination and userid', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/search?id=1&destination=RW&UserId=3')
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
       .end((err, res) => {
         res.body.should.be.a('object');

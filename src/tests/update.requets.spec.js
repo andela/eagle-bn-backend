@@ -80,4 +80,17 @@ describe('update requests tests', () => {
         done();
       });
   });
+  it('Should test for country suggestions', (done) => {
+    chai.request(app)
+      .put('/api/v1/requests/3/1')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send(reqData.req2)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('kamp city not found');
+        res.body.data.should.have.property('suggestions');
+        done();
+      });
+  });
 });

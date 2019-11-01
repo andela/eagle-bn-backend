@@ -30,7 +30,7 @@ const Request = {
 
   async postRequest(req, res) {
     try {
-      const { country, city, returnTime, trips, timeZone } = req.body;
+      const { country, city, returnTime, trips, timeZone, rememberMe } = req.body;
       const request = {};
       request.country = country;
       request.city = city;
@@ -55,7 +55,13 @@ const Request = {
         index += 1;
       }
       Req.trips = Trips;
-      return sendResult(res, 201, 'request created', Req);
+      if (req.userData.rememberMe !== rememberMe) {
+        await db.Users.update({ rememberMe }, {
+          where: { userid: req.userData.userId },
+        });
+        return sendResult(res, 201, 'A request created and personal data remembered', Req);
+      }
+      return sendResult(res, 201, 'A request created but personal data not remembered', Req);
     } catch (err) {
       return sendResult(res, 400, 'something went wrong!');
     }

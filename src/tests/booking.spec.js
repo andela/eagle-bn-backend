@@ -15,7 +15,7 @@ describe('review accomodation', () => {
       .send(bookingData[0])
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.msg).to.equal('rating');
+        expect(res.body.msg).to.equal('The booking has been rated successfuly');
         expect(res.body.data.rating).to.equal(1);
         done();
       });
@@ -27,7 +27,7 @@ describe('review accomodation', () => {
       .send(bookingData[0])
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.msg).to.equal('rating');
+        expect(res.body.msg).to.equal('The booking has been rated successfuly');
         expect(res.body.data.rating).to.equal(bookingData[0].rating);
         done();
       });
@@ -63,7 +63,7 @@ describe('review accomodation', () => {
       .send(bookingData[1])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('rating should be a number');
+        expect(res.body.msg).to.equal('rating should be an integer');
         done();
       });
   });
@@ -95,6 +95,15 @@ describe('review accomodation', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.msg).to.equal('Accommodation rating');
+        done();
+      });
+  });
+  it('it should return 404 when there is no rating related to an accommodation', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/4/rating')
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.msg).to.equal('There is no rating for this accommodation');
         done();
       });
   });
