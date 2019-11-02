@@ -91,51 +91,51 @@ export const validateTrips = async (req, res, next) => {
 
 export const updateValidateTrips = async (req, res, next) => {
   try {
-    const { country, city } = req.body;
-    const origin = locations.getCountryByShort(country.toUpperCase());
-    const { suggestions, error, names } = helper.getCityData(origin.states, city);
+    const { country, city, trip, returnTime } = req.body;
+    const upCountry = country ? country.toUpperCase() : '';
+    const originCity = city ? city.toLocaleLowerCase() : '';
+    const destCity = trip.city ? trip.city.toLocaleLowerCase() : '';
+    const origin = locations.getCountryByShort(upCountry || req.request.country.toUpperCase());
+    const { suggestions, error, names } = helper.getCityData(origin.states, originCity || req.request.city);
     if (error) {
       return resSend(res, 400, error, { suggestions });
     }
-    if (!names.find(place => place === city.toLocaleLowerCase())) {
-      return resSend(res, 400, `we dint find ${city} in  ${origin.name}`);
+    if (originCity && !names.find(place => place === originCity)) {
+      throw new Error(`cannot find ${city} in ${origin.name}`);
     }
     // same destination validation
-    if ((req.body.city || req.body.trip.city)
-    && (req.body.city.toLocaleLowerCase() || req.request.city)
-    === (req.body.trip.city.toLocaleLowerCase() || req.trip.city)) {
+    if ((originCity || destCity) && (originCity || req.request.city) === (destCity || req.trip.city)) {
       throw new Error('trips to the same city not allowed');
     }
 
-    if ((req.body.returnTime || req.body.trip.departureTime)
-    && new Date(req.body.returnTime || req.request.returnTime)
-    <= new Date(req.body.trip.departureTime || req.request.returnTime)) {
+    if ((returnTime || trip.departureTime)
+    && (new Date(returnTime || req.request.returnTime)
+    <= new Date(trip.departureTime || req.trip.departureTime))) {
       throw new Error('returnTime can not be less than OR equal to departureTime');
     }
     next();
-  } catch (err) {
-    return resSend(res, 400, err.message);
+  } catch (error) {
+    if (error.message.match(/null/g)) error.message = 'invalid origin country';
+    return resSend(res, 400, error.message);
   }
 };
 
 export const validateTripsData = async (req, res, next) => {
   try {
-    const { country, city, departureTime } = req.body.trip;
-    // check date
-    if (departureTime && !departureTime.match(/[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/)) {
-      return resSend(res, 400, 'date fomart is invalid try: YYYY-M-D');
-    }
-    const destination = locations.getCountryByShort(country.toUpperCase());
-    const { suggestions, error, names } = helper.getCityData(destination.states, city);
-    if (error) {
-      return resSend(res, 400, error, { suggestions });
-    }
-
-    if (!names.find(place => place === city.toLocaleLowerCase())) {
-      return resSend(res, 400, `we dint find ${city} in  ${destination.name}`);
+    const { country, city } = req.body.trip;
+    const destCountry = country ? country.toUpperCase() : '';
+    const destCity = city ? city.toLocaleLowerCase() : '';
+    const destination = locations.getCountryByShort(destCountry || req.trip.country.toUpperCase());
+    const allData = destCity && destination ? helper.getCityData(destination.states, city) : '';
+    const { suggestions, error, names } = allData;
+    if (error) resSend(res, 400, error, { suggestions });
+    if (destCity && !names) throw new Error(`city not found in ${destination.name}`);
+    if (destCity && !names.find(place => place === destCity)) {
+      throw new Error(`cannot find ${city} in ${destination.name}`);
     }
     next();
-  } catch (err) {
-    return resSend(res, 400, err.message);
+  } catch (error) {
+    if (error.message.match(/null/g)) error.message = 'invalid destination country';
+    return resSend(res, 400, error.message);
   }
 };

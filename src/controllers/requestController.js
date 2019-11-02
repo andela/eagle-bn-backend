@@ -115,14 +115,16 @@ const Request = {
   },
 
   async updateRequest(req, res) {
-    const { country, city, returnTime, reason, trip } = req.body;
+    const { country, city, returnTime, trip, timeZone } = req.body;
     const { requestId, tripId } = req.params;
-    let request = { country, city, returnTime: new Date(returnTime).toLocaleString() };
+    let request = {
+      country, city, returnTime: new Date(returnTime).toJSON(), timeZone
+    };
     let trips = {
       country: trip.country,
       city: trip.city,
-      departureTime: new Date(trip.departureTime).toLocaleString(),
-      reason
+      departureTime: new Date(trip.departureTime).toJSON(),
+      reason: trip.reason
     };
     const reqData = allRequest.getProvidedData(request);
     const tripData = allRequest.getProvidedData(trips);

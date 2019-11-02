@@ -62,10 +62,10 @@ const requestMidd = {
     const condition = { id: req.params.requestId, UserId: req.user.id, status: 'pending' };
     const request = await RequestService.getOneRequest(condition);
     if (!request) return sendResult(res, 404, 'request your trying to edit cannot be found');
-    req.request = request.dataValues;
-
+    req.request = request;
     next();
   },
+
   async checkCommentOwner(req, res, next) {
     const getComment = await CommentService.getComment(req.params.commentId);
 
