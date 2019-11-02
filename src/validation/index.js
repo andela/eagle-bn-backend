@@ -228,6 +228,28 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
+  editCommentValidation: async (req, res, next) => {
+    const { requestId, commentId } = req.params;
+    try {
+      new Check({ comment: req }).str().req().min(5);
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+
+    if (!commentId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'commentId should be a number');
+
+    next();
+  },
+  deleteCommentValidation: async (req, res, next) => {
+    const { requestId, commentId } = req.params;
+
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+
+    if (!commentId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'commentId should be a number');
+
+    next();
+  }
 };
 
 export default validator;
