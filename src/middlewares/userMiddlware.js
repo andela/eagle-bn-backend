@@ -79,7 +79,6 @@ const User = {
   checkToken(req, res, next) {
     const token = helper.getToken(req);
     const data = helper.verifyToken(token);
-
     if (data.error) {
       return sendResult(res, 401, 'You are not authorized');
     }
