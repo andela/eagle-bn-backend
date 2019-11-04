@@ -23,21 +23,13 @@ const Accommodation = {
       if (!accomUser) {
         return sendResult(res, 400, 'The accommodation facillity not found');
       }
-      if (req.userData.userId !== accomUser.userid) {
+      if (req.userData.userId !== accomUser.userid && req.userData.role !== 'Tadmin') {
         return sendResult(res, 401, 'The accommodation facility does not belong to you');
       }
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
     return next();
-  },
-
-  checkViewAccommodation(req, res, next) {
-    const { userData } = req;
-    if (userData.role === 'host' || userData.role === 'TAdmin') {
-      return next();
-    }
-    return sendResult(res, 401, 'You are not authorized');
   },
 
   checkForImages(req, res, next) {

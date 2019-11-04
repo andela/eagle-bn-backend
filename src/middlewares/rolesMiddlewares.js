@@ -13,6 +13,11 @@ const roles = {
     return notAuthorized(res);
   },
 
+  checkHostOrTAdmin(req, res, next) {
+    if (req.userData.role === 'host' || req.userData.role === 'Tadmin') return next();
+    return notAuthorized(res);
+  },
+
   checkRequester(req, res, next) {
     if (req.userData.role === 'requester') return next();
     return notAuthorized(res);
