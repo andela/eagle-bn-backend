@@ -1,3 +1,4 @@
+import helper from './helper';
 
 const email = (req, url, title, msg, actionMsg) => {
   const subject = title;
@@ -39,7 +40,7 @@ const email = (req, url, title, msg, actionMsg) => {
                                   <tbody>
                                     <tr>
                                       <td style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top" valign="top">
-                                        <h2 style="margin:0;margin-bottom:30px;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:300;line-height:1.5;font-size:24px;color:#294661!important">Hello ${req.user.username},</h2>
+                                        <h2 style="margin:0;margin-bottom:30px;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:300;line-height:1.5;font-size:24px;color:#294661!important">Hello There,</h2>
                                         <p style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300"><strong>${msg}</strong></p>
                                       </td>
                                     </tr>
@@ -66,7 +67,8 @@ const email = (req, url, title, msg, actionMsg) => {
                                     <tr>
                                       <td style="box-sizing:border-box;padding:0;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;vertical-align:top" valign="top">
                                         <p style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300">&nbsp;
-                                        <br> If you did not initiate this request, please contact us immediately at on our support email <a href="rswaib@gmail.com" target="_blank">Barefoot</a>.</p>
+                                        <br> If you have any issue, please contact us immediately at on our support email <a href="andela@gmail.com" target="_blank">Barefoot</a>.</p>
+                                        <br> Don't want to receive email notifications again? <a href="${req.protocol}://${req.headers.host}/api/v1/users/unsubscribe/${helper.createToken(req.userData || req.user)}" target="_blank">unsubscribe</a>.</p>
                                         <p style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300">Thank you,
                                         <br> The Barefoot Eagles Team</p>
                                       </td>

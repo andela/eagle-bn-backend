@@ -4,6 +4,7 @@ import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
 import string from '../utils/stringHelper';
 import { transporter } from '../config';
+import UserService from '../services/user.service';
 
 const User = {
   async signup(req, res) {
@@ -99,6 +100,14 @@ const User = {
   async getProfile(req, res) {
     const { password, ...data } = req.user;
     return sendResult(res, 200, 'my profile', data);
+  },
+
+  async userSubscription(req, res) {
+    const { id } = req.user;
+    const { subscription } = req.params;
+    const receiveEmails = (subscription === 'subscribe');
+    await UserService.manageUserSubscription(id, receiveEmails);
+    sendResult(res, 200, `you have been ${subscription}ed successfully`);
   }
 
 };

@@ -347,7 +347,7 @@ const uploadfile = fileUpload({
 });
 
 const { verifyToken, cloudUpload, getUserbyEmail } = UserMiddle;
-const { updateProfile, getProfile } = userController;
+const { updateProfile, getProfile, userSubscription } = userController;
 
 app.post('/signup', valid.signup, UserMiddle.checkuserExist, userController.signup);
 app.post('/login', UserMiddle.checkloginEntries, userController.login);
@@ -360,6 +360,7 @@ app.get('/profile', verifyToken, getUserbyEmail, getProfile);
 app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updateProfile);
 app.put('/role', checkRole, checkAdmin, UserMiddle.getUserbyEmail, isUserVerified, role.changeRole);
 app.get('/roles', checkAdmin, role.allRole);
+app.get('/email/:subscription/:token', verifyToken, userSubscription);
 
 export default app;
 
