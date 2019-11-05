@@ -1,4 +1,5 @@
 import BookingService from '../services/booking.service';
+import UserService from '../services/user.service';
 import sendResult from '../utils/sendResult';
 
 const BookingsController = {
@@ -20,6 +21,36 @@ const BookingsController = {
     const feedbackList = await BookingService.getAccommodationFeedback(accommodationId);
     return sendResult(res, 200, 'Accommodation rating', { averageRating, feedbackList });
   },
+
+  async createBooking(req, res) {
+    const { TripId, AccommodationId, start, end, numberOfSpace } = req.body;
+    const { userId } = req.userData;
+    const result = await BookingService.createBooking({
+      TripId, AccommodationId, start, end, numberOfSpace, UserId: userId });
+    result.tripId = result.TripId;
+    result.accommodationId = result.AccommodationId;
+    result.userId = result.UserId;
+    const { fullname } = await UserService.getUser({ id: userId });
+    result.fullname = fullname;
+    delete result.TripId;
+    delete result.AccommodationId;
+    delete result.UserId;
+    return sendResult(res, 201, 'Booking details', result);
+  },
+
+  async getBooking(req, res) {
+    const { id } = req.params;
+    const result = await BookingService.getBookingById(id);
+    result.tripId = result.TripId;
+    result.accommodationId = result.AccommodationId;
+    result.userId = result.UserId;
+    const { fullname } = await UserService.getUser({ id: result.userId });
+    result.fullname = fullname;
+    delete result.TripId;
+    delete result.AccommodationId;
+    delete result.UserId;
+    return sendResult(res, 200, result);
+  }
 };
 
 export default BookingsController;

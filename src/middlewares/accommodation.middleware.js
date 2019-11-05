@@ -1,5 +1,6 @@
 import sendResult from '../utils/sendResult';
 import db from '../database/models/index';
+import AccommodationService from '../services/accommodation.service';
 
 const checkForWrongFile = (files, req, res, next) => {
   let imageArray = [];
@@ -47,6 +48,23 @@ const Accommodation = {
     }
     return next();
   },
+
+  async isAccommodationAvailable(req, res, next) {
+    const { AccommodationId } = req.body;
+    if (await AccommodationService
+      .checkAccommodationAvailability(AccommodationId)) {
+      return next();
+    }
+    return sendResult(res, 404, 'The Accommodation is booked out');
+  },
+
+  async accommodationExists(req, res, next) {
+    const { AccommodationId } = req.body;
+    if (await AccommodationService.getAccommodation(AccommodationId)) {
+      return next();
+    }
+    return sendResult(res, 404, 'The Accommodation is not found');
+  }
 };
 
 export default Accommodation;

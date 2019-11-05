@@ -10,7 +10,6 @@ import locations from 'countrycitystatejson';
 import places from '../../services/countries.json';
 import { allScores, highScores } from '../../services';
 import resSend from '../../utils/sendResult';
-import db from '../../database/models';
 import helper from '../../utils/requestUtils';
 
 export const checkStringInArray = (array, string, n) => ((array.find(element => element.toLocaleLowerCase()
@@ -51,25 +50,6 @@ const validateTimeAndDestination = (req, trips) => {
       }
     }
   });
-};
-
-export const validateAccommodation = async (req, res, next) => {
-  const { trips } = req.body;
-  // eslint-disable-next-line no-restricted-syntax
-  for (const trip in trips) {
-    const single = trips[trip];
-    if (single.accommodationId) {
-      const accommodationId = (typeof single.accommodationId === 'number') ? single.accommodationId : -1;
-      const acc = await db.Accommodations.findOne({ where: { id: accommodationId }, raw: true });
-      if (!acc) {
-        req.error[`accommodationIdAt${trip + 1}`] = 'accommodation not found';
-      }
-    }
-  }
-  if (Object.keys(req.error).length !== 0) {
-    return resSend(res, 400, req.error);
-  }
-  next();
 };
 
 export const validateTrips = async (req, res, next) => {

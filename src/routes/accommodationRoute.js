@@ -3,7 +3,7 @@ import fileUpload from 'express-fileupload';
 import path from 'path';
 import BookingsController from '../controllers/bookings.controller';
 import AccommodationsController from '../controllers/accommodationController';
-import AccommodationMiddleware from '../middlewares/accommodationMiddleware';
+import AccommodationMiddleware from '../middlewares/accommodation.middleware';
 import UserMiddleware from '../middlewares/userMiddlware';
 import valid from '../validation';
 import RoleMiddleware from '../middlewares/rolesMiddlewares';
