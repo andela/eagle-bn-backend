@@ -7,6 +7,7 @@ import AccommodationMiddleware from '../middlewares/accommodation.middleware';
 import UserMiddleware from '../middlewares/userMiddlware';
 import valid from '../validation';
 import RoleMiddleware from '../middlewares/rolesMiddlewares';
+import LikingsController from '../controllers/likings.controller';
 
 const app = express.Router();
 
@@ -93,6 +94,10 @@ app.get('/', AccommodationsController.getAccommodations);
 app.get('/:accommodationId/rating', valid.getReviewvalidation, BookingsController.getRating);
 app.get('/search', AccommodationsController.getAccommodationsByFilter);
 app.get('/:accommodationId', AccommodationsController.getAccommodationById);
+app.post('/:accommodationId/like', [
+  checkToken,
+  LikingsController.addLikeAccommdation
+]);
 
 
 export default app;
