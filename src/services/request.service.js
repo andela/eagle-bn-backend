@@ -1,4 +1,4 @@
-import db from '../database/models/index';
+import db from '../database/models';
 
 const RequestService = {
   async getOneRequest(condition) {
@@ -22,8 +22,13 @@ const RequestService = {
       where: condition, returning: true, plain: true, raw: true,
     });
     return trip;
-  }
+  },
 
+  getTripOwner: async (id) => {
+    const { RequestId } = await db.Trips.findOne({ where: { id }, attributes: ['RequestId'] });
+    const { UserId } = await db.Requests.findOne({ where: { id: RequestId }, attributes: ['UserId'] });
+    return UserId;
+  },
 };
 
 export default RequestService;

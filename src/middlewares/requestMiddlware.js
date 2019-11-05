@@ -1,6 +1,7 @@
 import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import RequestService from '../services/request.service';
+import CommentService from '../services/comment.service';
 
 const requestMidd = {
   async checkExistingTrip(req, res, next) {
@@ -32,6 +33,14 @@ const requestMidd = {
   },
 
   async checkTripOwner(req, res, next) {
+    const { userId } = req.userData;
+    const { TripId } = req.body;
+    const user = await RequestService.getTripOwner(TripId);
+    if (user === userId) return next();
+    return sendResult(res, 401, 'you are not authorized');
+  },
+
+  async checkRequestOwner(req, res, next) {
     const { request } = req;
     const { userId } = req.userData;
     const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
@@ -40,7 +49,7 @@ const requestMidd = {
   },
 
   async checkIfTripExists(req, res, next) {
-    const condition = { id: req.params.tripId };
+    const condition = { id: req.params.tripId || req.body.TripId };
     const trip = await RequestService.getOnetrip(condition);
     if (trip) {
       req.trip = trip;
@@ -54,6 +63,18 @@ const requestMidd = {
     const request = await RequestService.getOneRequest(condition);
     if (!request) return sendResult(res, 404, 'request your trying to edit cannot be found');
     req.request = request.dataValues;
+
+    next();
+  },
+  async checkCommentOwner(req, res, next) {
+    const getComment = await CommentService.getComment(req.params.commentId);
+
+    if (!getComment) return sendResult(res, 404, 'Comment does not exist');
+
+    if (getComment.userId !== req.userData.userId) return sendResult(res, 401, 'You are not Authorized, You are not the owner of the comment');
+
+    if (getComment.deletedAt !== null) return sendResult(res, 401, 'The Comment has already been deleted');
+
     next();
   }
 };

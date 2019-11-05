@@ -63,6 +63,11 @@ module.exports = (sequelize, DataTypes) => {
     lineManager: DataTypes.INTEGER,
     RoleId: DataTypes.INTEGER,
     rememberMe: DataTypes.BOOLEAN,
+    recieveEmails: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+      allowNull: false
+    }
   }, { freezeTableName: true });
   User.associate = function(models) {
     User.belongsTo(models.Roles, {

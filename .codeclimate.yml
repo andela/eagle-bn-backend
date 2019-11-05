@@ -1,7 +1,6 @@
 checks:
   method-lines:
-    config:
-      threshold: 40
+    enabled: false
   method-complexity:
     enabled: false
   similar-code:

@@ -38,6 +38,15 @@ module.exports = {
       updatedAt: new Date(),
       RoleId:5,
       rememberMe: false
+    },{
+      fullname: 'Tadmin',
+      email: 'tadmin@gmail.com',
+      password: helpers.hashPassword('eagle123!'),
+      isverified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      RoleId:2,
+      rememberMe: false
     },
     {
       fullname: 'manager',

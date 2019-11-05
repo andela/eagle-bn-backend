@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable no-prototype-builtins */
 
+
 class Validate {
   constructor(data) {
     this.key = Object.keys(data);
@@ -42,7 +43,7 @@ class Validate {
   }
 
   alpha() {
-    if (this.val && (!this.error) && (!this.val.match(/[a-zA-Z]{2}/))) {
+    if (this.val && (!this.error) && (!this.val.match(/[a-zA-Z]{2,}/))) {
       this.status = 400;
       throw new Error(`${this.key} should be alphabetic and have 2 character minimum`);
     }
@@ -50,7 +51,7 @@ class Validate {
   }
 
   num() {
-    if (this.val && (!this.error) && (!this.val.match(/[0-9]{1}/))) {
+    if (this.val && (!this.error) && (!/^[0-9]{1,}$/.test(this.val))) {
       this.status = 400;
       throw new Error(`${this.key} should be a number`);
     }
@@ -58,10 +59,12 @@ class Validate {
   }
 
   integer() {
-    this.val = this.val.toString();
-    if (this.val && (!this.error) && (!this.val.match(/^[0-9]{1,}$/))) {
-      this.status = 400;
-      throw new Error(`${this.key} should be an integer`);
+    if (this.val) {
+      this.val = this.val.toString();
+      if ((!this.error) && (!this.val.match(/^[0-9]{1,}$/))) {
+        this.status = 400;
+        throw new Error(`${this.key} should be an integer`);
+      }
     }
     return this;
   }
@@ -122,6 +125,14 @@ class Validate {
     if (this.val && !this.val.match(/[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/)) {
       throw new Error(`${this.key} date fomart is invalid try: YYYY-M-D`);
     }
+  }
+
+  dateGreaterThan(date) {
+    if (this.val && (!this.error) && !(new Date(this.val) > date)) {
+      this.status = 400;
+      throw new Error(`${this.key} should be a greater than ${new Date(date)}`);
+    }
+    return this;
   }
 }
 

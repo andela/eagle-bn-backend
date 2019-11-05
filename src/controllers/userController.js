@@ -4,6 +4,7 @@ import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
 import string from '../utils/stringHelper';
 import { transporter } from '../config';
+import UserService from '../services/user.service';
 
 const User = {
   async signup(req, res) {
@@ -39,7 +40,8 @@ const User = {
       const {
         id, isverified, Role, fullname, rememberMe
       } = userInfo;
-      const token = helpers.createToken(id, email, isverified, Role.roleValue, rememberMe);
+      // eslint-disable-next-line max-len
+      const token = helpers.createToken(id, email, isverified, Role.roleValue, rememberMe, fullname);
       const data = {
         userid: id, fullname, email, isverified, token
       };
@@ -79,7 +81,7 @@ const User = {
       id,
       fullname,
       email,
-      token: helpers.createToken(id, email, isverified, rememberMe)
+      token: helpers.createToken(id, email, isverified, rememberMe, fullname)
     });
   },
 
@@ -99,6 +101,14 @@ const User = {
   async getProfile(req, res) {
     const { password, ...data } = req.user;
     return sendResult(res, 200, 'my profile', data);
+  },
+
+  async userSubscription(req, res) {
+    const { id } = req.user;
+    const { subscription } = req.params;
+    const receiveEmails = (subscription === 'subscribe');
+    await UserService.manageUserSubscription(id, receiveEmails);
+    sendResult(res, 200, `you have been ${subscription}ed successfully`);
   }
 
 };

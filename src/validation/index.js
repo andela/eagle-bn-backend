@@ -228,6 +228,66 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
+  getChats(req, res, next) {
+    try {
+      new Check({ offset: req }).integer();
+      new Check({ limit: req }).integer();
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
+  addChats(req, res, next) {
+    try {
+      new Check({ message: req }).req().str();
+      new Check({ receiverId: req }).integer();
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
+
+  editCommentValidation: async (req, res, next) => {
+    const { requestId, commentId } = req.params;
+    try {
+      new Check({ comment: req }).str().req().min(5);
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+
+    if (!commentId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'commentId should be a number');
+
+    next();
+  },
+  deleteCommentValidation: async (req, res, next) => {
+    const { requestId, commentId } = req.params;
+
+    if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+
+    if (!commentId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'commentId should be a number');
+
+    next();
+  },
+
+  getBookingValidation(req, res, next) {
+    return isNumeric(req.params.id, 'Booking ID', res, next);
+  },
+
+  validateBooking(req, res, next) {
+    try {
+      new Check({ accommodationId: req }).num().req();
+      new Check({ tripId: req }).num().req();
+      new Check({ numberOfSpace: req }).num().req();
+      new Check({ start: req }).dateGreaterThan(Date.now()).req();
+      new Check({ end: req }).dateGreaterThan(new Date(req.body.start)).req();
+      req.body.TripId = req.body.tripId;
+      req.body.AccommodationId = req.body.accommodationId;
+      next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+  }
 };
 
 export default validator;

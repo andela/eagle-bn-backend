@@ -31,10 +31,11 @@ const uploadImages = (req, res, data, msg) => {
 const Accommodation = {
   async addAccommodation(req, res) {
     const {
-      description, address, availableSpace, cost, amenities, services, currency
+      description, address, availableSpace, cost, amenities, services, currency, name
     } = req.body;
     const { userId } = req.userData;
     const response = await db.Accommodations.create({
+      name,
       description,
       address,
       cost,
@@ -48,20 +49,28 @@ const Accommodation = {
     uploadImages(req, res, accommodation);
   },
 
-  async getAccommodation(req, res) {
-    const { role, userId } = req.userData;
+  async getAccommodations(req, res) {
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodations = await db.Accommodations.findAll({
+      include: image, });
 
-    if (role === 'host') {
-      const accommodations = await db.Accommodations.findAll({
-        where: { userid: userId },
-        include: [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }],
-      });
+    return sendResult(res, 200, 'Accommodations facilities', accommodations);
+  },
 
-      return sendResult(res, 200, 'my accommodations', accommodations);
-    }
+  async getAccommodationById(req, res) {
+    const { accommodationId } = req.params;
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodation = await db.Accommodations.findOne({
+      where: { id: accommodationId }, include: image, });
+    return sendResult(res, 200, 'Accommodation facility', accommodation);
+  },
 
-    const accommodations = await db.Accommodations.findAll();
-    return sendResult(res, 200, 'all accommodations', accommodations);
+  async getAccommodationsByFilter(req, res) {
+    const { isAvailable } = req.query;
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodations = await db.Accommodations.findAll({
+      where: { isAvailable }, include: image, });
+    return sendResult(res, 200, 'Accommodations facilities', accommodations);
   },
 
   async editAccommodation(req, res) {

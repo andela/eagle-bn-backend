@@ -3,6 +3,7 @@ import db from '../database/models/index';
 import Check from '../utils/validator';
 import helper from '../utils/helper';
 import cloud from '../config/clound-config';
+import UserService from '../services/user.service';
 
 const User = {
   async checkuserExist(req, res, next) {
@@ -79,7 +80,6 @@ const User = {
   checkToken(req, res, next) {
     const token = helper.getToken(req);
     const data = helper.verifyToken(token);
-
     if (data.error) {
       return sendResult(res, 401, 'You are not authorized');
     }
@@ -88,6 +88,13 @@ const User = {
     return next();
   },
 
+  async checkReceiverExist(req, res, next) {
+    const { receiverId } = req.body;
+    if (!receiverId) return next();
+    const user = await UserService.getUser({ id: receiverId });
+    if (user) return next();
+    return sendResult(res, 400, 'this user does not exist');
+  }
 };
 
 export default User;

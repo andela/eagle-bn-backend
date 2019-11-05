@@ -1,14 +1,67 @@
-import express from 'express';
-import fileUpload from 'express-fileupload';
-import path from 'path';
-import BookingsController from '../controllers/bookings.controller';
-import AccommodationsController from '../controllers/accommodationController';
-import AccommodationMiddleware from '../middlewares/accommodation.middleware';
-import UserMiddleware from '../middlewares/userMiddlware';
-import valid from '../validation';
-import RoleMiddleware from '../middlewares/rolesMiddlewares';
+/**
+ * @swagger
+ * definitions:
+ *   Accommodation:
+ *     type: object
+ *     required:
+ *     properties:
+ *       id:
+ *         type: string
+ *       userid:
+ *         type: string
+ *       description:
+ *         type: string
+ *       address:
+ *         type: string
+ *       availableSpace:
+ *         type: string
+ *       cost:
+ *         type: string
+ *       services:
+ *         type: string
+ *       amenities:
+ *         type: string
+ */
 
-const app = express.Router();
+/**
+ * @swagger
+ * definitions:
+ *   editAccommodation:
+ *     type: object
+ *     required:
+ *       - UserId
+ *       - name
+ *       - description
+ *       - address
+ *       - availablesspace
+ *       - services
+ *       - cost
+ *       - amenities
+ *       - currency
+ *     properties:
+ *       userId:
+ *         type: integer
+ *       name:
+ *         type: string
+ *       description:
+ *         type: string
+ *       address:
+ *         type: string
+ *       availablesspace:
+ *         type: string
+ *       services:
+ *         type: string
+ *       cost:
+ *         type: integer
+ *       currency:
+ *         type: integer
+ *       amenities:
+ *         type: string
+ *       tcreatedAt:
+ *         type: string
+ *       updatedAt:
+ *         type: string
+ */
 
 /**
  * @swagger
@@ -76,23 +129,3 @@ const app = express.Router();
  *       401:
  *         description: You are not authorized
  */
-const fUpload = fileUpload({
-  useTempFiles: true,
-  tempFileDir: path.join(__dirname, '../temp'),
-});
-
-const {
-  isSupplierAccommodation, checkForImages, checkForImagesUpdate
-} = AccommodationMiddleware;
-const { checkToken } = UserMiddleware;
-
-app.patch('/:id', fUpload, checkToken, RoleMiddleware.checkHostOrTAdmin, isSupplierAccommodation, checkForImagesUpdate, valid.editAccommodation, AccommodationsController.editAccommodation);
-app.delete('/:id', checkToken, RoleMiddleware.checkHost, isSupplierAccommodation, AccommodationsController.deleteAccommodation);
-app.post('/', fUpload, checkToken, RoleMiddleware.checkHostOrTAdmin, valid.accommodation, checkForImages, AccommodationsController.addAccommodation);
-app.get('/', AccommodationsController.getAccommodations);
-app.get('/:accommodationId/rating', valid.getReviewvalidation, BookingsController.getRating);
-app.get('/search', AccommodationsController.getAccommodationsByFilter);
-app.get('/:accommodationId', AccommodationsController.getAccommodationById);
-
-
-export default app;
