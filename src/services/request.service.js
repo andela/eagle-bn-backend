@@ -29,6 +29,15 @@ const RequestService = {
     const { UserId } = await db.Requests.findOne({ where: { id: RequestId }, attributes: ['UserId'] });
     return UserId;
   },
+
+  async findAllTrips(reqCondition, tripCondition) {
+    const trip = await db.Requests.findAll({
+      where: reqCondition,
+      raw: true,
+      include: [{ model: db.Trips, where: tripCondition, required: true }],
+    });
+    return trip;
+  },
 };
 
 export default RequestService;
