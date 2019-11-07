@@ -59,10 +59,12 @@ class Validate {
   }
 
   integer() {
-    this.val = this.val.toString();
-    if (this.val && (!this.error) && (!this.val.match(/^[0-9]{1,}$/))) {
-      this.status = 400;
-      throw new Error(`${this.key} should be an integer`);
+    if (this.val) {
+      this.val = this.val.toString();
+      if ((!this.error) && (!this.val.match(/^[0-9]{1,}$/))) {
+        this.status = 400;
+        throw new Error(`${this.key} should be an integer`);
+      }
     }
     return this;
   }
