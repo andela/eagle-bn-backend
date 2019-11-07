@@ -228,6 +228,24 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
+  getChats(req, res, next) {
+    try {
+      new Check({ offset: req }).integer();
+      new Check({ limit: req }).integer();
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
+  addChats(req, res, next) {
+    try {
+      new Check({ message: req }).req().str();
+      new Check({ receiverId: req }).integer();
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
 
   editCommentValidation: async (req, res, next) => {
     const { requestId, commentId } = req.params;
@@ -266,6 +284,28 @@ const validator = {
       req.body.TripId = req.body.tripId;
       req.body.AccommodationId = req.body.accommodationId;
       next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+  },
+
+  stats(req, res, next) {
+    try {
+      new Check({ weeks: req }).num().min(1);
+      new Check({ months: req }).num().min(1);
+      new Check({ years: req }).num().min(1);
+      new Check({ days: req }).num().min(1);
+      const { weeks, months, years, days } = req.query;
+      const period = { weeks, months, years, days };
+      Object.keys(req.query).map(key => {
+        if (!key || !period[key]) {
+          throw new Error(`${key} is an invalid parameter`);
+        }
+      });
+      if (Object.keys(req.query).length > 1) {
+        throw new Error('you can provide one query at a time');
+      }
+      return next();
     } catch (error) {
       return sendResult(res, 400, error.message);
     }

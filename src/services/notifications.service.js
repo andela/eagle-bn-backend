@@ -7,6 +7,7 @@ const NotificationService = {
   createNotification: async (notification) => db.Notifications.create(notification, { raw: true }),
   setNotificationStatus: async (id, isRead) => db.Notifications
     .update({ isRead }, { where: { id } }),
+  markAllAsRead: async (userId) => db.Notifications.update({ isRead: true }, { where: { userId } }),
 };
 
 export default NotificationService;

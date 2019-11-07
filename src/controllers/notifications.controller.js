@@ -31,6 +31,16 @@ const NotificationController = {
       'Notification status updated!'
     );
   },
+
+  async markAllNotificationsAsRead(req, res) {
+    const { userId } = req.userData;
+    await NotificationService.markAllAsRead(userId);
+    return sendResult(
+      res,
+      200,
+      'All notifications are marked as read',
+    );
+  }
 };
 
 export default NotificationController;

@@ -33,7 +33,13 @@ const {
 } = valid;
 const { addComment, viewComment, updateComment, trashComment } = comment;
 
-
+app.get('/stats', [
+  verifyToken,
+  userMidd.getUserbyEmail,
+  valid.stats,
+  reqMidd.checkStats,
+  requestController.stats
+]);
 app.get('/search', verifyToken, searchValidate, search);
 app.get('/:requestId', singleReqValid, checkToken, checkExistingTrip, checkRequestOwner, requestController.getSingleRequest);
 app.get('/', checkToken, checkRequester, requestController.getRequest);
