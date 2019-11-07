@@ -1,5 +1,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-restricted-syntax */
+import moment from 'moment';
+import Sequelize from 'sequelize';
 import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import allRequest from '../utils/requestUtils';
@@ -8,6 +10,8 @@ import RequestService from '../services/request.service';
 import NotificationService from '../services/notifications.service';
 import UserService from '../services/user.service';
 import EmailService from '../services/email.service';
+
+const { Op } = Sequelize;
 
 const Request = {
   async getRequest(req, res) {
@@ -138,6 +142,43 @@ const Request = {
     return sendResult(res, 200, 'request update successful', request[1]);
   },
 
+  async stats(req, res) {
+    const days = new Date(moment().subtract('1', 'days'));
+    const weeks = new Date(moment().subtract('7', 'days'));
+    const months = new Date(moment().subtract('1', 'months'));
+    const lastMonth = await RequestService.findAllTrips(req.reqCondition, {
+      departureTime: { [Op.gte]: months }
+    });
+    const lastWweek = await RequestService.findAllTrips(req.reqCondition, {
+      departureTime: { [Op.gte]: weeks }
+    });
+    const yestarday = await RequestService.findAllTrips(req.reqCondition, {
+      departureTime: { [Op.gte]: days }
+    });
+
+    return sendResult(res, 200, 'all trip statistics', { days: {
+      period_name: 'days',
+      period_num: '1',
+      num_trips: yestarday.length || 0,
+      period_from: days,
+      period_to: new Date()
+    },
+    weeks: {
+      period_name: 'weeks',
+      period_num: '1',
+      num_trips: lastWweek.length || 0,
+      period_from: weeks,
+      period_to: new Date()
+    },
+    months: {
+      period_name: 'months',
+      period_num: '1',
+      num_trips: lastMonth.length || 0,
+      period_from: months,
+      period_to: new Date()
+    }
+    });
+  }
 };
 
 export default Request;

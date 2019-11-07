@@ -5,7 +5,7 @@ const UserService = {
   manageUserSubscription: async (id, receiveEmails) => db.Users.update(
     { receiveEmails },
     { where: { id } },
-  ),
+  )
 };
 
 export default UserService;

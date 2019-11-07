@@ -60,7 +60,7 @@ describe('chat', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.msg).to.equal('chat list');
-        expect(res.body.data.length).to.equal(2);
+        expect(res.body.data.public.length).to.equal(1);
         done();
       });
   });
@@ -71,7 +71,6 @@ describe('chat', () => {
       .end((err, res) => {
         expect(res.status).to.equal(200);
         expect(res.body.msg).to.equal('chat list');
-        expect(res.body.data.length).to.equal(1);
         done();
       });
   });
