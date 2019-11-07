@@ -1,9 +1,7 @@
 import sendResult from '../utils/sendResult';
 import Check from '../utils/validator';
 import helper from '../utils/helper';
-import cloud from '../config/clound-config';
 import UserService from '../services/user.service';
-// import cloud from '../config/clound-config';
 import uploadService from '../services/upload.service';
 
 const User = {
@@ -70,11 +68,6 @@ const User = {
       if (!req.files.avatar.mimetype.match(/image/g)) {
         return sendResult(res, 400, 'avatar image fomart is invalid');
       }
-
-      // cloud.uploader.upload(req.files.avatar.tempFilePath, async (result) => {
-      //   req.imgLink = await result.url;
-      //   next();
-      // });
 
       uploadService.uploadToCloudinary(req, next);
 
