@@ -86,7 +86,6 @@ const User = {
     req.userData = data;
     return next();
   },
-
 };
 
 export default User;

@@ -24,7 +24,16 @@ module.exports = {
     country: 'NG',
     city: 'lagos',
     reason: 'I do not have any reason',
-    departureTime: new Date(),
+    departureTime: new Date('2019, 10, 02'),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    RequestId: 2,
+    country: 'NG',
+    city: 'lagos',
+    reason: 'bussiness trip',
+    departureTime: new Date('2019, 11, 02'),
     createdAt: new Date(),
     updatedAt: new Date()
   },
