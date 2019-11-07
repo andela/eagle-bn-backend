@@ -1,5 +1,6 @@
-import { msg, transporter } from '../config';
-import sendResult from '../utils/sendResult';
+import path from 'path';
+import helpers from '../utils/helper';
+import Email from '../utils/templates/emailSender';
 
 /**
  * @export
@@ -9,19 +10,19 @@ export default class EmailUtil {
   /**
    * register a new
    * @static
-   * @param {Object} req the request
+   * @param {String} template the template to use
    * @param {Object} notification the notification to be sent to the user
    * @memberof EmailUtil
    * @returns {Object} sendEmail
    */
-  static async sendEmail(req, notification) {
-    const { title } = notification;
-    const { url } = notification;
-    const { actionMsg } = notification;
-    const emailMsg = `Your viewing this message because ${notification.type} at Barefoot nomard`;
-    const message = { ...msg(req, url, title, emailMsg, actionMsg),
-      to: notification.email };
-    await transporter.sendMail(message);
+  static async sendEmail(template, notification) {
+    Email.send({
+      template: path.join(__dirname, '../', 'utils', 'templates', 'emails', template),
+      message: {
+        to: notification.to,
+      },
+      locals: notification,
+    });
   }
 
   /**
@@ -30,39 +31,111 @@ export default class EmailUtil {
    * @param {Object} req the request
    * @param {number} requestId the id of the request created
    * @param {string} userEmail the email of the user who created the request
-   * @param {string} managerEmail the email of the manager to send email on.
+   * @param {Object} user the user to send email.
    * @memberof EmailUtil
    * @returns {Object} sendEmail
    */
-  static async newRequestNotificationToManager(req, requestId, userEmail, managerEmail) {
+  static async newRequestNotificationToManager(req, requestId, userEmail, user) {
     const notification = {
+      req,
       title: 'New Trip Request',
       url: `/api/v1/requests/${requestId}`,
       actionMsg: 'View Trip Request',
-      type: `new trip request was initiated by ${userEmail}`,
-      email: managerEmail
+      msg: `new trip request was initiated by ${userEmail}`,
+      to: user.email,
+      fullname: user.fullname,
+      token: helpers.createToken(user.id, user.email),
+      base: `${req.protocol}://${req.headers.host}`
     };
-    await this.sendEmail(req, notification);
+    await this.sendEmail('request', notification);
   }
 
   /**
    * register a new
    * @static
    * @param {Object} req the request
-   * @param {Object} res the reponse
    * @param {Object} newRequest the notificion to be sent
    * @memberof EmailUtil
    * @returns {Object} sendResult
    */
-  static async requestedStatusUpdated(req, res, newRequest) {
+  static async requestedStatusUpdated(req, newRequest) {
     const notification = {
+      req,
       title: `Request ${newRequest.status}`,
       url: `/api/v1/requests/${newRequest.id}`,
       actionMsg: 'View request',
-      type: `your request has been ${newRequest.status}`,
-      email: req.user.email,
+      msg: `your request has been ${newRequest.status}`,
+      to: req.user.email,
+      fullname: req.user.fullname,
+      token: helpers.createToken(req.user.id, req.user.email),
+      base: `${req.protocol}://${req.headers.host}`
     };
-    await this.sendEmail(req, notification);
-    return sendResult(res, 200, 'updated successfully', newRequest);
+    await this.sendEmail('request', notification);
+  }
+
+  /**
+   * register a new
+   * @static
+   * @param {Object} req the request
+   * @memberof EmailUtil
+   * @returns {Object} sendResult
+   */
+  static async resetPasswordEmail(req) {
+    const notification = {
+      req,
+      title: 'Password reset',
+      url: `/api/v1/users/reset-password/${helpers.createToken(req.user.id, req.user.email)}`,
+      actionMsg: 'Reset Password',
+      msg: 'you requested to reset the password',
+      to: req.user.email,
+      fullname: req.user.fullname,
+      token: helpers.createToken(req.user.id, req.user.email),
+      base: `${req.protocol}://${req.headers.host}`
+    };
+    await this.sendEmail('password', notification);
+  }
+
+  /**
+   * register a new
+   * @static
+   * @param {Object} req the request
+   * @param {Object} user the data of the user
+   * @memberof EmailUtil
+   * @returns {Object} sendResult
+   */
+  static async verifyAccountEmail(req, user) {
+    const notification = {
+      req,
+      title: 'Email Verification',
+      url: `/api/v1/users/verify/${helpers.createToken(user.id, user.email)}`,
+      actionMsg: 'Verify Email',
+      msg: 'you created account',
+      to: user.email,
+      fullname: user.fullname,
+      token: helpers.createToken(user.id, user.email),
+      base: `${req.protocol}://${req.headers.host}`
+    };
+    await this.sendEmail('verification', notification);
+  }
+
+  /**
+   * register a new
+   * @static
+   * @param {Object} req the request
+   * @param {Object} user the data of the user
+   * @memberof EmailUtil
+   * @returns {Object} sendResult
+   */
+  static async roleChanged(req) {
+    const notification = {
+      req,
+      title: 'Role Changed',
+      msg: `your role has been changed to ${req.body.new_role}`,
+      to: req.user.email,
+      fullname: req.user.fullname,
+      token: helpers.createToken(req.user.id, req.user.email),
+      base: `${req.protocol}://${req.headers.host}`
+    };
+    await this.sendEmail('role', notification);
   }
 }
