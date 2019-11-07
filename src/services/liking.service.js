@@ -12,7 +12,7 @@ const LikingService = {
       return sendResult(res, 201, 'You liked the accommodation ', like);
     }
     like.update({ isLiked: !like.isLiked });
-    return sendResult(res, 201, ` The accommodation like  status updated to ${like.isLiked}`, like);
+    return sendResult(res, 200, ` The accommodation like  status updated to ${like.isLiked}`, like);
   }
 };
 export default LikingService;

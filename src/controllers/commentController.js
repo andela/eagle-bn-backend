@@ -17,7 +17,7 @@ const CommentsController = {
       attributes: { exclude: ['updatedAt'] },
       include: [{
         model: db.Comments,
-        attributes: { exclude: ['id', 'updatedAt', 'requestId', 'userId'] },
+        attributes: { exclude: ['id', 'updatedAt', 'requestId', 'userId', 'deletedAt'] },
         include: [{
           model: db.Users, attributes: ['fullname']
         }]
@@ -27,11 +27,11 @@ const CommentsController = {
   },
   updateComment: async (req, res) => {
     await CommentService.updateComment(req.params.commentId, req.body.comment);
-    sendResult(res, 201, '', 'Comment Updated Successful');
+    sendResult(res, 200, 'Comment Updated Successful');
   },
   trashComment: async (req, res) => {
     await CommentService.trashComment(req.params.commentId);
-    sendResult(res, 201, '', 'Comment Deleted');
+    sendResult(res, 200, 'Comment Deleted Successful');
   }
 };
 
