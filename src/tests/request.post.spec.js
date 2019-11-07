@@ -96,3 +96,15 @@ describe('create request and new request notifications', () => {
       });
   });
 });
+
+describe('PATCH /notifications/all', () => {
+  it('should return a 201 status when all notification are marked as read', (done) => {
+    chai.request(app)
+      .patch('/api/v1/notifications/readall')
+      .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
+  });
+});
