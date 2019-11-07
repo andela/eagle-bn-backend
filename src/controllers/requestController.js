@@ -66,11 +66,10 @@ const Request = {
     }
     if (req.userData.rememberMe !== rememberMe) {
       await db.Users.update({ rememberMe }, {
-        where: { userid: req.userData.userId },
+        where: { id: req.userData.userId },
       });
-      return sendResult(res, 201, 'A request created and personal data remembered', Req);
     }
-    return sendResult(res, 201, 'A request created but personal data not remembered', Req);
+    return sendResult(res, 201, `A request created successfully. Remember me for future request? ${rememberMe}`, Req);
   },
 
   async changeRequestStatus(req, res) {
