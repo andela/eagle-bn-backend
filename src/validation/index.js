@@ -228,6 +228,24 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
+  getChats(req, res, next) {
+    try {
+      new Check({ offset: req }).integer();
+      new Check({ limit: req }).integer();
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
+  addChats(req, res, next) {
+    try {
+      new Check({ message: req }).req().str();
+      new Check({ receiverId: req }).integer();
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
 
   editCommentValidation: async (req, res, next) => {
     const { requestId, commentId } = req.params;

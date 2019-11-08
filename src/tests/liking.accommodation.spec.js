@@ -26,33 +26,33 @@ describe('Like/Unlike an accomodation facility', () => {
         done();
       });
   });
-  it('it should return 201 status and create a like', (done) => {
+  it('it should return 200 status and create a like', (done) => {
     chai.request(app)
       .post('/api/v1/accommodations/1/like')
       .set('Authorization', helper.createToken(2, 'requester@gmail.com', true, 'requester'))
       .send(likingData[2])
       .end((err, res) => {
-        expect(res.status).to.equal(201);
+        expect(res.status).to.equal(200);
         done();
       });
   });
-  it('it should return 201 and update the like status from false to true', (done) => {
+  it('it should return 200 and update the like status from false to true', (done) => {
     chai.request(app)
       .post('/api/v1/accommodations/1/like')
       .set('Authorization', helper.createToken(1, 'requester@gmail.com', true, 'requester'))
       .send(likingData[0])
       .end((err, res) => {
-        expect(res.status).to.equal(201);
+        expect(res.status).to.equal(200);
         done();
       });
   });
-  it('it should return 201 and update the like status from true to false', (done) => {
+  it('it should return 200 and update the like status from true to false', (done) => {
     chai.request(app)
       .post('/api/v1/accommodations/1/like')
       .set('Authorization', helper.createToken(1, 'requester@gmail.com', true, 'requester'))
       .send(likingData[1])
       .end((err, res) => {
-        expect(res.status).to.equal(201);
+        expect(res.status).to.equal(200);
         done();
       });
   });

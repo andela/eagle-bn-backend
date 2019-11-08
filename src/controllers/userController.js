@@ -2,9 +2,8 @@
 import helpers from '../utils/helper';
 import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
-import string from '../utils/stringHelper';
-import { transporter } from '../config';
 import UserService from '../services/user.service';
+import EmailService from '../services/email.service';
 
 const User = {
   async signup(req, res) {
@@ -18,10 +17,9 @@ const User = {
     const Role = await db.Roles.findOne({ where: response.dataValues.RoleId });
 
     const userData = response.get({ plain: true });
-    userData.password = undefined;
-    const token = helpers.createToken(userData.id, email, false, false);
-    // send verification email the user,
-    await transporter.sendMail({ to: email, from: process.env.EMAIL_SENDER, subject: 'email verification', html: string.emailBody(req, token) });
+    delete userData.password;
+    // SEND VERIFICATION EMAIL TO USER
+    await EmailService.verifyAccountEmail(req, userData);
     const data = { ...userData, Role: Role.roleValue };
     return sendResult(res, 201, 'Account created successfully', data);
   },

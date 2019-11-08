@@ -3,6 +3,7 @@ import db from '../database/models/index';
 import Check from '../utils/validator';
 import helper from '../utils/helper';
 import cloud from '../config/clound-config';
+import UserService from '../services/user.service';
 
 const User = {
   async checkuserExist(req, res, next) {
@@ -86,6 +87,14 @@ const User = {
     req.userData = data;
     return next();
   },
+
+  async checkReceiverExist(req, res, next) {
+    const { receiverId } = req.body;
+    if (!receiverId) return next();
+    const user = await UserService.getUser({ id: receiverId });
+    if (user) return next();
+    return sendResult(res, 400, 'this user does not exist');
+  }
 };
 
 export default User;

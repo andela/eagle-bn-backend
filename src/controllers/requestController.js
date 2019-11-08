@@ -59,18 +59,17 @@ const Request = {
       userId: lineManager,
     });
     // CHECK IF MANAGER IS SUBSCRIBED TO EMAIL NOTIFICATION
-    const { recieveEmails, email } = await UserService.getUser({ id: lineManager });
-    if (recieveEmails) {
+    const user = await UserService.getUser({ id: lineManager });
+    if (user.recieveEmails) {
       // SENDING NOTIFICATION TO THE MANAGER
-      await EmailService.newRequestNotificationToManager(req, Req.id, req.userData.email, email);
+      await EmailService.newRequestNotificationToManager(req, Req.id, req.userData.email, user);
     }
     if (req.userData.rememberMe !== rememberMe) {
       await db.Users.update({ rememberMe }, {
-        where: { userid: req.userData.userId },
+        where: { id: req.userData.userId },
       });
-      return sendResult(res, 201, 'A request created and personal data remembered', Req);
     }
-    return sendResult(res, 201, 'A request created but personal data not remembered', Req);
+    return sendResult(res, 201, `A request created successfully. Remember me for future request? ${rememberMe}`, Req);
   },
 
   async changeRequestStatus(req, res) {
@@ -78,7 +77,9 @@ const Request = {
     const { request } = req;
     if (request.status === 'pending') {
       const newRequest = await request.update({ status });
-      return EmailService.requestedStatusUpdated(req, res, newRequest);
+      req.user = await UserService.getUser({ id: newRequest.UserId });
+      EmailService.requestedStatusUpdated(req, newRequest);
+      return sendResult(res, 200, 'updated successfully', newRequest);
     }
     return sendResult(res, 403, 'this request is already approved/rejected');
   },
