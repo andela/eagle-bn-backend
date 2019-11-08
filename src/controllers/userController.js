@@ -19,7 +19,7 @@ const User = {
     const userData = response.get({ plain: true });
     delete userData.password;
     // SEND VERIFICATION EMAIL TO USER
-    await EmailService.verifyAccountEmail(req, userData);
+    await EmailService.sendVerificationEmail(req, userData);
     const data = { ...userData, Role: Role.roleValue };
     return sendResult(res, 201, 'Account created successfully', data);
   },

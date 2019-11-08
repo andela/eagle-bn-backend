@@ -62,7 +62,7 @@ const Request = {
     const user = await UserService.getUser({ id: lineManager });
     if (user.recieveEmails) {
       // SENDING NOTIFICATION TO THE MANAGER
-      await EmailService.newRequestNotificationToManager(req, Req.id, req.userData.email, user);
+      await EmailService.sendNewRequestEmail(req, Req.id, req.userData.email, user);
     }
     if (req.userData.rememberMe !== rememberMe) {
       await db.Users.update({ rememberMe }, {
@@ -78,7 +78,7 @@ const Request = {
     if (request.status === 'pending') {
       const newRequest = await request.update({ status });
       req.user = await UserService.getUser({ id: newRequest.UserId });
-      EmailService.requestedStatusUpdated(req, newRequest);
+      await EmailService.sendRequestedStatusUpdatedEmail(req, newRequest);
       return sendResult(res, 200, 'updated successfully', newRequest);
     }
     return sendResult(res, 403, 'this request is already approved/rejected');

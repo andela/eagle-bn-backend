@@ -9,7 +9,7 @@ const role = {
     if (newRole.roleValue === req.body.new_role) return sendResult(res, 400, 'User already has this role');
     await db.Users.update({ RoleId: req.new_role_id }, { where: { email: req.body.email } });
 
-    await EmailService.roleChanged(req);
+    await EmailService.sendRoleChangedEmail(req);
     const data = {
       status: 200,
       message: `Super admininstrator successfully changed role of ${req.body.email}`,
