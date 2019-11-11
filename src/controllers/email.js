@@ -5,7 +5,7 @@ import EmailService from '../services/email.service';
 
 const email = {
   async sendReset(req, res) {
-    EmailService.resetPasswordEmail(req);
+    await EmailService.sendResetPasswordEmail(req);
     sendResult(res, 201, `password reset instructions sent to ${req.user.email}`);
   },
 

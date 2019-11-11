@@ -35,7 +35,7 @@ export default class EmailUtil {
    * @memberof EmailUtil
    * @returns {Object} sendEmail
    */
-  static async newRequestNotificationToManager(req, requestId, userEmail, user) {
+  static async sendNewRequestEmail(req, requestId, userEmail, user) {
     const notification = {
       req,
       title: 'New Trip Request',
@@ -58,7 +58,7 @@ export default class EmailUtil {
    * @memberof EmailUtil
    * @returns {Object} sendResult
    */
-  static async requestedStatusUpdated(req, newRequest) {
+  static async sendRequestedStatusUpdatedEmail(req, newRequest) {
     const notification = {
       req,
       title: `Request ${newRequest.status}`,
@@ -80,7 +80,7 @@ export default class EmailUtil {
    * @memberof EmailUtil
    * @returns {Object} sendResult
    */
-  static async resetPasswordEmail(req) {
+  static async sendResetPasswordEmail(req) {
     const notification = {
       req,
       title: 'Password reset',
@@ -103,7 +103,7 @@ export default class EmailUtil {
    * @memberof EmailUtil
    * @returns {Object} sendResult
    */
-  static async verifyAccountEmail(req, user) {
+  static async sendVerificationEmail(req, user) {
     const notification = {
       req,
       title: 'Email Verification',
@@ -126,7 +126,7 @@ export default class EmailUtil {
    * @memberof EmailUtil
    * @returns {Object} sendResult
    */
-  static async roleChanged(req) {
+  static async sendRoleChangedEmail(req) {
     const notification = {
       req,
       title: 'Role Changed',
