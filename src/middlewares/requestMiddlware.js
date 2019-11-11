@@ -1,7 +1,11 @@
+import moment from 'moment';
+import Sequelize from 'sequelize';
 import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import RequestService from '../services/request.service';
 import CommentService from '../services/comment.service';
+
+const { Op } = Sequelize;
 
 const requestMidd = {
   async checkExistingTrip(req, res, next) {
@@ -59,7 +63,7 @@ const requestMidd = {
   },
 
   async checkIfReqExist(req, res, next) {
-    const condition = { id: req.params.requestId, UserId: req.user.id, status: 'pending' };
+    const condition = { id: req.params.requestId, UserId: req.params.userId || req.user.id, status: 'pending' };
     const request = await RequestService.getOneRequest(condition);
     if (!request) return sendResult(res, 404, 'request your trying to edit cannot be found');
     req.request = request;
@@ -75,6 +79,38 @@ const requestMidd = {
 
     if (getComment.deletedAt !== null) return sendResult(res, 401, 'The Comment has already been deleted');
 
+    next();
+  },
+
+  async checkStats(req, res, next) {
+    let key = Object.keys(req.query)[0];
+    let value = req.query[key];
+    const { weeks } = req.query;
+    let weeksKey;
+    if (req.query.weeks) {
+      value *= 7; weeksKey = 'weeks'; key = 'days';
+    }
+    const query = new Date(moment().subtract(value, key));
+    const tripCondition = {
+      departureTime: { [Op.gte]: query },
+    };
+    const reqCondition = { UserId: req.user.id };
+    if (query.toDateString() === 'Invalid Date') {
+      return sendResult(res, 400, 'provide a valid date interval');
+    }
+    const data = key ? await RequestService.findAllTrips(reqCondition, tripCondition)
+      : await RequestService.findAllTrips(reqCondition);
+
+    if (key) {
+      return sendResult(res, 200, `Trip statistics for ${weeks || value} ${weeksKey || key} ago`, {
+        period_name: weeksKey || key,
+        period_num: weeks || value,
+        num_trips: data.length,
+        period_from: query,
+        period_to: new Date(),
+      });
+    }
+    req.reqCondition = reqCondition;
     next();
   }
 };

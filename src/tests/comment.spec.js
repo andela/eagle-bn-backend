@@ -93,8 +93,8 @@ describe('PUT /comment/:commentId', () => {
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send({ comment: 'Updated Comment' })
       .end((err, res) => {
-        expect(res.status).to.equal(201);
-        expect(res.body.status).to.equal(201);
+        expect(res.status).to.equal(200);
+        expect(res.body.status).to.equal(200);
         done();
       });
   });
@@ -169,8 +169,8 @@ describe('DELETE /comment/:commentId', () => {
       .delete('/api/v1/requests/1/comments/1')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
-        expect(res.status).to.equal(201);
-        expect(res.body.status).to.equal(201);
+        expect(res.status).to.equal(200);
+        expect(res.body.status).to.equal(200);
         done();
       });
   });

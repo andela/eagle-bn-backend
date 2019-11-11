@@ -1,0 +1,32 @@
+include ../header.pug
+div(style="font-size:16px;background-color:#fdfdfd;margin:2vw auto auto 35%;padding:10px; font-family:'Arial, Helvetica, sans-serif;height:auto;width:auto;")
+  h2(style='color: #007bff')
+    | Barefoot Nomad
+  br
+  div(style='border: #294661 solid 1px; padding: 1vw; width: 50%')
+    h2(style="margin:0;margin-bottom:30px;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:300;line-height:1.5;font-size:24px;color:#294661!important")  Hello #{fullname} 
+    br
+    p(style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300")
+      strong  you are viewing this email because #{msg} at Barefoot Nomad 
+    br
+    - var bhref = base + url
+    a(href=bhref style='box-sizing:border-box;border-color:#007bff;font-weight:400;text-decoration:none;display:inline-block;margin-left:5vw;color:#ffffff;background-color:#007bff;border:solid 1px #007bff;border-radius:2px;font-size:14px;padding:12px 45px' target='_blank' data-saferedirecturl='') #{actionMsg}
+    p(style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300")
+      br
+      br
+      |  If you have any issue, please contact us immediately at on our support email 
+      a(href='mailto:andelaeagle@gmail.com' target='_blank') Barefoot
+      | .
+    br
+    p
+      | Don&apos;t want to receive email notifications again? 
+      - var href = base + '/api/v1/users/unsubscribe/' + token
+      a(href=href target='_blank') unsubscribe
+      | .
+    p(style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300")
+      | Thank you,
+      br
+      |  The Barefoot Eagles Team
+  br
+  p(style="color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:12px;font-weight:400;margin-bottom:5px;margin:10px 0 20px") Send with Confidence
+  p(style="margin:0;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-weight:300;font-size:12px;margin-bottom:5px") &copy; Barefoot Nomard Eagles Kigali

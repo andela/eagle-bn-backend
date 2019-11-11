@@ -8,11 +8,12 @@ const app = express.Router();
 const { checkToken } = UserMiddleware;
 const { checkNotificationExists, checkNotificationOwner } = NotificationMiddleware;
 const {
-  getUserNotifications, updateNotificationStatus, getSingleNotification,
+  getUserNotifications, updateNotificationStatus, getSingleNotification, markAllNotificationsAsRead
 } = NotificationController;
 
 app.get('/', checkToken, getUserNotifications);
 app.get('/:id', checkToken, checkNotificationExists, checkNotificationOwner, getSingleNotification);
 app.patch('/:id/:status', checkToken, checkNotificationExists, checkNotificationOwner, updateNotificationStatus);
+app.patch('/readall', checkToken, markAllNotificationsAsRead);
 
 export default app;
