@@ -38,6 +38,7 @@ app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updat
 app.put('/role', checkRole, checkAdmin, UserMiddle.getUserbyEmail, isUserVerified, role.changeRole);
 app.get('/roles', checkAdmin, role.allRole);
 app.get('/email/:subscription/:token', verifyToken, userSubscription);
+app.patch('/logout', UserMiddle.verifyToken, UserController.logout);
 
 export default app;
 
