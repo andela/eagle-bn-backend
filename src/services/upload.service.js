@@ -4,24 +4,25 @@ import sendResult from '../utils/sendResult';
 import db from '../database/models/index';
 import cloudinary from '../config/clound-config';
 
-let success = 0;
-let failure = 0;
 
 const uploadService = {
+  success: 0,
+  failure: 0,
 
   checkIfAllUploaded(total, res, data, msg) {
-    if (success + failure === total) return sendResult(res, 201, `${msg} ${success}/${success + failure} Images Uploaded`, data);
+    if (uploadService.success + uploadService.failure === total) return sendResult(res, 201, `${msg} ${uploadService.success}/${uploadService.success + uploadService.failure} Images Uploaded`, data);
   },
   uploadImages(req, res, data, msg) {
-    success = 0;
-    failure = 0;
+    uploadService.success = 0;
+    uploadService.failure = 0;
     if (!req.imageArray) return sendResult(res, 200, msg, data);
     const numberofImages = req.imageArray.length;
     data.images = [];
     req.imageArray.forEach((element) => {
       cloudinary.uploader.upload(element.tempFilePath, async (result) => {
         if (result.error) {
-          failure += 1; return uploadService.checkIfAllUploaded(numberofImages, res, data, msg);
+          uploadService.failure += 1;
+          return uploadService.checkIfAllUploaded(numberofImages, res, data, msg);
         }
 
         const imageRes = await db.AccommodationImages.create({
@@ -29,7 +30,7 @@ const uploadService = {
           accommodationid: data.id,
         });
         data.images.push(imageRes.imageurl);
-        success += 1;
+        uploadService.success += 1;
         return uploadService.checkIfAllUploaded(numberofImages, res, data, msg);
       });
     });

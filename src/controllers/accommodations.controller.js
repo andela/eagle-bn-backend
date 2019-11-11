@@ -21,8 +21,7 @@ const Accommodation = {
       availableSpace,
       currency: (currency) || 'USD',
     });
-    const accommodation = response.get({ plain: true });
-    uploadService.uploadImages(req, res, accommodation, 'Accomodation Added');
+    uploadService.uploadImages(req, res, response);
   },
 
   async getAccommodations(req, res) {
@@ -50,8 +49,7 @@ const Accommodation = {
       await AccommodationService.deleteAccommodationImages(id);
       returnData.AccommodationImages = undefined;
     }
-    const returnAccomodation = await AccommodationService.getAccommodationById(id);
-    uploadService.uploadImages(req, res, returnAccomodation, 'Accommodation data/images updated successfully');
+    uploadService.uploadImages(req, res, returnData, 'Accommodation data/images updated successfully');
   },
 
   async deleteAccommodation(req, res) {

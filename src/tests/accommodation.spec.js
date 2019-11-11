@@ -15,6 +15,7 @@ let Utoken = '';
 const img = fs.readFileSync(path.join(__dirname, 'mockData/img.jpeg'));
 const img2 = fs.readFileSync(path.join(__dirname, 'mockData/img2.jpeg'));
 const wrongFile = fs.readFileSync(path.join(__dirname, 'mockData/email.js'));
+const WrongExt = fs.readFileSync(path.join(__dirname, 'mockData/package.jpg'));
 
 describe('accommodation tests', () => {
   before((done) => {
@@ -63,6 +64,29 @@ describe('accommodation tests', () => {
       .field('amenities', 'free wifi')
       .attach('images', img, 'preview.png')
       .attach('images', img2, 'preview2.png')
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.data).to.have.property('id');
+        expect(res.body.data).to.have.property('images');
+        done();
+      });
+  });
+
+  it('should return 201 status with a number of images uploaded and accommodation data when one of the images uploaded is/are invalid', (done) => {
+    chai.request(app)
+      .post('/api/v1/accommodations')
+      .set('Authorization', Utoken)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .field('address', 'Kigali, rwanda')
+      .field('description', 'great house')
+      .field('name', 'hotel')
+      .field('cost', '40000')
+      .field('availableSpace', '2 rooms')
+      .field('services', 'swimming pool')
+      .field('amenities', 'free wifi')
+      .attach('images', img, 'preview.png')
+      .attach('images', img2, 'preview2.png')
+      .attach('images', WrongExt, 'preview3.png')
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.data).to.have.property('id');

@@ -1,0 +1,60 @@
+{
+  "name": "maids-app",
+  "version": "1.0.0",
+  "description": "web app to hire a house-maids",
+  "main": "index.js",
+  "nyc": {
+    "require": [
+      "esm"
+    ],
+    "exclude": [
+      "**/**/**/errorsMiddleware.js"
+    ]
+  },
+  "scripts": {
+    "test": "npm run removeDummy && npm run dummy && NODE_ENV=test  nyc mocha --timeout 200000 --exit server/tests/*js",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "start": "node -r esm ./server/index.js",
+    "dev": "nodemon -r esm ./server/index.js",
+    "table": "sequelize-cli db:migrate",
+    "dropTable": "sequelize-cli db:migrate:undo:all",
+    "dummy": "NODE_ENV=test sequelize-cli db:migrate",
+    "removeDummy": "NODE_ENV=test sequelize-cli db:migrate:undo:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urbanishimwe/maids-app.git"
+  },
+  "author": "Andela pre-simulation program",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urbanishimwe/maids-app/issues"
+  },
+  "homepage": "https://github.com/urbanishimwe/maids-app#readme",
+  "dependencies": {
+    "bcrypt": "3.0.6",
+    "body-parser": "1.19.0",
+    "chai": "4.2.0",
+    "chai-http": "4.3.0",
+    "cloudinary": "^1.15.0",
+    "coveralls": "3.0.6",
+    "dotenv": "8.1.0",
+    "esm": "3.2.25",
+    "express": "4.17.1",
+    "express-fileupload": "^1.1.6-alpha.5",
+    "jsonwebtoken": "8.5.1",
+    "mocha": "6.2.0",
+    "nodemon": "1.19.2",
+    "nyc": "14.1.1",
+    "open": "^6.4.0",
+    "pg": "7.12.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.18.4",
+    "sequelize-cli": "^5.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
