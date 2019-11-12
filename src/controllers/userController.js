@@ -98,7 +98,7 @@ const User = {
 
   async getProfile(req, res) {
     const { password, ...data } = req.user;
-    return sendResult(res, 200, 'my profile', data);
+    return sendResult(res, 200, 'user profile', data);
   },
 
   async userSubscription(req, res) {

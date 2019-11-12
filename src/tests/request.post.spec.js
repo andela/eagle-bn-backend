@@ -55,7 +55,6 @@ describe('create request and new request notifications', () => {
       .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equal(3);
         done();
       });
   });
@@ -79,7 +78,7 @@ describe('create request and new request notifications', () => {
   });
   it('should return a 200 status when notification is updated to read', (done) => {
     chai.request(app)
-      .patch('/api/v1/notifications/1/read')
+      .patch('/api/v1/notifications/1/status')
       .set('Authorization', helper.createToken(5, 'manager@gmail.com', true, 'manager'))
       .end((err, res) => {
         expect(res.status).to.equal(200);

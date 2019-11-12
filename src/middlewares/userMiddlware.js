@@ -41,6 +41,14 @@ const User = {
     next();
   },
 
+  async getUserById(req, res, next) {
+    const { id } = req.params;
+    const user = await UserService.getUser({ id });
+    if (!user) return sendResult(res, 404, 'User with id not found');
+    req.user = user;
+    next();
+  },
+
   validatePass(req, res, next) {
     try {
       new Check({ password: req }).req().min(2).withSpec()

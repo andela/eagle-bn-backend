@@ -6,7 +6,6 @@ import mockData from './mockData/signupMockupData';
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
 describe('signup', () => {
   it('should return a 201 status', (done) => {
     chai.request(app)

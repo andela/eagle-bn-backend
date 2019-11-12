@@ -100,7 +100,7 @@ class Validate {
 
   withSpec() {
     // eslint-disable-next-line no-useless-escape
-    if (this.val && (!this.val.match(/[a-zA-Z]+/) || !this.val.match(/[0-9]+/) || !this.val.match(/[-!$%^&*()_+|~=``{}\\:";'<>?,./]+/))) {
+    if (this.val && (!this.val.match(/[a-zA-Z]+/) || this.val.match(/\s+/) || !this.val.match(/[0-9]+/) || !this.val.match(/[-!$%^&*()_+|~=``{}\\:";'<>?,./@]+/))) {
       throw new Error(`${this.key} should contain letters, numbers and  at least 1 special character`);
     }
     return this;
