@@ -17,6 +17,14 @@ module.exports = {
     timeZone: 'africa/kigali',
     createdAt: new Date(),
     updatedAt: new Date()
+  },
+  { // one-way trip
+    UserId: 3,
+    country: 'RW',
+    city: 'kigali-ngali',
+    timeZone: 'africa/kigali',
+    createdAt: new Date(),
+    updatedAt: new Date()
   }])
   ]),
   down: (queryInterface, Sequelize) => Promise.all([
