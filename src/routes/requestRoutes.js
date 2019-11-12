@@ -2,7 +2,7 @@
 import express from 'express';
 import requestController from '../controllers/requestController';
 import valid from '../validation';
-import { validateTrips, updateValidateTrips, validateTripsData } from '../validation/trips';
+import { validateTrips, updateValidateTrips } from '../validation/trips';
 import reqMidd from '../middlewares/requestMiddlware';
 import userMidd from '../middlewares/userMiddlware';
 import roles from '../middlewares/rolesMiddlewares';
@@ -46,7 +46,7 @@ app.get('/', checkToken, checkRequester, requestController.getRequest);
 app.post('/', checkToken, checkRequester, valid.request, validateTrips, requestController.postRequest);
 app.get('/managers/:managerId', managerValid, checkToken, checkManager, checkManagerId, getManagerRequests);
 app.patch('/:requestId/:status', singleReqValid, checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);
-app.put('/:requestId/:tripId', verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, reqMidd.checkIfTripExists, updateValidateTrips, validateTripsData, requestController.updateRequest);
+app.put('/:requestId/:tripId', verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, reqMidd.checkIfTripExists, updateValidateTrips, requestController.updateRequest);
 app.put('/:requestId/comments/:commentId', editCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, updateComment);
 app.delete('/:requestId/comments/:commentId', deleteCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, trashComment);
 app.post('/:requestId/comments', addCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, addComment);
