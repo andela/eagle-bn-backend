@@ -8,7 +8,6 @@ const setupSwagger = (app) => {
       version: '1.0.0',
       description: 'Make company global travel and accommodation easy and convenient for the strong workforce of savvy members of staff, by leveraging the modern web.',
     },
-    host: 'localhost:3000',
     basePath: '/api/v1',
     securityDefinitions: {
       bearerAuth: {
@@ -21,7 +20,7 @@ const setupSwagger = (app) => {
   };
   const options = {
     swaggerDefinition,
-    apis: ['./src/routes/**/*.js', './src/database/models/**/*.js', './src/swagger/**/*.js'],
+    apis: ['./src/swagger/**/*.yml'],
   };
   const swaggerSpec = swaggerJsdoc(options);
 
