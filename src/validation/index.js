@@ -313,6 +313,9 @@ const validator = {
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
+  },
+  idValidate(req, res, next) {
+    isNumeric(req.params.id, 'id provided', res, next);
   }
 };
 
