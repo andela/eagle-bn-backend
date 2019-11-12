@@ -10,16 +10,6 @@ const LikingsController = {
     } catch (error) {
       return sendResult(res, 400, 'Wrong accommodation ID sent');
     }
-  },
-
-  async getAccommdationLikes(req, res) {
-    try {
-      const { accommodationId } = req.params;
-      const number = await LikingService.getLikes(accommodationId);
-      return sendResult(res, 200, ` The ccommodation ${accommodationId} has:  ${number.likes} likes `, number);
-    } catch (error) {
-      return sendResult(res, 400, 'Wrong accommodation ID sent');
-    }
   }
 };
 
