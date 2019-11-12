@@ -15,8 +15,7 @@
     "exclude": [
       "**/**/**/swaggerDefinition.js",
       "**/**/**/index.js",
-      "**/**/**/sendResult.js",
-      "**/**/**/validator.js"
+      "**/**/utils/**"
     ],
     "sourceMap": false,
     "instrument": false
@@ -51,6 +50,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cloudinary": "^1.15.0",
+    "cors": "^2.8.5",
     "countrycitystatejson": "^0.2.13",
     "coveralls": "^3.0.6",
     "dotenv": "^8.1.0",
