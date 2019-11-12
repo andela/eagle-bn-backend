@@ -5,6 +5,11 @@ module.exports = {
     return queryInterface.addColumn('Comments','parent',{
       type: Sequelize.INTEGER,
       allowNull: true,
+      references: {
+        model: 'Comments',
+        key: 'id',
+        onDelete: 'CASCADE'
+      }
     },'')
   },
 

@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'requestId',
         targetKey: 'id',
       });
+    Comments.belongsTo(models.Comments, {
+      foreignKey: 'parent',
+      targetKey: 'id',
+      onDelete: 'CASCADE',
+    });
 
   };
   return Comments;

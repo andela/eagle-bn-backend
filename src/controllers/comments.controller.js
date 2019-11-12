@@ -9,7 +9,10 @@ const CommentsController = {
   addComment: async (req, res) => {
     const { comment, parent } = req.body;
     const newComment = await CommentService.createComment({
-      comment, parent
+      comment,
+      userId: req.userData.userId,
+      requestId: req.params.requestId,
+      parent
     });
     const { lineManager, id } = await UserService.getUser({ id: req.request.UserId });
     // CREATE NOTIFICATION FOR THE REQUESER OR MANAGER
