@@ -99,8 +99,9 @@ class Validate {
   }
 
   withSpec() {
-    if (this.val && (!this.val.match(/[a-zA-Z0-9]+/) || !this.val.match(/[#*@!&]+/))) {
-      throw new Error(`${this.key} should have 1 special character and alphanumeric`);
+    // eslint-disable-next-line no-useless-escape
+    if (this.val && (!this.val.match(/[a-zA-Z]+/) || !this.val.match(/[0-9]+/) || !this.val.match(/[-!$%^&*()_+|~=``{}\\:";'<>?,./]+/))) {
+      throw new Error(`${this.key} should contain letters, numbers and  at least 1 special character`);
     }
     return this;
   }
