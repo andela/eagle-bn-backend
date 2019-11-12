@@ -53,7 +53,7 @@ describe('approve/reject request', () => {
       .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equal(2);
+        expect(res.body.data.length).to.equal(3);
         done();
       });
   });
@@ -63,7 +63,6 @@ describe('approve/reject request', () => {
       .set('Authorization', helpers.createToken(5, 'alexis@gmail.com', true, 'manager'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data.length).to.equal(1);
         done();
       });
   });

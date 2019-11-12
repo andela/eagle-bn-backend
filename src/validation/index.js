@@ -205,13 +205,15 @@ const validator = {
     if (booking.start < Date.now()) return next();
     return sendResult(res, 400, 'You can\'t review an accommodation before your booking starting date');
   },
-  accommodationId(req, res, next) {
+  validateAccommodationId(req, res, next) {
     return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
   },
 
   updateRequest(req, res, next) {
-    const { returnTime } = req.body;
-    const { departureTime } = req.body.trip;
+    const { returnTime, trip } = req.body;
+    const { departureTime, reason } = trip;
+    req.body.departureTime = departureTime;
+    req.body.reason = reason;
     try {
       new Check({ timeZone: req }).str().min(1);
       new Check({ trips: req }).array().min(1);
@@ -220,6 +222,8 @@ const validator = {
       new Check({ requestId: req }).num().min(1);
       new Check({ tripId: req }).num().min(1);
       new Check({ returnTime: req }).date();
+      new Check({ departureTime: req }).date();
+      new Check({ reason: req }).alpha();
       if (returnTime || departureTime) {
         req.body.timeZone = new Date(returnTime || departureTime).toString().split('(')[1].replace(/[\(\)]/g, '');
       }
