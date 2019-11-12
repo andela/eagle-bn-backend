@@ -13,6 +13,17 @@ const LikingService = {
     }
     like.update({ isLiked: !like.isLiked });
     return sendResult(res, 200, ` The accommodation like  status updated to ${like.isLiked}`, like);
+  },
+
+  async getLikes(accommodationId) {
+    const countLikes = await db.Likings
+      .findAndCountAll({ where: { accommodationId, isLiked: true }, raw: false });
+    const countUnlikes = await db.Likings
+      .findAndCountAll({ where: { accommodationId, isLiked: false }, raw: false });
+    const data = {
+      likes: countLikes.count + countUnlikes.count,
+    };
+    return data;
   }
 };
 export default LikingService;

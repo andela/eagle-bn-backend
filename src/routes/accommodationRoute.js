@@ -32,6 +32,10 @@ app.post('/:accommodationId/like', [
   checkToken,
   LikingsController.addLikeAccommdation
 ]);
+app.get('/:accommodationId/like', [
+  checkToken,
+  LikingsController.getAccommdationLikes
+]);
 
 
 export default app;
