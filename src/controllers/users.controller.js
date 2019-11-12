@@ -1,45 +1,39 @@
 /* eslint-disable object-curly-newline */
 import helpers from '../utils/helper';
-import db from '../database/models/index';
 import sendResult from '../utils/sendResult';
 import UserService from '../services/user.service';
 import EmailService from '../services/email.service';
+import RoleService from '../services/role.service';
 
 const User = {
   async signup(req, res) {
     const { fullname, password, email } = req.body;
 
-    const response = await db.Users.create({
+    const response = await UserService.createUser({
       email,
       password: helpers.hashPassword(password),
       fullname
     });
-    const Role = await db.Roles.findOne({ where: response.dataValues.RoleId });
-
-    const userData = response.get({ plain: true });
-    delete userData.password;
+    const Role = await RoleService.getRole({ id: response.RoleId });
+    delete response.password;
     // SEND VERIFICATION EMAIL TO USER
-    await EmailService.sendVerificationEmail(req, userData);
-    const data = { ...userData, Role: Role.roleValue };
+    await EmailService.sendVerificationEmail(req, response);
+    const data = { ...response, Role: Role.roleValue };
     return sendResult(res, 201, 'Account created successfully', data);
   },
 
   async login(req, res) {
     const { email, password } = req.body;
-    const userInfo = await db.Users.findOne({
-      where: {
-        email
-      },
-      include: [{ model: db.Roles, attributes: { include: 'roleValue' } }]
-    });
-    if (!userInfo) return sendResult(res, 400, 'The email and/or password is invalid');
-    const comfirmPass = helpers.comparePassword(password, userInfo.password);
+    const user = await UserService.getUser({ email });
+    if (!user) return sendResult(res, 400, 'The email and/or password is invalid');
+    const comfirmPass = helpers.comparePassword(password, user.password);
     if (comfirmPass) {
+      user.Role = await RoleService.getRole({ id: user.RoleId });
       const {
         id, isverified, Role, fullname, rememberMe
-      } = userInfo;
-      // eslint-disable-next-line max-len
-      const token = helpers.createToken(id, email, isverified, Role.roleValue, rememberMe, fullname);
+      } = user;
+      const token = helpers
+        .createToken(id, email, isverified, Role.roleValue, rememberMe, fullname);
       const data = {
         userid: id, fullname, email, isverified, token
       };
@@ -55,26 +49,16 @@ const User = {
     try {
       const user = await helpers.verifyToken(helpers.getToken(req));
       if (!user || user.error || !(user.userId) || !(user.email)) return sendResult(res, 401, 'invalid token, try to check your email again');
-      await db.Users.update(
-        { isverified: true },
-        {
-        // eslint-disable-next-line radix
-          where: { id: user.userId },
-        },
-      );
+      await UserService.updateUserById(user.userId, { isverified: true });
       return sendResult(res, 200, 'email verified! try to login with your existing account');
     } catch (error) {
       return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
     }
   },
   async OauthLogin(req, res) {
-    const [data] = await db.Users.findOrCreate({
-      where: { email: req.user.email },
-      defaults: req.user
-    });
     const {
       id, fullname, email, isverified, rememberMe
-    } = data;
+    } = await UserService.findOrCreateUser(req.user, req.user.email);
     return sendResult(res, 201, 'User logged successfully', {
       id,
       fullname,
@@ -87,12 +71,8 @@ const User = {
     const { email, role, ...updateData } = {
       ...req.body, avatar: req.imgLink, password: helpers.hashPassword(req.body.password)
     };
-
-    const user = await db.Users.update(updateData, {
-      where: { email: req.user.email }, returning: true, raw: true
-    });
-
-    const { password, ...data } = user[1][0];
+    const user = await UserService.updateUserByEmail(updateData, req.user.email);
+    const { password, ...data } = user;
     return sendResult(res, 200, 'Profile updated successfully', data);
   },
 

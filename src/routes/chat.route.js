@@ -1,6 +1,6 @@
 import express from 'express';
 import ChatsController from '../controllers/chats.controller';
-import UserMiddleware from '../middlewares/userMiddlware';
+import UserMiddleware from '../middlewares/user.middleware';
 import validator from '../validation';
 
 const app = express.Router();

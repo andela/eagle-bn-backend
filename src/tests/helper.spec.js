@@ -1,6 +1,6 @@
 import chai from 'chai';
 import helpers from '../utils/helper';
-import userController from '../controllers/userController';
+import userController from '../controllers/users.controller';
 
 const { expect } = chai;
 const plainPassword = 'lemoissonW';
