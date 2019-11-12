@@ -84,7 +84,7 @@ const User = {
   },
 
   async updateProfile(req, res) {
-    const { email, role, ...updateData } = {
+    const { email, role, RoleId, createdAt, updatedAt, id, ...updateData } = {
       ...req.body, avatar: req.imgLink, password: helpers.hashPassword(req.body.password)
     };
 
