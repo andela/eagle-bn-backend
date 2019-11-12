@@ -47,12 +47,6 @@ const UserService = {
     });
     return user[1];
   },
-
-  async getOneUser(condition) {
-    const user = await db.Users.findOne({ where: condition, raw: true });
-    return user;
-  }
-
 };
 
 export default UserService;

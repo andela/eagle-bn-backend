@@ -35,13 +35,11 @@ const User = {
       const token = helpers
         .createToken(id, email, isverified, Role.roleValue, rememberMe, fullname);
       const data = {
-        userid: id, fullname, email, isverified, token,
+        userid: id, fullname, email, isverified, token
       };
-
       if (!isverified) {
         return sendResult(res, 400, 'Please verify your account first');
       }
-      await UserService.updateUser({ isLogged: true }, { id });
       return sendResult(res, 201, 'User logged successfully', data);
     }
     return sendResult(res, 400, 'The email and/or password is invalid');
@@ -92,7 +90,7 @@ const User = {
   },
 
   async logout(req, res) {
-    const data = { isLogged: false };
+    const data = { lastSeen: new Date() };
     const condition = { id: req.user.userId };
     await UserService.updateUser(data, condition);
     sendResult(res, 200, 'Logout successful');
