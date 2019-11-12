@@ -64,7 +64,7 @@ describe('update requests tests', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('we dint find nairobi in  Uganda');
+        res.body.should.have.property('msg').eql('cannot find nairobi in Uganda');
         done();
       });
   });
@@ -90,6 +90,30 @@ describe('update requests tests', () => {
         res.body.should.be.a('object');
         res.body.should.have.property('msg').eql('kamp city not found');
         res.body.data.should.have.property('suggestions');
+        done();
+      });
+  });
+  it('Should test for invalid country', (done) => {
+    chai.request(app)
+      .put('/api/v1/requests/3/1')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send(reqData.req5)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('invalid origin country');
+        done();
+      });
+  });
+  it('Should test for invalid destination country', (done) => {
+    chai.request(app)
+      .put('/api/v1/requests/3/1')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send(reqData.req6)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('invalid destination country');
         done();
       });
   });

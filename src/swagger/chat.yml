@@ -1,0 +1,76 @@
+/chats/:
+  parameters:
+      - in: header
+        name: Authorization
+        description: The token
+  produces:
+      - application/json
+  post:
+    description: add chat
+    tags:
+      - chats
+    parameters:
+      - in: body
+        name: chat body
+        description: chat data
+        schema:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+            receiverId:
+              type: int
+    responses:
+      200:
+        description: new chat
+        schema:
+          type: object
+          properties:
+            status: 201
+            msg: 
+              type: string
+            data:
+              $ref: '#/definitions/chat'
+      400:
+        description: Wrong data sent
+  get:
+    description: get chats
+    tags:
+      - chats
+    produces:
+      - application/json
+    responses:
+      200:
+        description: get user chats
+        schema:
+          type: object
+          properties:
+            msg:
+              type: string
+            data:
+              type: array
+              items:
+              $ref: '#/definitions/chat'
+              
+      400:
+        description: Wrong data sent
+
+definitions:
+  chat:
+    type: object
+    required:
+    properties:
+      id:
+        type: int
+      authorId:
+        type: int
+      message:
+        type: string
+      receiverId:
+        type: int
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
