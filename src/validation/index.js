@@ -6,6 +6,7 @@ import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
 import { checkStringInArray, checkDate, checkCountry } from './trips';
 import currencies from '../utils/currencies.json';
+import RoleService from '../services/roles.service';
 
 const isNumeric = (num, name, res, next) => {
   if (num.match(/^[0-9]{1,}$/)) return next();
@@ -316,7 +317,44 @@ const validator = {
   },
   idValidate(req, res, next) {
     isNumeric(req.params.id, 'id provided', res, next);
+  },
+
+  validatePass(req, res, next) {
+    try {
+      new Check({ password: req }).req().min(2).withSpec()
+        .confirm();
+      next();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+  },
+
+  validateEmail(req, res, next) {
+    try {
+      new Check({ email: req }).req().email();
+      next();
+    } catch (error) {
+      sendResult(res, 400, error.message);
+    }
+  },
+
+  async checkRole(req, res, next) {
+    try {
+      new Check({ email: req }).req().email();
+      new Check({ new_role: req }).req().min(2).alpha();
+    } catch (error) {
+      return sendResult(res, 400, error.message);
+    }
+
+    const checkIfExist = await RoleService.getRole({ roleValue: req.body.new_role });
+
+    if (!checkIfExist) return sendResult(res, 400, 'Role Value does not exist');
+
+    req.new_role_id = checkIfExist.id;
+
+    return next();
   }
+
 };
 
 export default validator;

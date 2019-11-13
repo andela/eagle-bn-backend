@@ -1,6 +1,5 @@
 import sendResult from '../utils/sendResult';
 import db from '../database/models/index';
-import Check from '../utils/validator';
 import helper from '../utils/helper';
 import cloud from '../config/clound-config';
 import UserService from '../services/user.service';
@@ -18,15 +17,6 @@ const User = {
       return sendResult(res, 400, 'Both email and password are required');
     }
     next();
-  },
-
-  validateEmail(req, res, next) {
-    try {
-      new Check({ email: req }).req().email();
-      next();
-    } catch (error) {
-      sendResult(res, 400, error.message);
-    }
   },
 
   async getUserbyEmail(req, res, next) {
@@ -47,16 +37,6 @@ const User = {
     if (!user) return sendResult(res, 404, 'User with id not found');
     req.user = user;
     next();
-  },
-
-  validatePass(req, res, next) {
-    try {
-      new Check({ password: req }).req().min(2).withSpec()
-        .confirm();
-      next();
-    } catch (error) {
-      return sendResult(res, 400, error.message);
-    }
   },
 
   verifyToken(req, res, next) {
