@@ -39,7 +39,14 @@ const UserService = {
   async createUser(user) {
     const result = await db.Users.create(user);
     return result.get({ plain: true });
-  }
+  },
+
+  async updateUser(data, condition) {
+    const user = await db.Users.update(data, {
+      where: condition, returning: true, plain: true, raw: true,
+    });
+    return user[1];
+  },
 };
 
 export default UserService;

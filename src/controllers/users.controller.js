@@ -87,6 +87,13 @@ const User = {
     const receiveEmails = (subscription === 'subscribe');
     await UserService.manageUserSubscription(id, receiveEmails);
     sendResult(res, 200, `you have been ${subscription}ed successfully`);
+  },
+
+  async logout(req, res) {
+    const data = { lastSeen: new Date() };
+    const condition = { id: req.user.userId };
+    await UserService.updateUser(data, condition);
+    sendResult(res, 200, 'Logout successful');
   }
 
 };
