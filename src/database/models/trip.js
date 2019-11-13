@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Trips = sequelize.define('Trips', {
-    departureTime: { type: DataTypes.STRING, allowNull: false },
+    departureTime: { type: DataTypes.DATE, allowNull: false },
     country: { type: DataTypes.STRING, allowNull: false },
     city: { type: DataTypes.STRING, allowNull: false },
     reason: { type: DataTypes.TEXT,  allowNull: false },

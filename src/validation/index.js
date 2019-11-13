@@ -124,6 +124,8 @@ const validator = {
       new Check({ status: req }).str().min(5);
       new Check({ departureTime: req }).str();
       new Check({ id: req }).num();
+      new Check({ to: req }).date();
+      new Check({ from: req }).date();
       const {
         id, origin, UserId, status, destination, reason,
         departureTime, from, to, returnTime,
@@ -138,6 +140,9 @@ const validator = {
         from,
         to,
         returnTime };
+      if (to && from) {
+        if (new Date(to) <= new Date(from)) throw new Error('from date should be less than to date');
+      }
       Object.keys(req.query).map(key => {
         if (!allData.hasOwnProperty(key) || !allData[key]) {
           throw new Error(`${key} is invalid parameter`);
