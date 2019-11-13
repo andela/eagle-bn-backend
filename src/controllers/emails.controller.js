@@ -13,7 +13,7 @@ const email = {
     const userInfo = helpers.decodeToken(req.params.token);
     if (userInfo.error) return sendResult(res, 400, userInfo.error);
     const password = helpers.hashPassword(req.body.password);
-    await UserService.updateUserByEmail({ password }, userInfo.email);
+    await UserService.updateUser({ password }, { email: userInfo.email });
     sendResult(res, 200, 'password updated successfully');
   }
 };
