@@ -1,5 +1,5 @@
 import locations from 'countrycitystatejson';
-import helper from './requestUtils';
+import helper from './request.util';
 
 const getCountryByName = (country) => {
   const lowerCountry = country ? country.toLowerCase() : '';
