@@ -8,6 +8,24 @@ module.exports = {
       isLiked: false,
       createdAt: new Date(),
       updatedAt: new Date()
+    },{
+      userId: 1,
+      accommodationId: 2,
+      isLiked: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },{
+      userId: 2,
+      accommodationId: 2,
+      isLiked: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },{
+      userId: 3,
+      accommodationId: 2,
+      isLiked: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }])
   ]),
 
