@@ -178,6 +178,7 @@ const validator = {
     const { requestId } = req.params;
     try {
       new Check({ comment: req }).str().req().min(5);
+      new Check({ parent: req }).num().min(1);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
@@ -255,6 +256,7 @@ const validator = {
     const { requestId, commentId } = req.params;
     try {
       new Check({ comment: req }).str().req().min(5);
+      new Check({ parent: req }).num().min(1);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }

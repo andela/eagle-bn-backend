@@ -82,6 +82,14 @@ const requestMidd = {
     next();
   },
 
+  async chekIfParentExist(req, res, next) {
+    if (req.body.parent) {
+      const isFound = await CommentService.getComment(req.body.parent);
+      if (!isFound) return sendResult(res, 404, 'Parent comment does not exist');
+    }
+    next();
+  },
+
   async checkStats(req, res, next) {
     let key = Object.keys(req.query)[0];
     let value = req.query[key];

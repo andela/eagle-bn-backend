@@ -7,10 +7,12 @@ import RequestService from '../services/request.service';
 
 const CommentsController = {
   addComment: async (req, res) => {
+    const { comment, parent } = req.body;
     const newComment = await CommentService.createComment({
-      comment: req.body.comment,
+      comment,
       userId: req.userData.userId,
       requestId: req.params.requestId,
+      parent
     });
     const { lineManager, id } = await UserService.getUser({ id: req.request.UserId });
     // CREATE NOTIFICATION FOR THE REQUESER OR MANAGER
@@ -23,11 +25,14 @@ const CommentsController = {
     });
     // EMITTING ECHO FOR NEW NOTIFICATION
     NotificationUtil.echoNotification(req, notification, 'new_comment', userId);
+    if (parent) {
+      sendResult(res, 201, `reply to comment ${parent}`, newComment);
+    }
     sendResult(res, 201, 'Comment Created', newComment);
   },
   viewComment: async (req, res) => {
     const comments = await RequestService.getRequestComments(req.params.requestId);
-    sendResult(res, 201, '', comments);
+    sendResult(res, 200, '', comments);
   },
   updateComment: async (req, res) => {
     await CommentService.updateComment(req.params.commentId, req.body.comment);
