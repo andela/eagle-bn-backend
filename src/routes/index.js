@@ -1,9 +1,8 @@
 import express from 'express';
-import userRouter from './userRoutes';
-import accommodationRouter from './accommodationRoute';
-import requestRouter from './requestRoutes';
+import userRouter from './user.route';
+import accommodationRouter from './accommodation.route';
+import requestRouter from './request.route';
 import bookingRouter from './booking.route';
-// eslint-disable-next-line import/no-cycle
 import chatRouter from './chat.route';
 import notificationRouter from './notification.route';
 

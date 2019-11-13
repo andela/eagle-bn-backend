@@ -10,7 +10,7 @@ import locations from 'countrycitystatejson';
 import places from '../../services/countries.json';
 import { allScores, highScores } from '../../services';
 import resSend from '../../utils/sendResult';
-import helper from '../../utils/requestUtils';
+import helper from '../../utils/request.util';
 
 export const checkStringInArray = (array, string, n) => ((array.find(element => element.toLocaleLowerCase()
   === string.toLocaleLowerCase()))
