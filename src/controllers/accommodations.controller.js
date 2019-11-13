@@ -58,9 +58,8 @@ const Accommodation = {
   },
 
   async getAccommodationsByFilter(req, res) {
-    const { isAvailable } = req.query;
     const accommodations = await AccommodationService
-      .getAllAccommodationsByAvailability(isAvailable);
+      .getAllAccommodationsByFilter(req);
     return sendResult(res, 200, 'Accommodations facilities', accommodations);
   },
 

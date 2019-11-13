@@ -26,7 +26,7 @@ const CommentsController = {
     // EMITTING ECHO FOR NEW NOTIFICATION
     NotificationUtil.echoNotification(req, notification, 'new_comment', userId);
     if (parent) {
-      sendResult(res, 201, `reply to comment ${parent}`, newComment);
+      return sendResult(res, 201, `reply to comment ${parent}`, newComment);
     }
     sendResult(res, 201, 'Comment Created', newComment);
   },
