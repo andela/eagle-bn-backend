@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     lineManager: DataTypes.INTEGER,
     RoleId: DataTypes.INTEGER,
     rememberMe: DataTypes.BOOLEAN,
+    lastSeen:DataTypes.DATE,
     recieveEmails: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

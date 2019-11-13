@@ -105,7 +105,7 @@ describe('Password Reset', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('password should have 1 special character and alphanumeric');
+        res.body.should.have.property('msg').eql('password should contain letters, numbers and  at least 1 special character');
         done();
       });
   });
@@ -200,6 +200,20 @@ describe('Password Reset', () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
+        done();
+      });
+  });
+});
+
+describe('logout functionality', () => {
+  it('check for successfull logout', (done) => {
+    chai.request(app)
+      .patch('/api/v1/users/logout')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('Logout successful');
         done();
       });
   });

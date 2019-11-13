@@ -94,17 +94,13 @@ const Request = {
   },
 
   async search(req, res) {
-    try {
-      const { tripData, reqData } = requestData(req);
-      if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
-        reqData.UserId = req.user.userId;
-      }
-      const request = await RequestService.searchRequest(reqData, tripData);
-
-      return sendResult(res, 200, 'Search results', request);
-    } catch (err) {
-      sendResult(res, 500, err.message);
+    const { tripData, reqData } = requestData(req);
+    if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
+      reqData.UserId = req.user.userId;
     }
+    const request = await RequestService.searchRequest(reqData, tripData);
+
+    return sendResult(res, 200, 'Search results', request);
   },
 
   async updateRequest(req, res) {

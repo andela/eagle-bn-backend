@@ -4,8 +4,9 @@
 import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
-import { checkStringInArray, checkDate, checkCountry } from './trips';
+import { checkStringInArray, checkDate } from './trips';
 import currencies from '../utils/currencies.json';
+import validatePlaces from '../utils/placeValidation';
 
 const isNumeric = (num, name, res, next) => {
   if (num.match(/^[0-9]{1,}$/)) return next();
@@ -83,7 +84,7 @@ const validator = {
     return isNumeric(req.params.managerId, 'manager Id', res, next);
   },
 
-  request(req, res, next) {
+  async request(req, res, next) {
     req.error = {};
     try {
       new Check({ timeZone: req }).str().req().min(1);
@@ -101,12 +102,13 @@ const validator = {
         checkDate(req, req.body.returnDate, req.body.timeZone);
       }
       // VALIDATE COUNTRY
-      const country = checkCountry(req.body.country);
-      if (!country) {
-        req.error.country = 'invalid country';
-      } else {
-        req.body.country = country;
+      // eslint-disable-next-line max-len
+      const { error, suggestions, country, city } = await validatePlaces(req.body.country, req.body.city);
+      if (error) {
+        return sendResult(res, 400, error, suggestions);
       }
+      req.body.city = city;
+      req.body.country = country;
       next();
     } catch (err) {
       const message = (Object.keys(req.error).length === 0) ? err.message : req.error;
@@ -122,7 +124,8 @@ const validator = {
       new Check({ origin: req }).str();
       new Check({ duration: req }).str().min(5);
       new Check({ status: req }).str().min(5);
-      new Check({ departureTime: req }).str();
+      new Check({ departureTime: req }).date();
+      new Check({ returnTime: req }).date();
       new Check({ id: req }).num();
       new Check({ to: req }).date();
       new Check({ from: req }).date();
@@ -183,6 +186,7 @@ const validator = {
     const { requestId } = req.params;
     try {
       new Check({ comment: req }).str().req().min(5);
+      new Check({ parent: req }).num().min(1);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
@@ -260,6 +264,7 @@ const validator = {
     const { requestId, commentId } = req.params;
     try {
       new Check({ comment: req }).str().req().min(5);
+      new Check({ parent: req }).num().min(1);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }

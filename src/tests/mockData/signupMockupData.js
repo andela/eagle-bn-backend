@@ -17,7 +17,7 @@ export default [
   },
   {
     fullname: 'lemoisson Metre',
-    password: '1234',
+    password: '1@M',
     email: 'lemoissonmetre@gmail.com',
   },
   {
