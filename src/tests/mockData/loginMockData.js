@@ -23,4 +23,12 @@ export default [
     email: 'alexismajyambere3@gmail.com',
     isverified: false,
   },
+  {
+    password: 'eagle123!',
+    email: 'dummy@gmail.com',
+  },
+  {
+    password: '12345678UU',
+    email: 'alexismajyambere@gmail.com',
+  },
 ];

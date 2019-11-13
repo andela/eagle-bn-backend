@@ -46,14 +46,10 @@ const User = {
   },
 
   async verifyEmail(req, res) {
-    try {
-      const user = await helpers.verifyToken(helpers.getToken(req));
-      if (!user || user.error || !(user.userId) || !(user.email)) return sendResult(res, 401, 'invalid token, try to check your email again');
-      await UserService.updateUserById(user.userId, { isverified: true });
-      return sendResult(res, 200, 'email verified! try to login with your existing account');
-    } catch (error) {
-      return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
-    }
+    const user = await helpers.verifyToken(helpers.getToken(req));
+    if (!user || user.error || !(user.userId) || !(user.email)) return sendResult(res, 401, 'invalid token, try to check your email again');
+    await UserService.updateUserById(user.userId, { isverified: true });
+    return sendResult(res, 200, 'email verified! try to login with your existing account');
   },
   async OauthLogin(req, res) {
     const {
@@ -88,6 +84,13 @@ const User = {
     const receiveEmails = (subscription === 'subscribe');
     await UserService.manageUserSubscription(id, receiveEmails);
     sendResult(res, 200, `you have been ${subscription}ed successfully`);
+  },
+
+  async logout(req, res) {
+    const data = { lastSeen: new Date() };
+    const condition = { id: req.user.userId };
+    await UserService.updateUser(data, condition);
+    sendResult(res, 200, 'Logout successful');
   }
 
 };

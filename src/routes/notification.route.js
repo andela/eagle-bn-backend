@@ -1,7 +1,7 @@
 import express from 'express';
 import UserMiddleware from '../middlewares/user.middleware';
 import NotificationMiddleware from '../middlewares/notification.middleware';
-import NotificationController from '../controllers/notifications.controller';
+import NotificationsController from '../controllers/notifications.controller';
 import Validation from '../validation';
 
 const app = express.Router();
@@ -10,7 +10,7 @@ const { checkToken } = UserMiddleware;
 const { checkNotificationExists, checkNotificationOwner } = NotificationMiddleware;
 const {
   getUserNotifications, updateNotificationStatus, getSingleNotification, markAllNotificationsAsRead
-} = NotificationController;
+} = NotificationsController;
 const { idValidate } = Validation;
 
 app.get('/', checkToken, getUserNotifications);
