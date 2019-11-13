@@ -1,10 +1,10 @@
 import express from 'express';
 import BookingsController from '../controllers/bookings.controller';
 import BookingMiddleware from '../middlewares/booking.middleware';
-import UserMiddleware from '../middlewares/userMiddlware';
-import validation from '../validation';
+import UserMiddleware from '../middlewares/user.middleware';
+import Validation from '../validation';
 import AccommodationMiddleware from '../middlewares/accommodation.middleware';
-import RequestMiddleware from '../middlewares/requestMiddlware';
+import RequestMiddleware from '../middlewares/request.middleware';
 
 const app = express.Router();
 
@@ -13,7 +13,7 @@ const { checkUserBooking, bookingExist } = BookingMiddleware;
 const { setAccommodationRating, createBooking, getBooking } = BookingsController;
 const {
   reviewDateValidation, reviewValidation, validateBooking, getBookingValidation
-} = validation;
+} = Validation;
 const { checkIfTripExists, checkTripOwner } = RequestMiddleware;
 const { accommodationExists, isAccommodationAvailable } = AccommodationMiddleware;
 

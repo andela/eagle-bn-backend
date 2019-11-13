@@ -1,5 +1,4 @@
 import sendResult from '../utils/sendResult';
-import db from '../database/models/index';
 import Check from '../utils/validator';
 import helper from '../utils/helper';
 import cloud from '../config/clound-config';
@@ -7,7 +6,7 @@ import UserService from '../services/user.service';
 
 const User = {
   async checkuserExist(req, res, next) {
-    const existingUser = await db.Users.findOne({ where: { email: req.body.email }, raw: true });
+    const existingUser = await UserService.getUser({ email: req.body.email });
     if (existingUser) return sendResult(res, 409, 'This email already exists');
     next();
   },
@@ -30,13 +29,8 @@ const User = {
   },
 
   async getUserbyEmail(req, res, next) {
-    const user = await db.Users.findOne({
-      where: { email: req.body.email || req.user.email },
-      raw: true,
-    });
-
+    const user = await UserService.getUser({ email: req.body.email || req.user.email });
     if (!user) return sendResult(res, 409, 'User with email not found');
-
     req.user = user;
     next();
   },
@@ -102,6 +96,14 @@ const User = {
     const user = await UserService.getUser({ id: receiverId });
     if (user) return next();
     return sendResult(res, 400, 'this user does not exist');
+  },
+  async isUserVerified(req, res, next) {
+    const user = await UserService.getUserRole({ email: req.body.email });
+    if (!user.isverified) {
+      return sendResult(res, 400, 'The user is not verified');
+    }
+    req.old_role = user.Role.roleName;
+    next();
   }
 };
 
