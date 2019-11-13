@@ -65,7 +65,7 @@ const Request = {
       await EmailService.sendNewRequestEmail(req, Req.id, req.userData.email, user);
     }
     if (req.userData.rememberMe !== rememberMe) {
-      await UserService.updateUserById(req.userData.userId, { rememberMe });
+      await UserService.updateUser({ rememberMe }, { id: req.userData.userId });
     }
     return sendResult(res, 201, `A request created successfully. Remember me for future request? ${rememberMe}`, Req);
   },
