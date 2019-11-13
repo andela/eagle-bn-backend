@@ -32,7 +32,7 @@ const CommentsController = {
   },
   viewComment: async (req, res) => {
     const comments = await RequestService.getRequestComments(req.params.requestId);
-    sendResult(res, 201, '', comments);
+    sendResult(res, 200, '', comments);
   },
   updateComment: async (req, res) => {
     await CommentService.updateComment(req.params.commentId, req.body.comment);
