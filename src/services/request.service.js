@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize';
+import moment from 'moment';
 import db from '../database/models';
 
 const RequestService = {
@@ -77,9 +78,11 @@ const RequestService = {
   },
   async getTraveledDestinations() {
     // eslint-disable-next-line no-return-await
-    return await db.Trips.findAll({ attributes: ['country', 'city', [Sequelize.fn('COUNT', 'city'), 'N of visitors']],
-      group: ['city', 'country'],
-      order: [[Sequelize.fn('COUNT', 'city'), 'DESC']]
+    return await db.Trips.findAll({
+      where: Sequelize.where(Sequelize.fn('date', Sequelize.col('Trips.createdAt')), '<=', Sequelize.fn('date', moment().format('YYYY-MM-DD'))),
+      attributes: ['country', 'city', [Sequelize.fn('COUNT', 'city'), 'N of visitors']],
+      group: ['Trips.city', 'Trips.country'],
+      order: [[Sequelize.fn('COUNT', 'Trips.city'), 'DESC']]
     });
   }
 };

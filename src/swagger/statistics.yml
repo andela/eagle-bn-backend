@@ -1,0 +1,26 @@
+openapi: 3.0.0
+info:
+  title: swagger
+  description: 'TODO: Add Description'
+  contact: {}
+  version: '1.0'
+servers:
+- url: http://localhost:3000/api/v1/statistics
+  variables: {}
+paths:
+  /statistics/traveled-destinations:
+    get:
+      tags:
+      - Misc
+      summary: get travelled destinations
+      description: 'TODO: Add Description'
+      operationId: GetTravelledDestinations
+      parameters: []
+      responses:
+        200:
+          description: ''
+          headers: {}
+      deprecated: false
+tags:
+- name: dist
+  description: ''

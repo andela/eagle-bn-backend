@@ -4,9 +4,9 @@ import RequestsService from '../services/request.service';
 
 const StatisticsController = {
   async getDestinations(req, res) {
-    const Travelled = await RequestsService.getTraveledDestinations();
+    const travelledDestination = await RequestsService.getTraveledDestinations();
 
-    sendResult(res, 200, 'Destinations Travelled', Travelled);
+    sendResult(res, 200, 'Destinations Travelled', travelledDestination);
   }
 };
 
