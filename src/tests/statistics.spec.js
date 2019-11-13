@@ -85,3 +85,17 @@ describe('statistics in x time frame', () => {
       });
   });
 });
+
+
+describe('Get traveled destination with number of visitors', () => {
+  it('Should return 200 with an object', (done) => {
+    chai.request(app)
+      .get('/api/v1/statistics/traveled-destinations')
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('data').a('array');
+        done();
+      });
+  });
+});

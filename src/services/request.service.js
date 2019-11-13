@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize';
 import db from '../database/models';
 
 const RequestService = {
@@ -73,6 +74,13 @@ const RequestService = {
       where: { UserId: userId },
       include: { model: db.Trips, attributes: { exclude: ['RequestId'] } } });
     return result;
+  },
+  async getTraveledDestinations() {
+    // eslint-disable-next-line no-return-await
+    return await db.Trips.findAll({ attributes: ['country', 'city', [Sequelize.fn('COUNT', 'city'), 'N of visitors']],
+      group: ['city', 'country'],
+      order: [[Sequelize.fn('COUNT', 'city'), 'DESC']]
+    });
   }
 };
 
