@@ -6,7 +6,6 @@ import mockData from './mockData/signupMockupData';
 
 chai.use(chaiHttp);
 const { expect } = chai;
-
 describe('signup', () => {
   it('should return a 201 status', (done) => {
     chai.request(app)
@@ -55,7 +54,7 @@ describe('signup', () => {
       .send(mockData[3])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('password should have 1 special character and alphanumeric');
+        expect(res.body.msg).to.equal('password length should be greater than 7');
         done();
       });
   });
@@ -65,7 +64,7 @@ describe('signup', () => {
       .send(mockData[4])
       .end((err, res) => {
         expect(res.status).to.equal(400);
-        expect(res.body.msg).to.equal('password provided do not match');
+        expect(res.body.msg).to.equal('password should contain letters, numbers and  at least 1 special character');
         done();
       });
   });
@@ -99,7 +98,7 @@ describe('signup', () => {
         done();
       });
   });
-  it('should return a 400 status when password lenght is less than 2', (done) => {
+  it('should return a 400 status when fullname lenght is less than 2', (done) => {
     chai.request(app)
       .post('/api/v1/users/signup')
       .send(mockData[8])

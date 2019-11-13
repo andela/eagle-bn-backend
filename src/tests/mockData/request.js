@@ -7,7 +7,7 @@ now.setDate(now.getDate() + 1);
 export default [
   {
     country: 'RW',
-    city: 'Kigali-ngali',
+    city: 'Kigali',
     returnTime: `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} 11:59 pm`,
     timeZone: 'africa/kigali',
     trips: [
@@ -19,7 +19,7 @@ export default [
       },
       {
         country: 'UG',
-        city: 'central',
+        city: 'kampala',
         departureTime: `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} 11:30 am`,
         reason: 'no reason for this',
       }
