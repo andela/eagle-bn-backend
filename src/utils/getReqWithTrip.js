@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import Sequelize from 'sequelize';
 
-const { Op } = Sequelize;
+const { Op, where, cast, col } = Sequelize;
 
 const getReqsWithTrips = (req) => {
   const {
@@ -15,12 +15,21 @@ const getReqsWithTrips = (req) => {
   if (id) reqData.id = id;
   if (UserId) reqData.UserId = UserId;
   if (status) reqData.status = status;
-  if (origin) reqData.country = origin;
-  if (returnTime) reqData.returnTime = { [Op.like]: `${returnTime}%` };
-
+  if (origin) reqData.country = { [Op.iLike]: `%${origin}%` };
+  if (returnTime) {
+    reqData.returnTime = where(
+      cast(col('returnTime'), 'varchar'),
+      { [Op.iLike]: `%${returnTime}%` }
+    );
+  }
   // trip data
-  if (destination) tripData.country = destination;
-  if (departureTime) tripData.departureTime = { [Op.like]: `${departureTime}%` };
+  if (destination) tripData.country = { [Op.iLike]: `%${destination}%` };
+  if (departureTime) {
+    tripData.departureTime = where(
+      cast(col('departureTime'), 'varchar'),
+      { [Op.iLike]: `%${departureTime}%` }
+    );
+  }
   if (from && to) {
     tripData.departureTime = {
       [Op.and]: [

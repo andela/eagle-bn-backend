@@ -4,14 +4,11 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.changeColumn('Trips', 
   'departureTime', {
-    type: Sequelize.DATE,
+    type: 'timestamptz USING CAST("departureTime" as timestamptz)',
   });
  },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.changeColumn('Trips', 
-    'departureTime', {
-      type: Sequelize.DATE,
-    });
+    return queryInterface.removeColumn('Trips', 'departureTime', );
  }
 };

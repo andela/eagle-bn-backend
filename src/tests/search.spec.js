@@ -85,7 +85,7 @@ describe('Search functionality', () => {
       .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com', true, 'requester'))
       .end((err, res) => {
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('Oops no results found');
+        res.body.should.have.property('msg').eql('"from" date should be less than "to" date');
         done();
       });
   });

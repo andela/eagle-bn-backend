@@ -141,7 +141,7 @@ const validator = {
         to,
         returnTime };
       if (to && from) {
-        if (new Date(to) <= new Date(from)) throw new Error('from date should be less than to date');
+        if (new Date(to) <= new Date(from)) throw new Error('"from" date should be less than "to" date');
       }
       Object.keys(req.query).map(key => {
         if (!allData.hasOwnProperty(key) || !allData[key]) {

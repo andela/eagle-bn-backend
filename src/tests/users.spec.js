@@ -176,7 +176,7 @@ describe('Password Reset', () => {
   });
   it('get user profile', (done) => {
     chai.request(app)
-      .get('/api/v1/users/profile/1')
+      .get('/api/v1/users/1/profile')
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
@@ -186,7 +186,7 @@ describe('Password Reset', () => {
   });
   it('get user profile, user not exist', (done) => {
     chai.request(app)
-      .get('/api/v1/users/profile/100')
+      .get('/api/v1/users/100/profile')
       .end((err, res) => {
         res.should.have.status(404);
         res.body.should.be.a('object');

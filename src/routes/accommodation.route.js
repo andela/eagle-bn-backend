@@ -2,11 +2,11 @@ import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
 import BookingsController from '../controllers/bookings.controller';
-import AccommodationsController from '../controllers/accommodationController';
+import AccommodationsController from '../controllers/accommodations.controller';
 import AccommodationMiddleware from '../middlewares/accommodation.middleware';
-import UserMiddleware from '../middlewares/userMiddlware';
+import UserMiddleware from '../middlewares/user.middleware';
 import valid from '../validation';
-import RoleMiddleware from '../middlewares/rolesMiddlewares';
+import RoleMiddleware from '../middlewares/role.middleware';
 import LikingsController from '../controllers/likings.controller';
 
 const app = express.Router();

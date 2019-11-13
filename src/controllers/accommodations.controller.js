@@ -1,7 +1,7 @@
 import sendResult from '../utils/sendResult';
-import db from '../database/models/index';
 import cloudinary from '../config/clound-config';
 import BookmarkService from '../services/bookmark.service';
+import AccommodationService from '../services/accommodation.service';
 
 let success = 0;
 let failure = 0;
@@ -18,10 +18,7 @@ const uploadImages = (req, res, data, msg) => {
     cloudinary.uploader.upload(element.tempFilePath, async (result, error) => {
       if (error) { failure += 1; checkIfAllUploaded(numberofImages, res, data, msg); }
 
-      const imageRes = await db.AccommodationImages.create({
-        imageurl: result.url,
-        accommodationid: data.id,
-      });
+      const imageRes = await AccommodationService.createAccommodationImage(result.url, data.id);
       data.images.push(imageRes.imageurl);
       success += 1;
       checkIfAllUploaded(numberofImages, res, data, msg);
@@ -35,7 +32,7 @@ const Accommodation = {
       description, address, availableSpace, cost, amenities, services, currency, name
     } = req.body;
     const { userId } = req.userData;
-    const response = await db.Accommodations.create({
+    const response = await AccommodationService.createAccommodation({
       name,
       description,
       address,
@@ -46,61 +43,40 @@ const Accommodation = {
       availableSpace,
       currency: (currency) || 'USD',
     });
-    const accommodation = response.get({ plain: true });
-    uploadImages(req, res, accommodation);
+    uploadImages(req, res, response);
   },
 
   async getAccommodations(req, res) {
-    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
-    const accommodations = await db.Accommodations.findAll({
-      include: image, });
-
+    const accommodations = await AccommodationService.getAllAccommodations();
     return sendResult(res, 200, 'Accommodations facilities', accommodations);
   },
 
   async getAccommodationById(req, res) {
     const { accommodationId } = req.params;
-    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
-    const accommodation = await db.Accommodations.findOne({
-      where: { id: accommodationId }, include: image, });
+    const accommodation = await AccommodationService.getAccommodationById(accommodationId);
     return sendResult(res, 200, 'Accommodation facility', accommodation);
   },
 
   async getAccommodationsByFilter(req, res) {
     const { isAvailable } = req.query;
-    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
-    const accommodations = await db.Accommodations.findAll({
-      where: { isAvailable }, include: image, });
+    const accommodations = await AccommodationService
+      .getAllAccommodationsByAvailability(isAvailable);
     return sendResult(res, 200, 'Accommodations facilities', accommodations);
   },
 
   async editAccommodation(req, res) {
-    const accommodationData = await db.Accommodations.findOne({
-      where: { id: req.params.id, },
-    });
     const { id } = req.params;
-    await accommodationData.update(req.body);
+    await AccommodationService.updateAccommodation(req.body, id);
     if (req.files) {
-      await db.AccommodationImages.destroy({
-        where: { accommodationid: id, },
-      });
+      await AccommodationService.deleteAccommodationImages(id);
     }
-    const returnData = await db.Accommodations.findOne({
-      where: { id, },
-      raw: true,
-      include: [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }],
-    });
+    const returnData = await AccommodationService.getAccommodationById(id);
     uploadImages(req, res, returnData, 'Accommodation data/images updated successfully');
   },
 
   async deleteAccommodation(req, res) {
-    await db.Accommodations.destroy({
-      where: { id: req.params.id, },
-    });
-    const returnAccommo = await db.Accommodations.findOne({
-      where: { id: req.params.id, },
-      raw: true,
-    });
+    await AccommodationService.deleteAccommodationById(req.params.id);
+    const returnAccommo = await AccommodationService.getAccommodationById(req.params.id);
 
     if (!returnAccommo) {
       return sendResult(res, 200, 'The accommodation facility data has been deleted', returnAccommo);

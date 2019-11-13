@@ -2,9 +2,8 @@
 /* eslint-disable no-restricted-syntax */
 import moment from 'moment';
 import Sequelize from 'sequelize';
-import db from '../database/models';
 import sendResult from '../utils/sendResult';
-import allRequest from '../utils/requestUtils';
+import allRequest from '../utils/request.util';
 import requestData from '../utils/getReqWithTrip';
 import RequestService from '../services/request.service';
 import NotificationService from '../services/notifications.service';
@@ -17,7 +16,7 @@ const { Op } = Sequelize;
 const Request = {
   async getRequest(req, res) {
     try {
-      const requests = await allRequest.getUserRequest(req.userData.userId);
+      const requests = await RequestService.getAllRequestByUserId(req.userData.userId);
       return sendResult(res, 200, 'Requests', requests);
     } catch (err) {
       return sendResult(res, 400, 'something went wrong!');
@@ -33,8 +32,7 @@ const Request = {
     request.status = 'pending';
     request.timeZone = timeZone;
     if (returnTime) request.returnTime = returnTime;
-    let Req = await db.Requests.create(request);
-    Req = Req.get({ plain: true });
+    const Req = await RequestService.createRequest(request);
     const Trips = [];
     let index = 0;
     for (const trip of trips) {
@@ -45,7 +43,7 @@ const Request = {
       single.departureTime = trip.departureTime;
       single.RequestId = Req.id;
       // eslint-disable-next-line no-await-in-loop
-      Trips[index] = await db.Trips.create(single, { raw: true });
+      Trips[index] = await RequestService.createTrip(single);
       index += 1;
     }
     Req.trips = Trips;
@@ -67,9 +65,7 @@ const Request = {
       await EmailService.sendNewRequestEmail(req, Req.id, req.userData.email, user);
     }
     if (req.userData.rememberMe !== rememberMe) {
-      await db.Users.update({ rememberMe }, {
-        where: { id: req.userData.userId },
-      });
+      await UserService.updateUserById(req.userData.userId, { rememberMe });
     }
     return sendResult(res, 201, `A request created successfully. Remember me for future request? ${rememberMe}`, Req);
   },
@@ -78,7 +74,7 @@ const Request = {
     const { status } = req.params;
     const { request } = req;
     if (request.status === 'pending') {
-      const newRequest = await request.update({ status });
+      const newRequest = await RequestService.updateRequest({ status }, { id: request.id });
       req.user = await UserService.getUser({ id: newRequest.UserId });
       await EmailService.sendRequestedStatusUpdatedEmail(req, newRequest);
       return sendResult(res, 200, 'updated successfully', newRequest);
@@ -93,32 +89,22 @@ const Request = {
   async getManagerRequests(req, res) {
     const { status } = req.query;
     const { managerId } = req.params;
-    const includeUser = { model: db.Users, attributes: ['id', 'email', 'lineManager'], where: { lineManager: managerId } };
-    let requests;
-    if (status) {
-      requests = await db.Requests.findAll({
-        where: { status },
-        include: [includeUser],
-      });
-    } else {
-      requests = await db.Requests.findAll({
-        include: [includeUser]
-      });
-    }
+    const requests = await RequestService.getRequestByManagerId(managerId, status);
     sendResult(res, 200, 'request list', requests);
   },
 
   async search(req, res) {
-    const { tripData, reqData } = requestData(req);
-    if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
-      reqData.UserId = req.user.userId;
-    }
-    const request = await db.Requests.findAll({
-      where: reqData,
-      include: [{ model: db.Trips, where: tripData, required: true }]
-    });
+    try {
+      const { tripData, reqData } = requestData(req);
+      if (req.user.role !== 'admin' && req.user.role !== 'Tadmin') {
+        reqData.UserId = req.user.userId;
+      }
+      const request = await RequestService.searchRequest(reqData, tripData);
 
-    return sendResult(res, 200, 'Search results', request);
+      return sendResult(res, 200, 'Search results', request);
+    } catch (err) {
+      sendResult(res, 500, err.message);
+    }
   },
 
   async updateRequest(req, res) {
@@ -142,9 +128,9 @@ const Request = {
     if (tripData) {
       const condition = { id: tripId };
       trips = await RequestService.updateTrip(tripData, condition);
-      request[1].trip = trips[1];
+      request.trip = trips;
     }
-    return sendResult(res, 200, 'request update successful', request[1]);
+    return sendResult(res, 200, 'request update successful', request);
   },
 
   async stats(req, res) {
