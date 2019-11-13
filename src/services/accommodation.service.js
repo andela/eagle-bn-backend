@@ -23,9 +23,9 @@ const AccommodationService = {
     const { isAvailable, address, name, costLessOr, costGreaterOr, services } = req.query;
     const condition = {};
     if (isAvailable) condition.isAvailable = isAvailable;
-    if (address) condition.address = { [Op.startsWith]: address };
-    if (services) condition.services = { [Op.startsWith]: services };
-    if (name) condition.name = { [Op.startsWith]: name };
+    if (address) condition.address = { [Op.iLike]: `%${address}%` };
+    if (services) condition.services = { [Op.iLike]: `%${services}%` };
+    if (name) condition.name = { [Op.iLike]: `%${name}%` };
     if (costLessOr) condition.cost = { [Op.lte]: costLessOr };
     if (costGreaterOr) condition.cost = { [Op.gte]: costGreaterOr };
 
