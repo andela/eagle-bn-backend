@@ -15,6 +15,7 @@ const {
   checkExistingTrip,
   checkLineManager,
   checkManagerId,
+  chekIfParentExist,
   checkCommentOwner,
   checkRequestOwner } = reqMidd;
 const { changeRequestStatus, getManagerRequests, search } = requestController;
@@ -49,6 +50,6 @@ app.patch('/:requestId/:status', singleReqValid, checkToken, checkManager, check
 app.put('/:requestId/:tripId', verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, reqMidd.checkIfTripExists, updateValidateTrips, requestController.updateRequest);
 app.put('/:requestId/comments/:commentId', editCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, updateComment);
 app.delete('/:requestId/comments/:commentId', deleteCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, trashComment);
-app.post('/:requestId/comments', addCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, addComment);
+app.post('/:requestId/comments', addCommentValidation, checkToken, chekIfParentExist, checkExistingTrip, checkRequestOwner, addComment);
 app.get('/:requestId/comments', viewCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, viewComment);
 export default app;
