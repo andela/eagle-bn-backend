@@ -23,8 +23,11 @@ const CommentService = {
     );
 
     return result;
+  },
+  async createComment(comment) {
+    const result = await db.Comments.create(comment);
+    return result.get({ plain: true });
   }
-
 };
 
 export default CommentService;
