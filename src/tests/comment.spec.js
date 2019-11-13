@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('/POST comment', () => {
-  it('it should return 401 when request id does not exist', (done) => {
+  it('it should return 404 when request id does not exist', (done) => {
     chai.request(app)
       .post('/api/v1/requests/100/comments')
       .set('Authorization', helpers.createToken(3, 'admin@gmail.com', true, 'requester'))
@@ -26,6 +26,27 @@ describe('/POST comment', () => {
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.data.comment).to.equal('new Comment');
+        done();
+      });
+  });
+  it('it should return 201 and create a reply comment', (done) => {
+    chai.request(app)
+      .post('/api/v1/requests/1/comments')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ comment: 'reply comment', parent: 1, requestId: 1 })
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.data.comment).to.equal('reply comment');
+        done();
+      });
+  });
+  it('it should return 404 status when a prent does not exist', (done) => {
+    chai.request(app)
+      .post('/api/v1/requests/1/comments')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ comment: 'reply coment', parent: 10000, requestId: 1 })
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
         done();
       });
   });
@@ -54,27 +75,27 @@ describe('/POST comment', () => {
 });
 
 describe('GET /comment', () => {
-  it('should return a 201 when you are owner of the request or manager', (done) => {
+  it('should return a 200 when you are owner of the request or manager', (done) => {
     chai.request(app)
       .get('/api/v1/requests/1/comments')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
-        expect(res.status).to.equal(201);
-        expect(res.body.status).to.equal(201);
+        expect(res.status).to.equal(200);
+        expect(res.body.status).to.equal(200);
         done();
       });
   });
-  it('should return a 201 when you are owner of the request or manager you want to see the thread', (done) => {
+  it('should return a 200 when you are owner of the request or manager you want to see the thread', (done) => {
     chai.request(app)
       .get('/api/v1/requests/1/comments')
       .set('Authorization', helpers.createToken(5, 'manager@gmail.com', true, 'manager'))
       .end((err, res) => {
-        expect(res.status).to.equal(201);
-        expect(res.body.status).to.equal(201);
+        expect(res.status).to.equal(200);
+        expect(res.body.status).to.equal(200);
         done();
       });
   });
-  it('it should return 401 when request id does not exist', (done) => {
+  it('it should return 404 when request id does not exist', (done) => {
     chai.request(app)
       .get('/api/v1/requests/100/comments')
       .set('Authorization', helpers.createToken(5, 'admin@gmail.com', true, 'manager'))
@@ -87,7 +108,7 @@ describe('GET /comment', () => {
 
 
 describe('PUT /comment/:commentId', () => {
-  it('should return a 201 when you are owner of the request or manager', (done) => {
+  it('should return a 200 when you are owner of the request or manager', (done) => {
     chai.request(app)
       .put('/api/v1/requests/1/comments/1')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
