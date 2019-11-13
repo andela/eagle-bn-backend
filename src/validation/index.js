@@ -205,7 +205,7 @@ const validator = {
     if (booking.start < Date.now()) return next();
     return sendResult(res, 400, 'You can\'t review an accommodation before your booking starting date');
   },
-  getReviewvalidation(req, res, next) {
+  validateAccommodationId(req, res, next) {
     return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
   },
 
@@ -313,6 +313,9 @@ const validator = {
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
+  },
+  idValidate(req, res, next) {
+    isNumeric(req.params.id, 'id provided', res, next);
   }
 };
 

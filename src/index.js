@@ -1,10 +1,10 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
 import socketIo from 'socket.io';
+import cors from 'cors';
 import setupSwagger from './utils/swaggerDefinition';
 import routes from './routes/index';
 import helper from './utils/helper';
@@ -12,6 +12,8 @@ import helper from './utils/helper';
 const app = express();
 
 dotenv.config();
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -53,6 +55,14 @@ app.use('*', (req, res) => {
   res.status(404).json({
     status: 404,
     error: `${req.method}=${req.protocol}://${req.headers.host}${req.originalUrl} not found`,
+  });
+});
+// HANDLING BODY PARSER ERRORS
+// eslint-disable-next-line no-unused-vars
+app.use((error, req, res, next) => {
+  res.status(400).json({
+    status: 400,
+    message: `bad request: ${error.message}`
   });
 });
 

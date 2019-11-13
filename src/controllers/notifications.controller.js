@@ -22,13 +22,12 @@ const NotificationController = {
   },
 
   async updateNotificationStatus(req, res) {
-    const { id, status } = req.params;
-    const isRead = (status === 'read');
-    await NotificationService.setNotificationStatus(id, isRead);
+    const { id, isRead } = req.notification;
+    await NotificationService.setNotificationStatus(id, !(isRead));
     return sendResult(
       res,
       200,
-      'Notification status updated!'
+      `Notification status updated to ${!(isRead)}!`
     );
   },
 

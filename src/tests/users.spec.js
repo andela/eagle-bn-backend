@@ -174,25 +174,23 @@ describe('Password Reset', () => {
         done();
       });
   });
-  it('Should test for alphanumeric value', (done) => {
+  it('get user profile', (done) => {
     chai.request(app)
-      .get('/api/v1/users/profile')
-      .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com'))
+      .get('/api/v1/users/1/profile')
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('my profile');
+        res.body.should.have.property('msg').eql('user profile');
         done();
       });
   });
-  it('Should test for alphanumeric value', (done) => {
+  it('get user profile, user not exist', (done) => {
     chai.request(app)
-      .get('/api/v1/users/profile')
-      .set('Authorization', helpers.createToken(1, 'rswaib@gmail.com'))
+      .get('/api/v1/users/100/profile')
       .end((err, res) => {
-        res.should.have.status(200);
+        res.should.have.status(404);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('my profile');
+        res.body.should.have.property('msg').eql('User with id not found');
         done();
       });
   });

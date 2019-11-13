@@ -1,5 +1,4 @@
 import sendResult from '../utils/sendResult';
-import db from '../database/models/index';
 import AccommodationService from '../services/accommodation.service';
 
 const checkForWrongFile = (files, req, res, next) => {
@@ -18,9 +17,7 @@ const checkForWrongFile = (files, req, res, next) => {
 const Accommodation = {
   async isSupplierAccommodation(req, res, next) {
     try {
-      const accomUser = await db.Accommodations.findOne({
-        where: { id: req.params.id, },
-      });
+      const accomUser = await AccommodationService.getAccommodationById(req.params.id);
       if (!accomUser) {
         return sendResult(res, 400, 'The accommodation facillity not found');
       }
@@ -59,8 +56,8 @@ const Accommodation = {
   },
 
   async accommodationExists(req, res, next) {
-    const { AccommodationId } = req.body;
-    if (await AccommodationService.getAccommodation(AccommodationId)) {
+    const AccommodationId = req.body.AccommodationId || req.params.accommodationId;
+    if (await AccommodationService.getAccommodationById(AccommodationId)) {
       return next();
     }
     return sendResult(res, 404, 'The Accommodation is not found');
