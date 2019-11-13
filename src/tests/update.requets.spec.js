@@ -101,7 +101,7 @@ describe('update requests tests', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('invalid origin country');
+        res.body.should.have.property('msg').eql('xx is not a valid country');
         done();
       });
   });
@@ -113,7 +113,7 @@ describe('update requests tests', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('invalid destination country');
+        res.body.should.have.property('msg').eql('XX is not a valid country');
         done();
       });
   });

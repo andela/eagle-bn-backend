@@ -44,7 +44,7 @@ const RequestService = {
       attributes: { exclude: ['updatedAt'] },
       include: [{
         model: db.Comments,
-        attributes: { exclude: ['id', 'updatedAt', 'requestId', 'userId', 'deletedAt'] },
+        attributes: { exclude: ['updatedAt', 'requestId', 'userId', 'deletedAt'] },
         include: [{
           model: db.Users, attributes: ['fullname', 'id']
         }]
