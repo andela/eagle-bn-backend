@@ -27,9 +27,9 @@ app.post('/', fUpload, checkToken, RoleMiddleware.checkHostOrTAdmin, valid.accom
 app.get('/', AccommodationsController.getAccommodations);
 app.get('/:accommodationId/rating', valid.validateAccommodationId, BookingsController.getRating);
 app.get('/search', AccommodationsController.getAccommodationsByFilter);
-app.get('/bookmarked', checkToken, AccommodationsController.getBookmarkedAccommodations);
+app.get('/bookmarks', checkToken, AccommodationsController.getBookmarkedAccommodations);
 app.get('/:accommodationId', AccommodationsController.getAccommodationById);
 app.post('/:accommodationId/like', checkToken, LikingsController.addLikeAccommdation);
-app.post('/:accommodationId/bookmark', checkToken, valid.validateAccommodationId, accommodationExists, AccommodationsController.bookmarkAccommodation);
-app.delete('/:accommodationId/bookmark', checkToken, valid.validateAccommodationId, accommodationExists, AccommodationsController.undoBookmark);
+app.post('/:accommodationId/bookmarks', checkToken, valid.validateAccommodationId, accommodationExists, AccommodationsController.bookmarkAccommodation);
+app.delete('/:accommodationId/bookmarks', checkToken, valid.validateAccommodationId, accommodationExists, AccommodationsController.undoBookmark);
 export default app;
