@@ -13,6 +13,12 @@ const LikingService = {
     }
     like.update({ isLiked: !like.isLiked });
     return sendResult(res, 200, ` The accommodation like  status updated to ${like.isLiked}`, like);
+  },
+
+  async getLikes(accommodationId) {
+    const countLikes = await db.Likings
+      .count({ where: { accommodationId, isLiked: true }, raw: false });
+    return countLikes;
   }
 };
 export default LikingService;

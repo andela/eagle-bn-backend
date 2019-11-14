@@ -1,11 +1,47 @@
 import db from '../database/models';
 
 const UserService = {
-  getUser: async (condition) => db.Users.findOne({ where: condition, raw: true }),
-  manageUserSubscription: async (id, receiveEmails) => db.Users.update(
-    { receiveEmails },
-    { where: { id } },
-  )
+  async getUser(condition) {
+    return db.Users.findOne({ where: condition, raw: true });
+  },
+
+  async manageUserSubscription(id, receiveEmails) {
+    return db.Users.update({ receiveEmails }, { where: { id } });
+  },
+
+  async getUserRole(condition) {
+    return db.Users.findOne({
+      where: condition,
+      include: [{ model: db.Roles, attributes: { include: ['roleName'] }, raw: true }]
+    });
+  },
+
+  getAllUsersRole() {
+    return db.Users.findAll({
+      attributes: ['id', 'fullname', 'email'],
+      include: [{ model: db.Roles, attributes: { exclude: ['createdAt', 'updatedAt'] } }] });
+  },
+
+  async findOrCreateUser(userData, email) {
+    const [data] = await db.Users.findOrCreate({
+      where: { email },
+      defaults: userData.user,
+      raw: true
+    });
+    return data;
+  },
+
+  async createUser(user) {
+    const result = await db.Users.create(user);
+    return result.get({ plain: true });
+  },
+
+  async updateUser(data, condition) {
+    const user = await db.Users.update(data, {
+      where: condition, returning: true, plain: true, raw: true,
+    });
+    return user[1];
+  },
 };
 
 export default UserService;

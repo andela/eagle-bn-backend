@@ -196,6 +196,51 @@ describe('accommodation tests', () => {
         done();
       });
   });
+  it('should return 200 status and accommodations list by name', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/search?name=hotel')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('Accommodations facilities');
+        done();
+      });
+  });
+  it('should return 200 status and accommodations list by address', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/search?address=kigali')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('Accommodations facilities');
+        done();
+      });
+  });
+  it('should return 200 status and accommodations list where the cost is less or equal 200001', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/search?costLessOr=200001')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('Accommodations facilities');
+        done();
+      });
+  });
+  it('should return 200 status and accommodations list where the cost is greater or equal 1000', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/search?costGreaterOr=1000')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('Accommodations facilities');
+        done();
+      });
+  });
+  it('should return 200 status and accommodations list by offered services', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/search?services=wifi, breakfast')
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('Accommodations facilities');
+        done();
+      });
+  });
   it('should return 400 currency is invalid', (done) => {
     chai.request(app)
       .post('/api/v1/accommodations')

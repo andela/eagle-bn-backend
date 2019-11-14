@@ -1,16 +1,16 @@
 import moment from 'moment';
 import Sequelize from 'sequelize';
-import db from '../database/models';
 import sendResult from '../utils/sendResult';
 import RequestService from '../services/request.service';
 import CommentService from '../services/comment.service';
+import UserService from '../services/user.service';
 
 const { Op } = Sequelize;
 
 const requestMidd = {
   async checkExistingTrip(req, res, next) {
     const { requestId } = req.params;
-    const request = await db.Requests.findOne({ where: { id: requestId } });
+    const request = await RequestService.getOneRequest({ id: requestId });
     if (request) {
       req.request = request;
       return next();
@@ -21,7 +21,7 @@ const requestMidd = {
   async checkLineManager(req, res, next) {
     const { request } = req;
     const { userData } = req;
-    const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
+    const user = await UserService.getUser({ id: request.UserId });
     if (user.lineManager === userData.userId) {
       req.user = user;
       return next();
@@ -47,7 +47,7 @@ const requestMidd = {
   async checkRequestOwner(req, res, next) {
     const { request } = req;
     const { userId } = req.userData;
-    const user = await db.Users.findOne({ where: { id: request.UserId }, raw: true });
+    const user = await UserService.getUser({ id: request.UserId });
     if (user.lineManager === userId || user.id === userId) return next();
     return sendResult(res, 401, 'you are not authorized');
   },
@@ -79,6 +79,14 @@ const requestMidd = {
 
     if (getComment.deletedAt !== null) return sendResult(res, 401, 'The Comment has already been deleted');
 
+    next();
+  },
+
+  async chekIfParentExist(req, res, next) {
+    if (req.body.parent) {
+      const isFound = await CommentService.getComment(req.body.parent);
+      if (!isFound) return sendResult(res, 404, 'Parent comment does not exist');
+    }
     next();
   },
 

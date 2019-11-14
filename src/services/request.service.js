@@ -14,14 +14,14 @@ const RequestService = {
     const request = await db.Requests.update(data, {
       where: condition, returning: true, plain: true, raw: true,
     });
-    return request;
+    return request[1];
   },
 
   async updateTrip(data, condition) {
     const trip = await db.Trips.update(data, {
       where: condition, returning: true, plain: true, raw: true,
     });
-    return trip;
+    return trip[1];
   },
 
   getTripOwner: async (id) => {
@@ -38,6 +38,55 @@ const RequestService = {
     });
     return trip;
   },
+  async getRequestComments(id) {
+    return db.Requests.findOne({
+      where: { id },
+      attributes: { exclude: ['updatedAt'] },
+      include: [{
+        model: db.Comments,
+        attributes: { exclude: ['updatedAt', 'requestId', 'userId', 'deletedAt'] },
+        include: [{
+          model: db.Users, attributes: ['fullname', 'id']
+        }]
+      }]
+    });
+  },
+  async createRequest(request) {
+    const requestResult = await db.Requests.create(request);
+    return requestResult.get({ plain: true });
+  },
+
+  async createTrip(trip) {
+    const requestResult = await db.Trips.create(trip);
+    return requestResult.get({ plain: true });
+  },
+  async getRequestByManagerId(id, status) {
+    const includeUser = { model: db.Users, attributes: ['id', 'email', 'lineManager'], where: { lineManager: id } };
+    let requests;
+    if (status) {
+      requests = await db.Requests.findAll({
+        where: { status },
+        include: [includeUser],
+      });
+    } else {
+      requests = await db.Requests.findAll({
+        include: [includeUser]
+      });
+    }
+    return requests;
+  },
+  async searchRequest(reqData, tripData) {
+    return db.Requests.findAll({
+      where: reqData,
+      include: [{ model: db.Trips, where: tripData, required: true }]
+    });
+  },
+  async getAllRequestByUserId(userId) {
+    const result = await db.Requests.findAll({
+      where: { UserId: userId },
+      include: { model: db.Trips, attributes: { exclude: ['RequestId'] } } });
+    return result;
+  }
 };
 
 export default RequestService;
