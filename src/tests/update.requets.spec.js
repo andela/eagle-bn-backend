@@ -20,6 +20,18 @@ describe('update requests tests', () => {
         done();
       });
   });
+  it('Should successfully update a request', (done) => {
+    chai.request(app)
+      .put('/api/v1/requests/3')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send(reqData.req7)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.should.have.property('msg').eql('request update successful');
+        done();
+      });
+  });
   it('Should throw error if request not found', (done) => {
     chai.request(app)
       .put('/api/v1/requests/31/1')

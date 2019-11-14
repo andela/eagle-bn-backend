@@ -35,4 +35,8 @@ export default {
     country: 'XX',
     city: 'KIGALI'
   },
+  req7: {
+    country: 'cd',
+    city: 'kinshasa'
+  },
 };

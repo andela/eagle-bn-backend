@@ -38,19 +38,6 @@ const RequestService = {
     });
     return trip;
   },
-  async getRequestComments(id) {
-    return db.Requests.findOne({
-      where: { id },
-      attributes: { exclude: ['updatedAt'] },
-      include: [{
-        model: db.Comments,
-        attributes: { exclude: ['updatedAt', 'requestId', 'userId', 'deletedAt'] },
-        include: [{
-          model: db.Users, attributes: ['fullname', 'id']
-        }]
-      }]
-    });
-  },
   async createRequest(request) {
     const requestResult = await db.Requests.create(request);
     return requestResult.get({ plain: true });
