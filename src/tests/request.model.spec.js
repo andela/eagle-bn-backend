@@ -38,4 +38,34 @@ describe('get requests test', () => {
         done();
       });
   });
+  it('should return a 200 status and return a single accommodation', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equal('request data');
+        done();
+      });
+  });
+  it('should return a 400 status when a wrong requestId is provided', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/xxxx')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('request Id should be integer');
+        done();
+      });
+  });
+  it('should return a 404 status when request not found', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1000')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.msg).to.equal('no request with such an id');
+        done();
+      });
+  });
 });
