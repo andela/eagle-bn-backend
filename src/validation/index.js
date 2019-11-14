@@ -19,7 +19,7 @@ const validator = {
       new Check({ fullname: req }).str().alphaNum();
       new Check({ password: req }).str().withSpec().confirm();
       new Check({ gender: req }).str().gender();
-      new Check({ dob: req }).str().alphaNum();
+      new Check({ dob: req }).str().date();
       new Check({ address: req }).str().min(2);
       new Check({ city: req }).str().alpha();
       new Check({ state: req }).str().alpha();

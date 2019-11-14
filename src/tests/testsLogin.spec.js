@@ -71,6 +71,26 @@ describe('login', () => {
         done();
       });
   });
+  it('It should return a 400 status, when password is not provided', (done) => {
+    chai.request(myserver)
+      .post('/api/v1/users/login')
+      .send(mock[6])
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('Please verify your account first');
+        done();
+      });
+  });
+  it('It should return a 400 status, when password is not provided', (done) => {
+    chai.request(myserver)
+      .post('/api/v1/users/login')
+      .send(mock[7])
+      .end((err, res) => {
+        expect(res.status).to.equal(400);
+        expect(res.body.msg).to.equal('The email and/or password is invalid');
+        done();
+      });
+  });
 });
 
 describe('Oauthentication CallBack', () => {
