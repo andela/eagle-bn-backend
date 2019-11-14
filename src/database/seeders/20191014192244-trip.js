@@ -37,6 +37,24 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
   },
+  {
+    RequestId: 3,
+    country: 'Nigeria',
+    city: 'lagos',
+    reason: 'bussiness trip',
+    departureTime: new Date('2019, 11, 02'),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    RequestId: 3,
+    country: 'Uganda',
+    city: 'kampala',
+    reason: 'bussiness trip',
+    departureTime: new Date('2020, 11, 02'),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
 ])
   ]),
   down: (queryInterface, Sequelize) => Promise.all([

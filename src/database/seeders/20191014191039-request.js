@@ -8,7 +8,7 @@ module.exports = {
       timeZone: 'africa/kigali',
       returnTime: new Date(),
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
   { // one-way trip
     UserId: 3,

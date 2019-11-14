@@ -1,11 +1,7 @@
 export default {
   req1: {
-    country: 'UG',
-    city: 'kampala',
-    trip: {
-      country: 'TZ',
-      city: 'kigoma'
-    }
+    country: 'TZ',
+    city: 'kigoma'
   },
   req2: {
     country: 'UG',
@@ -24,12 +20,8 @@ export default {
     }
   },
   req4: {
-    country: 'UG',
-    city: 'kampala',
-    trip: {
-      country: 'UG',
-      city: 'kampala'
-    }
+    country: 'uganda',
+    city: 'kampala'
   },
   req5: {
     country: 'xx',
@@ -40,11 +32,7 @@ export default {
     }
   },
   req6: {
-    country: 'UG',
-    city: 'kampala',
-    trip: {
-      country: 'XX',
-      city: 'KIGALI'
-    }
+    country: 'XX',
+    city: 'KIGALI'
   },
 };

@@ -46,6 +46,7 @@ describe('/POST comment', () => {
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send({ comment: 'reply coment', parent: 10000, requestId: 1 })
       .end((err, res) => {
+        console.log(res.body);
         expect(res.status).to.equal(404);
         done();
       });

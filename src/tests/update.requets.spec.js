@@ -10,13 +10,13 @@ chai.should();
 describe('update requests tests', () => {
   it('Should successfully update a request', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3/5')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req1)
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('request update successful');
+        res.body.should.have.property('msg').eql('Trip updated successfully');
         done();
       });
   });
@@ -34,7 +34,7 @@ describe('update requests tests', () => {
   });
   it('Should test for country suggestions', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3/5')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req2)
       .end((err, res) => {
@@ -50,7 +50,7 @@ describe('update requests tests', () => {
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req1)
       .end((err, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
         res.body.should.be.a('object');
         res.body.should.have.property('msg').eql('no trip with a given id found');
         done();
@@ -58,7 +58,7 @@ describe('update requests tests', () => {
   });
   it('Should check if city not in country', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3/5')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req3)
       .end((err, res) => {
@@ -70,19 +70,19 @@ describe('update requests tests', () => {
   });
   it('Should check if cities provided are the same', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3/5')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req4)
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('msg').eql('trips to the same city not allowed');
+        res.body.should.have.property('msg').eql('the same destination already exists');
         done();
       });
   });
   it('Should test for country suggestions', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3/5')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req2)
       .end((err, res) => {
@@ -95,7 +95,7 @@ describe('update requests tests', () => {
   });
   it('Should test for invalid country', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3/5')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req5)
       .end((err, res) => {
@@ -107,7 +107,7 @@ describe('update requests tests', () => {
   });
   it('Should test for invalid destination country', (done) => {
     chai.request(app)
-      .put('/api/v1/requests/3/1')
+      .put('/api/v1/requests/3')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(reqData.req6)
       .end((err, res) => {

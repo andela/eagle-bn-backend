@@ -211,13 +211,17 @@ const validator = {
   validateAccommodationId(req, res, next) {
     return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
   },
+  validateTripId(req, res, next) {
+    return isNumeric(req.params.tripId, 'Trip Id', res, next);
+  },
+  validateRequestId(req, res, next) {
+    return isNumeric(req.params.requestId, 'request Id', res, next);
+  },
 
   updateTrip(req, res, next) {
     try {
       new Check({ country: req }).str().min(2);
       new Check({ city: req }).str().min(1);
-      new Check({ requestId: req }).num().min(1);
-      new Check({ tripId: req }).num().min(1);
       new Check({ departureTime: req }).date();
       new Check({ reason: req }).alpha();
       next();
@@ -230,7 +234,6 @@ const validator = {
       new Check({ timeZone: req }).str().min(1);
       new Check({ country: req }).str().min(2);
       new Check({ city: req }).str().min(1);
-      new Check({ requestId: req }).num().min(1);
       new Check({ returnTime: req }).date();
       next();
     } catch (err) {

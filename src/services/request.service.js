@@ -90,6 +90,7 @@ const RequestService = {
   async getTrips(RequestId) {
     const result = await db.Trips.findAll({
       where: { RequestId },
+      order: ['id']
     });
     return result;
   }

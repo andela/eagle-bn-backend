@@ -112,7 +112,7 @@ const Request = {
     const reqData = allRequest.getProvidedData(request);
     const condition = { id: requestId, UserId: req.user.id, status: 'pending' };
     request = await RequestService.updateRequest(reqData, condition);
-    const data = { Trips: req.trips, ...request };
+    const data = { ...request, Trips: req.trips };
     return sendResult(res, 200, 'request update successful', data);
   },
 

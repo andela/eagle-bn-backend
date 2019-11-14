@@ -30,6 +30,8 @@ const {
   singleReqValid,
   managerValid,
   searchValidate,
+  validateRequestId,
+  validateTripId
 } = valid;
 const { addComment, viewComment, updateComment, trashComment } = comment;
 
@@ -46,8 +48,8 @@ app.get('/', checkToken, checkRequester, requestController.getRequest);
 app.post('/', checkToken, checkRequester, valid.request, validateTrips, requestController.postRequest);
 app.get('/managers/:managerId', managerValid, checkToken, checkManager, checkManagerId, getManagerRequests);
 app.patch('/:requestId/:status', singleReqValid, checkToken, checkManager, checkExistingTrip, checkLineManager, tripValidation, changeRequestStatus);
-app.put('/:requestId/', verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, updateValidateRequest, requestController.updateRequest);
-app.put('/:requestId/:tripId', verifyToken, userMidd.getUserbyEmail, valid.updateTrip, reqMidd.checkIfReqExist, updateValidateTrips, requestController.updateTrip);
+app.put('/:requestId/', validateRequestId, verifyToken, userMidd.getUserbyEmail, valid.updateRequest, reqMidd.checkIfReqExist, updateValidateRequest, requestController.updateRequest);
+app.put('/:requestId/:tripId', validateRequestId, validateTripId, verifyToken, userMidd.getUserbyEmail, valid.updateTrip, reqMidd.checkIfReqExist, updateValidateTrips, requestController.updateTrip);
 app.put('/:requestId/comments/:commentId', editCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, updateComment);
 app.delete('/:requestId/comments/:commentId', deleteCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, trashComment);
 app.post('/:requestId/comments', addCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, addComment);
