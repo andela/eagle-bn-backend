@@ -9,6 +9,9 @@ import 'moment-timezone';
 import { allScores, highScores } from '../../services';
 import resSend from '../../utils/sendResult';
 import validatePlaces from '../../utils/placeValidation';
+import RequestUtil from '../../utils/request.util';
+import RequestService from '../../services/request.service';
+import sendResult from '../../utils/sendResult';
 
 export const checkStringInArray = (array, string, n) => ((array.find(element => element.toLocaleLowerCase()
   === string.toLocaleLowerCase()))
@@ -25,6 +28,35 @@ const checkString = (req, string, min, message) => {
   }
 };
 
+const compareTripRequest = async (trips, request) => {
+  let errorFound;
+  await trips.forEach(async (element, index) => {
+    try {
+      if (request.city.toLocaleLowerCase() === element.city.toLocaleLowerCase()
+      && request.country.toLocaleLowerCase() === element.country.toLocaleLowerCase()) {
+        throw new Error(`you can not make trip in the same destination in trip ${index + 1}`);
+      }
+      // CHECK IF THE RETURNTIME IS EQUIVALENT OR LESS THAN DEPARTURETIME
+      if (request.returnTime && new Date(request.returnTime) <= new Date(element.departureTime)) {
+        throw new Error(`returnTime can not be less than OR equal to departureTime in trip ${index + 1}`);
+      }
+
+      // CHECK SAME DESTINATION
+      if (trips[index - 1] && trips[index - 1].city) {
+        if (trips[index - 1].city.toLocaleLowerCase() === element.city.toLocaleLowerCase()
+          && trips[index - 1].country.toLocaleLowerCase() === element.country.toLocaleLowerCase()) {
+          throw new Error(`you can not make trip in the same destination at trip ${index + 1}`);
+        }
+        if (new Date(trips[index - 1].departureTime) >= new Date(element.departureTime)) {
+          throw new Error(`your trip is too short or invalid time span at trip ${index + 1}`);
+        }
+      }
+    } catch (err) {
+      errorFound = err;
+    }
+  });
+  return errorFound;
+};
 
 export const validateTrips = async (req, res, next) => {
   req.error = {};
@@ -77,29 +109,66 @@ export const validateTrips = async (req, res, next) => {
 };
 
 export const updateValidateTrips = async (req, res, next) => {
-  try {
-    const { trip, returnTime } = req.body;
+  const { request } = req;
+  const trip = await RequestService.getOnetrip({ id: req.params.tripId });
 
-    const { error, suggestions, city } = await validatePlaces(req.body.country, req.body.city);
-    if (error) {
-      return resSend(res, 400, error, { suggestions });
+  const { country, city, departureTime, reason } = req.body;
+  const tripToUpdate = { country, city, departureTime, reason };
+
+  const providedData = RequestUtil.getProvidedData(tripToUpdate);
+  const entries = Object.entries(providedData);
+  for (const [key, value] of entries) {
+    trip[key] = value;
+  }
+  const trips = await RequestService.getTrips(request.id);
+  const tripIndex = trips.findIndex(element => element.id === trip.id);
+  if (tripIndex < 0) return sendResult(res, 400, 'this request has no trip with such Id');
+  trips[tripIndex] = trip;
+  try {
+    if (country || city) {
+      const tripValidated = await validatePlaces(country || trip.country, city || trip.city);
+      if (tripValidated.error) {
+        return resSend(res, 400, tripValidated.error, { suggestions: tripValidated.suggestions });
+      }
     }
-    const tripValidated = await validatePlaces(trip.country, trip.city);
-    if (tripValidated.error) {
-      return resSend(res, 400, tripValidated.error, { suggestions: tripValidated.suggestions });
+    const err = await compareTripRequest(trips, request);
+    if (err) throw err;
+    req.trips = trips;
+    return next();
+  } catch (err) {
+    const requestData = { ...request, trip };
+    return resSend(res, 400, err.message, { suggestions: err.suggestions, request: requestData });
+  }
+};
+
+export const updateValidateRequest = async (req, res, next) => {
+  const { request } = req;
+  const trips = await RequestService.getTrips(request.id);
+  try {
+    const { country, city, returnTime, timeZone } = req.body;
+    const dataRequest = {
+      country,
+      city,
+      returnTime,
+      timeZone
+    };
+    if (country || city) {
+      const tripValidated = await validatePlaces(country || request.country, city || request.city);
+      if (tripValidated.error) {
+        return resSend(res, 400, tripValidated.error, { suggestions: tripValidated.suggestions });
+      }
     }
-    // same destination validation
-    if ((city || tripValidated.city) && (city || req.request.city) === (tripValidated.city || req.trip.city)) {
-      throw new Error('trips to the same city not allowed');
+    const providedData = RequestUtil.getProvidedData(dataRequest);
+    const entries = Object.entries(providedData);
+    for (const [key, value] of entries) {
+      request[key] = value;
     }
-    const timeToReturn = returnTime || req.request.returnTime;
-    if (timeToReturn && (timeToReturn || trip.departureTime) && new Date(timeToReturn)
-    <= new Date(trip.departureTime || req.trip.departureTime)) {
-      throw new Error('returnTime can not be less than OR equal to departureTime');
-    }
-    next();
-  } catch (error) {
-    if (error.message.match(/null/g)) error.message = 'invalid origin country';
-    return resSend(res, 400, error.message);
+
+    const err = await compareTripRequest(trips, request);
+    if (err) throw err;
+    req.trips = trips;
+    return next();
+  } catch (err) {
+    return resSend(res, 400, err.message, err.suggestions);
   }
 };

@@ -212,24 +212,26 @@ const validator = {
     return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
   },
 
-  updateRequest(req, res, next) {
-    const { returnTime, trip } = req.body;
-    const { departureTime, reason } = trip;
-    req.body.departureTime = departureTime;
-    req.body.reason = reason;
+  updateTrip(req, res, next) {
     try {
-      new Check({ timeZone: req }).str().min(1);
-      new Check({ trips: req }).array().min(1);
       new Check({ country: req }).str().min(2);
       new Check({ city: req }).str().min(1);
       new Check({ requestId: req }).num().min(1);
       new Check({ tripId: req }).num().min(1);
-      new Check({ returnTime: req }).date();
       new Check({ departureTime: req }).date();
       new Check({ reason: req }).alpha();
-      if (returnTime || departureTime) {
-        req.body.timeZone = new Date(returnTime || departureTime).toString().split('(')[1].replace(/[\(\)]/g, '');
-      }
+      next();
+    } catch (err) {
+      return sendResult(res, 400, err.message);
+    }
+  },
+  updateRequest(req, res, next) {
+    try {
+      new Check({ timeZone: req }).str().min(1);
+      new Check({ country: req }).str().min(2);
+      new Check({ city: req }).str().min(1);
+      new Check({ requestId: req }).num().min(1);
+      new Check({ returnTime: req }).date();
       next();
     } catch (err) {
       return sendResult(res, 400, err.message);

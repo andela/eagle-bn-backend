@@ -86,6 +86,12 @@ const RequestService = {
       where: { UserId: userId },
       include: { model: db.Trips, attributes: { exclude: ['RequestId'] } } });
     return result;
+  },
+  async getTrips(RequestId) {
+    const result = await db.Trips.findAll({
+      where: { RequestId },
+    });
+    return result;
   }
 };
 

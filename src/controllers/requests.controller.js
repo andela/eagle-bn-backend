@@ -104,29 +104,27 @@ const Request = {
   },
 
   async updateRequest(req, res) {
-    const { country, city, returnTime, trip, timeZone } = req.body;
-    const { requestId, tripId } = req.params;
+    const { country, city, returnTime, timeZone } = req.body;
+    const { requestId } = req.params;
     let request = {
       country, city, returnTime: new Date(returnTime).toJSON(), timeZone
     };
-    let trips = {
-      country: trip.country,
-      city: trip.city,
-      departureTime: new Date(trip.departureTime).toJSON(),
-      reason: trip.reason
-    };
     const reqData = allRequest.getProvidedData(request);
-    const tripData = allRequest.getProvidedData(trips);
-    if (reqData) {
-      const condition = { id: requestId, UserId: req.user.id, status: 'pending' };
-      request = await RequestService.updateRequest(reqData, condition);
-    }
-    if (tripData) {
-      const condition = { id: tripId };
-      trips = await RequestService.updateTrip(tripData, condition);
-      request.trip = trips;
-    }
-    return sendResult(res, 200, 'request update successful', request);
+    const condition = { id: requestId, UserId: req.user.id, status: 'pending' };
+    request = await RequestService.updateRequest(reqData, condition);
+    const data = { Trips: req.trips, ...request };
+    return sendResult(res, 200, 'request update successful', data);
+  },
+
+  async updateTrip(req, res) {
+    const { country, city, departureTime, reason } = req.body;
+    const { tripId } = req.params;
+    const trip = {
+      country, city, departureTime: new Date(departureTime).toJSON(), reason
+    };
+    const tripData = allRequest.getProvidedData(trip);
+    const result = await RequestService.updateTrip(tripData, { id: tripId });
+    return sendResult(res, 200, 'Trip updated successfully', result);
   },
 
   async stats(req, res) {
