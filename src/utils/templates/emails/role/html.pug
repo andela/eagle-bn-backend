@@ -17,7 +17,7 @@ div(style="font-size:16px;background-color:#fdfdfd;margin:2vw auto auto 35%;padd
     br
     p
       | Don&apos;t want to receive email notifications again? 
-      - var href = base + '/api/v1/users/unsubscribe/' + token
+      - var href = base + '/api/v1/users/email/unsubscribe/' + token
       a(href=href target='_blank') unsubscribe
       | .
     p(style="margin:0;margin-bottom:30px;color:#294661;font-family:'Open Sans','Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;font-size:16px;font-weight:300")
