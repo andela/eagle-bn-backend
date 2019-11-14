@@ -12,6 +12,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 const wrongFile = fs.readFileSync(path.join(__dirname, 'mockData/profile.js'));
+const trueFile = fs.readFileSync(path.join(__dirname, 'mockData/img.jpeg'));
 
 let loggedtoken = '';
 describe('Update/delete an accommodation tests', () => {
@@ -65,6 +66,18 @@ describe('Update/delete an accommodation tests', () => {
         done();
       });
   });
+  it('It should return a 201 status, when an image is updated', (done) => {
+    chai.request(myserver)
+      .patch('/api/v1/accommodations/1')
+      .set('Authorization', loggedtoken)
+      .attach('images', trueFile, 'img.jpeg')
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body).to.have.property('msg');
+        expect(res.body).to.have.property('status');
+        done();
+      });
+  });
   it('It should return a 200 status, when all data are note updated', (done) => {
     chai.request(myserver)
       .patch('/api/v1/accommodations/1')
@@ -78,6 +91,16 @@ describe('Update/delete an accommodation tests', () => {
         expect(res.body).to.have.property('data');
         expect(res.body.data.address).to.equal('kigali');
         expect(res.body.data.name).to.equal('hotel');
+        done();
+      });
+  });
+  it('It should return a 201 status, when it updated an image', (done) => {
+    chai.request(myserver)
+      .patch('/api/v1/accommodations/1')
+      .set('Authorization', loggedtoken)
+      .attach('images', trueFile, 'img.jpeg')
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
         done();
       });
   });
