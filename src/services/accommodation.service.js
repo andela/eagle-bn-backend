@@ -1,4 +1,7 @@
+import Sequelize from 'sequelize';
 import db from '../database/models/index';
+
+const { Op } = Sequelize;
 
 const AccommodationService = {
   async getAccommodationById(accommodationId) {
@@ -16,10 +19,19 @@ const AccommodationService = {
     return accommodations;
   },
 
-  async getAllAccommodationsByAvailability(isAvailable) {
+  async getAllAccommodationsByFilter(req) {
+    const { isAvailable, address, name, costLessOr, costGreaterOr, services } = req.query;
+    const condition = {};
+    if (isAvailable) condition.isAvailable = isAvailable;
+    if (address) condition.address = { [Op.iLike]: `%${address}%` };
+    if (services) condition.services = { [Op.iLike]: `%${services}%` };
+    if (name) condition.name = { [Op.iLike]: `%${name}%` };
+    if (costLessOr) condition.cost = { [Op.lte]: costLessOr };
+    if (costGreaterOr) condition.cost = { [Op.gte]: costGreaterOr };
+
     const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
     const accommodations = await db.Accommodations.findAll({
-      where: { isAvailable }, include: image, });
+      where: condition, include: image, });
     return accommodations;
   },
 

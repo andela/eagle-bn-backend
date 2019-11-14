@@ -8,7 +8,7 @@ const role = {
     const newRole = await RoleService.getRole({ id: req.user.RoleId });
     // check if user has the same role as the new role
     if (newRole.roleValue === req.body.new_role) return sendResult(res, 400, 'User already has this role');
-    await UserService.updateUserByEmail({ RoleId: req.new_role_id }, req.body.email);
+    await UserService.updateUser({ RoleId: req.new_role_id }, { email: req.body.email });
 
     await EmailService.sendRoleChangedEmail(req);
     const data = {
