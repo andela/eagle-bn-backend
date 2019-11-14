@@ -104,6 +104,26 @@ describe('GET /comment', () => {
         done();
       });
   });
+  it('should return a 200 in returning a single comment', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1/comments/1')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.status).to.equal(200);
+        done();
+      });
+  });
+  it('should return a 404 when comment is not found', (done) => {
+    chai.request(app)
+      .get('/api/v1/requests/1/comments/100')
+      .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(404);
+        expect(res.body.status).to.equal(404);
+        done();
+      });
+  });
 });
 
 
@@ -185,7 +205,7 @@ describe('DELETE /comment/:commentId', () => {
         done();
       });
   });
-  it('should return a 201 when you are owner of the request or manager', (done) => {
+  it('should return a 200 when you are owner of the request or manager', (done) => {
     chai.request(app)
       .delete('/api/v1/requests/1/comments/1')
       .set('Authorization', helpers.createToken(3, 'requester@gmail.com', true, 'requester'))

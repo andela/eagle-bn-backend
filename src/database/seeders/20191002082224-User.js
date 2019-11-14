@@ -42,16 +42,6 @@ module.exports = {
       RoleId:5,
       rememberMe: false,
       lastSeen: null,
-    },{
-      fullname: 'Tadmin',
-      email: 'tadmin@gmail.com',
-      password: helpers.hashPassword('eagle123!'),
-      isverified: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      RoleId:2,
-      rememberMe: false,
-      lastSeen: null,
     },
     {
       fullname: 'manager',
@@ -63,7 +53,18 @@ module.exports = {
       RoleId: 4,
       rememberMe: false,
       lastSeen: null,
-  }])
+    },
+    {
+      fullname: 'Tadmin',
+      email: 'tadmin@gmail.com',
+      password: helpers.hashPassword('eagle123!'),
+      isverified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      RoleId:2,
+      rememberMe: false,
+      lastSeen: null,
+    }])
   ]),
   down: (queryInterface, Sequelize) => Promise.all([
     queryInterface.bulkDelete('Users', null, {})

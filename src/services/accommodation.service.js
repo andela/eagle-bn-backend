@@ -42,7 +42,8 @@ const AccommodationService = {
 
   async updateAccommodation(newAccommodationData, accommodationid) {
     const accommodation = await this.getAccommodationById(accommodationid);
-    await accommodation.update(newAccommodationData);
+    const result = await accommodation.update(newAccommodationData);
+    return result;
   },
 
   async deleteAccommodationById(accommodationId) {

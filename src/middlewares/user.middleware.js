@@ -96,7 +96,7 @@ const User = {
     if (!receiverId) return next();
     const user = await UserService.getUser({ id: receiverId });
     if (!user) return sendResult(res, 400, 'this user does not exist');
-    if (user.id === userId) return sendResult(res, 403, 'Dude, you can\'t send a message to yourself');
+    if (user.id === userId) return sendResult(res, 403, 'you can\'t send a message to yourself');
     return next();
   },
   async isUserVerified(req, res, next) {

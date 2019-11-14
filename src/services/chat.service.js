@@ -36,7 +36,6 @@ const ChatService = {
       },
       include: [{ model: db.Users, attributes: ['fullname'], as: 'receiver' },
         { model: db.Users, attributes: ['fullname'], as: 'author' },
-        { model: db.Chats, attributes: ['message', 'authorId'], as: 'parent' },
         { model: db.Accommodations, attributes: ['name'], as: 'accommodation' },
       ],
       offset,
@@ -45,24 +44,6 @@ const ChatService = {
     });
     return groupBy(getContacts(chats, userId), 'contactId');
   },
-
-  async getSingleChat(id) {
-    const chat = db.Chats.findOne({ where: { id } });
-    return chat;
-  },
-
-  async getMessageReply(id) {
-    const chats = await db.Chats.findAll({
-      where: { parentId: id },
-      include: [{ model: db.Users, attributes: ['fullname'], as: 'receiver' },
-        { model: db.Users, attributes: ['fullname'], as: 'author' },
-        { model: db.Chats, attributes: ['message', 'authorId'], as: 'parent' },
-        { model: db.Accommodations, attributes: ['name'], as: 'accommodation' },
-      ],
-      order: [['id', 'DESC']]
-    });
-    return chats;
-  }
 };
 
 export default ChatService;

@@ -4,14 +4,13 @@ import EchoUtil from '../utils/echo.util';
 
 const ChatsController = {
   async postChat(req, res) {
-    const { message, receiverId, AccommodationId, parentId } = req.body;
+    const { message, receiverId, AccommodationId } = req.body;
     const { userId, fullname } = req.userData;
     const { io } = req;
     const chat = {
       authorId: userId,
       message,
       receiverId,
-      parentId,
       AccommodationId
     };
     const result = await ChatService.addChat(chat);
@@ -31,13 +30,6 @@ const ChatsController = {
 
     sendResult(res, 200, 'chat list', chatList);
   },
-
-  async getReplies(req, res) {
-    const { parentId } = req.params;
-    const chats = await ChatService.getMessageReply(parentId);
-
-    sendResult(res, 200, 'chat replies', chats);
-  }
 };
 
 export default ChatsController;

@@ -3,7 +3,6 @@ import CommentService from '../services/comment.service';
 import NotificationService from '../services/notifications.service';
 import UserService from '../services/user.service';
 import NotificationUtil from '../utils/notification.util';
-import RequestService from '../services/request.service';
 
 const CommentsController = {
   addComment: async (req, res) => {
@@ -31,8 +30,12 @@ const CommentsController = {
     sendResult(res, 201, 'Comment Created', newComment);
   },
   viewComment: async (req, res) => {
-    const comments = await RequestService.getRequestComments(req.params.requestId);
-    sendResult(res, 200, '', comments);
+    const comments = await CommentService.getComments(req.params.requestId);
+    sendResult(res, 200, 'Comments', comments);
+  },
+  async getComment(req, res) {
+    const { deletedAt, ...data } = req.comment;
+    sendResult(res, 200, 'Comment', data);
   },
   updateComment: async (req, res) => {
     await CommentService.updateComment(req.params.commentId, req.body.comment);

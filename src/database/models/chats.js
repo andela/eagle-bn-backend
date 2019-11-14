@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     receiverId: DataTypes.INTEGER,
     message: DataTypes.STRING,
     AccommodationId: DataTypes.INTEGER,
-    parentId: DataTypes.INTEGER
   }, {});
   Chats.associate = function(models) {
       Chats.belongsTo(models.Users, {
@@ -19,12 +18,6 @@ module.exports = (sequelize, DataTypes) => {
           targetKey: 'id',
           allowNull: true, 
           as: 'receiver'
-      });
-      Chats.belongsTo(models.Chats, {
-        foreignKey: 'parentId',
-        targetKey: 'id',
-        allowNull: true, 
-        as: 'parent'
       });
       Chats.belongsTo(models.Accommodations, {
       foreignKey: 'AccommodationId',

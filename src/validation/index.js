@@ -19,7 +19,7 @@ const validator = {
       new Check({ fullname: req }).str().alphaNum();
       new Check({ password: req }).str().withSpec().confirm();
       new Check({ gender: req }).str().gender();
-      new Check({ dob: req }).str().alphaNum();
+      new Check({ dob: req }).str().date();
       new Check({ address: req }).str().min(2);
       new Check({ city: req }).str().alpha();
       new Check({ state: req }).str().alpha();
@@ -188,8 +188,11 @@ const validator = {
     next();
   },
   viewCommentValidation: async (req, res, next) => {
-    const { requestId } = req.params;
+    const { requestId, commentId } = req.params;
     if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+    if (commentId) {
+      if (!/^[0-9]{1,}$/.test(commentId)) return sendResult(res, 400, 'commentId should be a number');
+    }
     next();
   },
   reviewValidation: async (req, res, next) => {
