@@ -82,10 +82,17 @@ const requestMidd = {
     next();
   },
 
+  async checkCommentExist(req, res, next) {
+    const comment = await CommentService.getComment(req.params.commentId);
+    if (!comment || comment.deletedAt) return sendResult(res, 404, 'Comment does not exist');
+    req.comment = comment;
+    next();
+  },
+
   async chekIfParentExist(req, res, next) {
     if (req.body.parent) {
       const isFound = await CommentService.getComment(req.body.parent);
-      if (!isFound) return sendResult(res, 404, 'Parent comment does not exist');
+      if (!isFound || isFound.deletedAt) return sendResult(res, 404, 'Parent comment does not exist');
     }
     next();
   },

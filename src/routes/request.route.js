@@ -17,7 +17,8 @@ const {
   checkManagerId,
   chekIfParentExist,
   checkCommentOwner,
-  checkRequestOwner } = RequestMiddleware;
+  checkRequestOwner,
+  checkCommentExist } = RequestMiddleware;
 const { changeRequestStatus, getManagerRequests, search } = RequestsController;
 
 const { checkManager, checkRequester } = RoleMiddleware;
@@ -32,7 +33,7 @@ const {
   managerValid,
   searchValidate,
 } = valid;
-const { addComment, viewComment, updateComment, trashComment } = CommentsController;
+const { addComment, viewComment, updateComment, trashComment, getComment } = CommentsController;
 
 app.get('/stats', [
   verifyToken,
@@ -52,4 +53,5 @@ app.put('/:requestId/comments/:commentId', editCommentValidation, checkToken, ch
 app.delete('/:requestId/comments/:commentId', deleteCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, checkCommentOwner, trashComment);
 app.post('/:requestId/comments', addCommentValidation, checkToken, chekIfParentExist, checkExistingTrip, checkRequestOwner, addComment);
 app.get('/:requestId/comments', viewCommentValidation, checkToken, checkExistingTrip, checkRequestOwner, viewComment);
+app.get('/:requestId/comments/:commentId', viewCommentValidation, checkToken, checkExistingTrip, checkCommentExist, checkRequestOwner, getComment);
 export default app;
