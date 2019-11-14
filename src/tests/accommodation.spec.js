@@ -263,7 +263,7 @@ describe('accommodation tests', () => {
   });
   it('should return 201 status when creating a bookmark ', (done) => {
     chai.request(app)
-      .post('/api/v1/accommodations/1/bookmark')
+      .post('/api/v1/accommodations/1/bookmarks')
       .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(201);
@@ -273,7 +273,7 @@ describe('accommodation tests', () => {
   });
   it('should return 200 status and bookmarked accommodations', (done) => {
     chai.request(app)
-      .get('/api/v1/accommodations/bookmarked')
+      .get('/api/v1/accommodations/bookmarks')
       .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
@@ -283,7 +283,7 @@ describe('accommodation tests', () => {
   });
   it('should return 200 and delete a bookmark', (done) => {
     chai.request(app)
-      .delete('/api/v1/accommodations/1/bookmark')
+      .delete('/api/v1/accommodations/1/bookmarks')
       .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
