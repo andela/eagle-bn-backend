@@ -30,5 +30,11 @@ export default [
   {
     password: '12345678UU',
     email: 'alexismajyambere@gmail.com',
+    isverified: false,
+  },
+  {
+    password: 'X2345678UUi@',
+    email: 'alexismajyambere@gmail.com',
+    isverified: true,
   },
 ];

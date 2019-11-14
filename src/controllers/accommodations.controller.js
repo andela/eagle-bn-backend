@@ -11,6 +11,8 @@ const checkIfAllUploaded = (total, res, data, msg) => {
 };
 
 const uploadImages = (req, res, data, msg) => {
+  success = 0;
+  failure = 0;
   if (!req.imageArray) return sendResult(res, 200, msg, data);
   const numberofImages = req.imageArray.length;
   data.images = [];
@@ -65,11 +67,12 @@ const Accommodation = {
 
   async editAccommodation(req, res) {
     const { id } = req.params;
-    await AccommodationService.updateAccommodation(req.body, id);
+    const accommodation = await AccommodationService.updateAccommodation(req.body, id);
+    const returnData = accommodation.get({ plain: true });
     if (req.files) {
       await AccommodationService.deleteAccommodationImages(id);
+      returnData.AccommodationImages = undefined;
     }
-    const returnData = await AccommodationService.getAccommodationById(id);
     uploadImages(req, res, returnData, 'Accommodation data/images updated successfully');
   },
 

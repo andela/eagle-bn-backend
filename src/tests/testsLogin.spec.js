@@ -71,7 +71,7 @@ describe('login', () => {
         done();
       });
   });
-  it('It should return a 400 status, when password is not provided', (done) => {
+  it('It should return a 400 status, when an account is not verified', (done) => {
     chai.request(myserver)
       .post('/api/v1/users/login')
       .send(mock[6])
@@ -81,7 +81,7 @@ describe('login', () => {
         done();
       });
   });
-  it('It should return a 400 status, when password is not provided', (done) => {
+  it('It should return a 400 status, when the password is incorect', (done) => {
     chai.request(myserver)
       .post('/api/v1/users/login')
       .send(mock[7])
@@ -92,7 +92,6 @@ describe('login', () => {
       });
   });
 });
-
 describe('Oauthentication CallBack', () => {
   afterEach(() => {
     sinon.restore();
