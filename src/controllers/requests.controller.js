@@ -15,12 +15,8 @@ const { Op } = Sequelize;
 
 const Request = {
   async getRequest(req, res) {
-    try {
-      const requests = await RequestService.getAllRequestByUserId(req.userData.userId);
-      return sendResult(res, 200, 'Requests', requests);
-    } catch (err) {
-      return sendResult(res, 400, 'something went wrong!');
-    }
+    const requests = await RequestService.getAllRequestByUserId(req.userData.userId);
+    return sendResult(res, 200, 'Requests', requests);
   },
 
   async postRequest(req, res) {
