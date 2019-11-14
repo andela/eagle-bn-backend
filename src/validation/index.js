@@ -188,8 +188,11 @@ const validator = {
     next();
   },
   viewCommentValidation: async (req, res, next) => {
-    const { requestId } = req.params;
+    const { requestId, commentId } = req.params;
     if (!requestId.match(/^[0-9]{1,}$/)) return sendResult(res, 400, 'requestId should be a number');
+    if (commentId) {
+      if (!/^[0-9]{1,}$/.test(commentId)) return sendResult(res, 400, 'commentId should be a number');
+    }
     next();
   },
   reviewValidation: async (req, res, next) => {
