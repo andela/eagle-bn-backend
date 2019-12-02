@@ -39,13 +39,13 @@ export default class EmailUtil {
     const notification = {
       req,
       title: 'New Trip Request',
-      url: `/api/v1/requests/${requestId}`,
+      url: `/requests/${requestId}`,
       actionMsg: 'View Trip Request',
       msg: `new trip request was initiated by ${userEmail}`,
       to: user.email,
       fullname: user.fullname,
       token: helpers.createToken(user.id, user.email),
-      base: `${req.protocol}://${req.headers.host}`
+      base: process.env.FRONTEND_BASE_URL
     };
     await this.sendEmail('request', notification);
   }
@@ -62,13 +62,13 @@ export default class EmailUtil {
     const notification = {
       req,
       title: `Request ${newRequest.status}`,
-      url: `/api/v1/requests/${newRequest.id}`,
+      url: `/requests/${newRequest.id}`,
       actionMsg: 'View request',
       msg: `your request has been ${newRequest.status}`,
       to: req.user.email,
       fullname: req.user.fullname,
       token: helpers.createToken(req.user.id, req.user.email),
-      base: `${req.protocol}://${req.headers.host}`
+      base: process.env.FRONTEND_BASE_URL
     };
     await this.sendEmail('request', notification);
   }
@@ -84,13 +84,13 @@ export default class EmailUtil {
     const notification = {
       req,
       title: 'Password reset',
-      url: `/api/v1/users/reset-password/${helpers.createToken(req.user.id, req.user.email)}`,
+      url: `/users/reset-password/${helpers.createToken(req.user.id, req.user.email)}`,
       actionMsg: 'Reset Password',
       msg: 'you requested to reset the password',
       to: req.user.email,
       fullname: req.user.fullname,
       token: helpers.createToken(req.user.id, req.user.email),
-      base: `${req.protocol}://${req.headers.host}`
+      base: process.env.FRONTEND_BASE_URL
     };
     await this.sendEmail('password', notification);
   }
@@ -107,13 +107,13 @@ export default class EmailUtil {
     const notification = {
       req,
       title: 'Email Verification',
-      url: `/api/v1/users/verify/${helpers.createToken(user.id, user.email)}`,
+      url: `/users/verify/${helpers.createToken(user.id, user.email)}`,
       actionMsg: 'Verify Email',
       msg: 'you created account',
       to: user.email,
       fullname: user.fullname,
       token: helpers.createToken(user.id, user.email),
-      base: `${req.protocol}://${req.headers.host}`
+      base: process.env.FRONTEND_BASE_URL
     };
     await this.sendEmail('verification', notification);
   }
@@ -134,7 +134,7 @@ export default class EmailUtil {
       to: req.user.email,
       fullname: req.user.fullname,
       token: helpers.createToken(req.user.id, req.user.email),
-      base: `${req.protocol}://${req.headers.host}`
+      base: process.env.FRONTEND_BASE_URL
     };
     await this.sendEmail('role', notification);
   }

@@ -5,6 +5,12 @@ import db from '../database/models';
 const RequestService = {
   async getOneRequest(condition) {
     const request = await db.Requests.findOne({ where: condition, raw: true, });
+    if (request) {
+      request.Trips = await db.Trips.findAll({
+        where: { RequestId: request.id },
+        attributes: { exclude: ['RequestId', 'createdAt', 'accommodationId'] },
+      });
+    }
     return request;
   },
   async getOnetrip(condition) {
