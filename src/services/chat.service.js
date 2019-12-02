@@ -2,10 +2,22 @@ import { Op } from 'sequelize';
 import db from '../database/models/index';
 
 const groupBy = (array, key) => array.reduce((newArray, element) => {
-  if (element[key] === null) element[key] = 'public';
   (newArray[element[key]] = newArray[element[key]] || []).push(element);
   return newArray;
 }, {});
+
+const getContacts = (chats, userId) => {
+  const newChats = chats.map(element => {
+    if (element.receiverId === userId) {
+      element.contactId = [element.authorId, element.author.fullname];
+    } else if (element.receiverId === null) element.contactId = 'public';
+    else element.contactId = [element.receiverId, element.receiver.fullname];
+    element.author = {};
+    element.receiver = undefined;
+    return element;
+  });
+  return newChats;
+};
 
 const ChatService = {
   async addChat(chat) {
@@ -22,11 +34,16 @@ const ChatService = {
           { receiverId: userId },
         ],
       },
+      include: [{ model: db.Users, attributes: ['fullname'], as: 'receiver' },
+        { model: db.Users, attributes: ['fullname'], as: 'author' },
+        { model: db.Accommodations, attributes: ['name'], as: 'accommodation' },
+      ],
       offset,
       limit,
+      order: [['id', 'DESC']]
     });
-    return groupBy(chats, 'receiverId');
-  }
+    return groupBy(getContacts(chats, userId), 'contactId');
+  },
 };
 
 export default ChatService;

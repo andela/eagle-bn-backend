@@ -57,7 +57,7 @@ const Accommodation = {
 
   async accommodationExists(req, res, next) {
     const AccommodationId = req.body.AccommodationId || req.params.accommodationId;
-    if (await AccommodationService.getAccommodationById(AccommodationId)) {
+    if (!AccommodationId || await AccommodationService.getAccommodationById(AccommodationId)) {
       return next();
     }
     return sendResult(res, 404, 'The Accommodation is not found');

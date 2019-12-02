@@ -92,10 +92,12 @@ const User = {
 
   async checkReceiverExist(req, res, next) {
     const { receiverId } = req.body;
+    const { userId } = req.userData;
     if (!receiverId) return next();
     const user = await UserService.getUser({ id: receiverId });
-    if (user) return next();
-    return sendResult(res, 400, 'this user does not exist');
+    if (!user) return sendResult(res, 400, 'this user does not exist');
+    if (user.id === userId) return sendResult(res, 403, 'you can\'t send a message to yourself');
+    return next();
   },
   async isUserVerified(req, res, next) {
     const user = await UserService.getUserRole({ email: req.body.email });

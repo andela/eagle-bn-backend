@@ -232,6 +232,10 @@ const validator = {
       return sendResult(res, 400, err.message);
     }
   },
+  validateParentChatId(req, res, next) {
+    return isNumeric(req.params.parentId, 'chat id', res, next);
+  },
+
   updateRequest(req, res, next) {
     try {
       new Check({ timeZone: req }).str().min(1);
@@ -256,6 +260,8 @@ const validator = {
     try {
       new Check({ message: req }).req().str();
       new Check({ receiverId: req }).integer();
+      new Check({ AccommodationId: req }).integer();
+      new Check({ parentId: req }).integer();
       next();
     } catch (err) {
       return sendResult(res, 400, err.message);

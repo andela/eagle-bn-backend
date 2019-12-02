@@ -22,12 +22,35 @@ describe('chat', () => {
   it('it should return 201 when private chat is created', (done) => {
     chai.request(app)
       .post('/api/v1/chats/')
+      .set('Authorization', helper.createToken(1, 'requester@gmail.com', true, 'requester'))
+      .send({ message: 'hey man', receiverId: 3 })
+      .end((err, res) => {
+        expect(res.status).to.equal(201);
+        expect(res.body.msg).to.equal('chat posted successfully');
+        expect(res.body.data.message).to.equal('hey man');
+        done();
+      });
+  });
+  it('it should return 201 when private chat is created', (done) => {
+    chai.request(app)
+      .post('/api/v1/chats/')
       .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send({ message: 'hey man', receiverId: 1 })
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.msg).to.equal('chat posted successfully');
         expect(res.body.data.message).to.equal('hey man');
+        done();
+      });
+  });
+
+  it('it should return 403 when user send message to himself', (done) => {
+    chai.request(app)
+      .post('/api/v1/chats/')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .send({ message: 'hey man', receiverId: 3 })
+      .end((err, res) => {
+        expect(res.status).to.equal(403);
         done();
       });
   });
