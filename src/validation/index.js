@@ -215,6 +215,10 @@ const validator = {
     return isNumeric(req.params.accommodationId, 'accommodation Id', res, next);
   },
 
+  validateParentChatId(req, res, next) {
+    return isNumeric(req.params.parentId, 'chat id', res, next);
+  },
+
   updateRequest(req, res, next) {
     const { returnTime, trip } = req.body;
     const { departureTime, reason } = trip;
@@ -251,6 +255,8 @@ const validator = {
     try {
       new Check({ message: req }).req().str();
       new Check({ receiverId: req }).integer();
+      new Check({ AccommodationId: req }).integer();
+      new Check({ parentId: req }).integer();
       next();
     } catch (err) {
       return sendResult(res, 400, err.message);
