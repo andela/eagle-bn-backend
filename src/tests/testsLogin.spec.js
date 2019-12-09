@@ -96,7 +96,7 @@ describe('Oauthentication CallBack', () => {
   afterEach(() => {
     sinon.restore();
   });
-  it('Should return status 201', async () => {
+  it('Should return redirect a user', async () => {
     const req = {
       user: {
         fullname: 'Crispy N. Christian',
@@ -105,10 +105,12 @@ describe('Oauthentication CallBack', () => {
       }
     };
 
-    const res = { status() {}, json() {}, };
-    sinon.stub(res, 'status').returnsThis();
+    const res = { status() {},
+      json() {},
+      redirect: () => {
+      } };
     await User.OauthLogin(req, res);
-    expect(res.status).to.have.been.calledWith(201);
+    expect(res.redirect).to.be.a('function');
   });
 
   it('OAuthCallback should return User object', async (done) => {
