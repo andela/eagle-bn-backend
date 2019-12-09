@@ -31,8 +31,21 @@ app.post('/login', UserMiddleware.checkloginEntries, login);
 app.get('/verify/:token', verifyEmail);
 app.post('/reset-password', UserMiddleware.validateEmail, getUserbyEmail, EmailsController.sendReset);
 app.patch('/reset-password/:token', UserMiddleware.validatePass, EmailsController.resetPass);
-app.post('/auth/facebook', passport.authenticate('facebook-token'), OauthLogin);
-app.post('/auth/google', passport.authenticate('google-plus-token'), OauthLogin);
+
+app.get('/google', passport.authenticate('google', {
+  scope: [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email'
+  ]
+}));
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), OauthLogin);
+
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), OauthLogin);
+
+
+// app.post('/auth/facebook', passport.authenticate('facebook-token'), OauthLogin);
+// app.post('/auth/google', passport.authenticate('google-plus-token'), OauthLogin);
 app.get('/:id/profile', valid.idValidate, getUserById, getProfile);
 app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updateProfile);
 app.put('/role', checkRole, checkAdmin, UserMiddleware.getUserbyEmail, isUserVerified, RolesController.changeRole);
