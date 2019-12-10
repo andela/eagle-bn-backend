@@ -10,7 +10,7 @@ passport.use(
     name: 'facebook',
     clientID: config.facebook.clientID,
     clientSecret: config.facebook.clientSecret,
-    callbackURL: 'http://localhost:3000/api/v1/users/auth/facebook/callback',
+    callbackURL: '/api/v1/users/auth/facebook/callback',
     profileFields: ['id', 'displayName', 'photos', 'email']
   }, OAuthCallback)
 );
@@ -23,7 +23,7 @@ passport.use(
     name: 'google',
     clientID: config.google.clientID,
     clientSecret: config.google.clientSecret,
-    callbackURL: 'http://localhost:3000/api/v1/users/auth/google/callback'
+    callbackURL: '/api/v1/users/auth/google/callback'
   }, OAuthCallback)
 );
 
