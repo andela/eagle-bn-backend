@@ -14,6 +14,10 @@ const app = express();
 dotenv.config();
 
 app.use(cors());
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
