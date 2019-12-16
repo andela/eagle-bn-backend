@@ -104,13 +104,25 @@ describe('Oauthentication CallBack', () => {
         isverified: true
       }
     };
-
     const res = { status() {},
       json() {},
       redirect: () => {
       } };
     await User.OauthLogin(req, res);
     expect(res.redirect).to.be.a('function');
+  });
+  it('Should return status 201', async () => {
+    const req = {
+      user: {
+        fullname: 'Crispy N. Christian',
+        email: 'crispy@mail.com',
+        isverified: true
+      }
+    };
+    const res = { status() {}, json() {}, };
+    sinon.stub(res, 'status').returnsThis();
+    await User.OauthFaceLogin(req, res);
+    expect(res.status).to.have.been.calledWith(201);
   });
 
   it('OAuthCallback should return User object', async (done) => {
