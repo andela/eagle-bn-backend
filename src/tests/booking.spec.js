@@ -153,16 +153,6 @@ describe('review accomodation', () => {
         done();
       });
   });
-  it('it should return 404 when trip does not exist', (done) => {
-    chai.request(app)
-      .post('/api/v1/bookings/')
-      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
-      .send({ accommodationId: 1, tripId: 10, start: moment('2020/1/1', 'YYYY/MM/DD').toDate(), end: moment('2020/2/2', 'YYYY/MM/DD').toDate(), numberOfSpace: 3 })
-      .end((err, res) => {
-        expect(res.status).to.equal(404);
-        done();
-      });
-  });
   it('it should return 404 when accommodation does not exist', (done) => {
     chai.request(app)
       .post('/api/v1/bookings/')
@@ -170,16 +160,6 @@ describe('review accomodation', () => {
       .send({ accommodationId: 10, tripId: 10, start: '1/1/2020', end: '2/2/2020', numberOfSpace: 3 })
       .end((err, res) => {
         expect(res.status).to.equal(404);
-        done();
-      });
-  });
-  it('it should return 401 when you do not own the trip', (done) => {
-    chai.request(app)
-      .post('/api/v1/bookings/')
-      .set('Authorization', helper.createToken(4, 'requester@gmail.com', true, 'requester'))
-      .send({ accommodationId: 1, tripId: 1, start: '1/1/2020', end: '2/2/2020', numberOfSpace: 3 })
-      .end((err, res) => {
-        expect(res.status).to.equal(401);
         done();
       });
   });
