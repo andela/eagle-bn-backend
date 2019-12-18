@@ -8,19 +8,19 @@ export default [
   {
     country: 'RW',
     city: 'Kigali',
-    returnTime: `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} 11:59 pm`,
+    returnTime: `${now.getMonth() + 2}/${now.getDate()}/${now.getFullYear() + 2} 11:59 pm`,
     timeZone: 'africa/kigali',
     trips: [
       {
         country: 'KE',
         city: 'Nairobi',
-        departureTime: `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} 10:30 am`,
+        departureTime: `${now.getMonth() + 2}/${now.getDate()}/${now.getFullYear()} 10:30 am`,
         reason: 'no reason for this',
       },
       {
         country: 'UG',
         city: 'kampala',
-        departureTime: `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()} 11:30 am`,
+        departureTime: `${now.getMonth() + 2}/${now.getDate()}/${now.getFullYear() + 1} 10:31 am`,
         reason: 'no reason for this',
       }
     ]

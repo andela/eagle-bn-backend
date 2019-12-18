@@ -23,16 +23,14 @@ const BookingsController = {
   },
 
   async createBooking(req, res) {
-    const { TripId, AccommodationId, start, end, numberOfSpace } = req.body;
+    const { AccommodationId, start, end, numberOfSpace } = req.body;
     const { userId } = req.userData;
     const result = await BookingService.createBooking({
-      TripId, AccommodationId, start, end, numberOfSpace, UserId: userId });
-    result.tripId = result.TripId;
+      AccommodationId, start, end, numberOfSpace, UserId: userId });
     result.accommodationId = result.AccommodationId;
     result.userId = result.UserId;
     const { fullname } = await UserService.getUser({ id: userId });
     result.fullname = fullname;
-    delete result.TripId;
     delete result.AccommodationId;
     delete result.UserId;
     return sendResult(res, 201, 'Booking details', result);
@@ -41,15 +39,18 @@ const BookingsController = {
   async getBooking(req, res) {
     const { id } = req.params;
     const result = await BookingService.getBookingById(id);
-    result.tripId = result.TripId;
     result.accommodationId = result.AccommodationId;
     result.userId = result.UserId;
     const { fullname } = await UserService.getUser({ id: result.userId });
     result.fullname = fullname;
-    delete result.TripId;
     delete result.AccommodationId;
     delete result.UserId;
     return sendResult(res, 200, result);
+  },
+  async getAllBooking(req, res) {
+    const { userId } = req.userData;
+    const bookings = await BookingService.getAllBooking(userId);
+    return sendResult(res, 200, bookings);
   }
 };
 

@@ -294,7 +294,6 @@ const validator = {
   validateBooking(req, res, next) {
     try {
       new Check({ accommodationId: req }).num().req();
-      new Check({ tripId: req }).num().req();
       new Check({ numberOfSpace: req }).num().req();
       new Check({ start: req }).dateGreaterThan(Date.now()).req();
       new Check({ end: req }).dateGreaterThan(new Date(req.body.start)).req();
