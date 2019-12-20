@@ -45,17 +45,20 @@ const BookingService = {
   async getAccommodationFeedback(AccommodationId) {
     const result = await db.Ratings.findAll({
       attributes: ['feedback', 'id'],
-      include: [{ model: db.Bookings,
-        where: { AccommodationId },
-        attributes: ['UserId'],
-        include: [
-          { model: db.Users, attributes: ['fullname'] }
-        ] }],
+      include: [
+        {
+          model: db.Bookings,
+          where: { AccommodationId },
+          attributes: ['UserId'],
+          include: [{ model: db.Users, attributes: ['fullname', 'avatar'] }]
+        }
+      ]
     });
     const formatedResult = result.map(element => ({
       feedbackId: element.id,
       feedback: element.feedback,
       author: element.Booking.User.fullname,
+      avatar: element.Booking.User.avatar,
       authorId: element.Booking.UserId
     }));
     return formatedResult;
