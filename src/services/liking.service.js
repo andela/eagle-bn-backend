@@ -17,7 +17,7 @@ const LikingService = {
 
   async getLikes(accommodationId) {
     return db.Likings
-      .findAll({ where: { accommodationId, isLiked: true }, raw: false });
+      .findAll({ where: { accommodationId, isLiked: true }, raw: true });
   }
 };
 export default LikingService;
