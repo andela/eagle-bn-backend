@@ -73,11 +73,11 @@ describe('Like/Unlike an accomodation facility', () => {
       .set('Authorization', helper.createToken(2, 'requester@gmail.com', true, 'requester'))
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.data).to.equal(3);
+        expect(res.body.data.length).to.equal(3);
         done();
       });
   });
-  it('it should return 400 status when wront accommodation sumber is sent', (done) => {
+  it('it should return 400 status when wrong accommodation sumber is sent', (done) => {
     chai.request(app)
       .get('/api/v1/accommodations/dgsd/like')
       .set('Authorization', helper.createToken(2, 'requester@gmail.com', true, 'requester'))
