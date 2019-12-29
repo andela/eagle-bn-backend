@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import db from '../database/models/index';
 
 const CommentService = {
@@ -14,11 +17,26 @@ const CommentService = {
     }
     return result;
   },
+  async getReplies(id) {
+    const replies = await db.Comments.findAll({
+      where: { parent: id },
+      attributes: { exclude: ['updatedAt', 'requestId', 'deletedAt', 'parent'] },
+      include: [{ model: db.Users, attributes: ['RoleId', 'fullname'] }],
+      raw: true
+    });
+    return replies;
+  },
   async getComments(requestId) {
-    return db.Comments.findAll({
+    const result = await db.Comments.findAll({
       where: { requestId, parent: null },
       attributes: { exclude: ['updatedAt', 'requestId', 'deletedAt', 'parent'] },
+      include: [{ model: db.Users, attributes: ['RoleId', 'fullname'] }],
+      raw: true
     });
+    for (const [key, value] of Object.entries(result)) {
+      value.replies = await this.getReplies(value.id);
+    }
+    return result;
   },
   async trashComment(id) {
     const result = await db.Comments.update(
