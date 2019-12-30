@@ -44,7 +44,7 @@ describe('accommodation tests', () => {
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.data).to.have.property('id');
-        expect(res.body.data.images[0]).to.contain('http');
+        expect(res.body.data.images[0]).to.contain('temp');
         done();
       });
   });

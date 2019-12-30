@@ -42,6 +42,15 @@ const UserService = {
     });
     return user[1];
   },
+
+  async getAllUsers() {
+    return db.Users.findAll({
+      raw: true,
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'password', 'recieveEmails', 'RoleId', 'lineManager']
+      },
+    });
+  }
 };
 
 export default UserService;
