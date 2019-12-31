@@ -23,7 +23,7 @@ const uploadfile = fileUpload({
 const { verifyToken, cloudUpload, getUserbyEmail, getUserById, isUserVerified } = UserMiddleware;
 const {
   updateProfile, getProfile, userSubscription, signup, login, verifyEmail, OauthLogin,
-  OauthFaceLogin
+  OauthFaceLogin, getUsers,
 } = UsersController;
 const { checkAdmin } = RoleMiddleware;
 
@@ -49,6 +49,7 @@ app.put('/role', checkRole, checkAdmin, UserMiddleware.getUserbyEmail, isUserVer
 app.get('/roles', checkAdmin, RolesController.allRole);
 app.get('/email/:subscription/:token', verifyToken, userSubscription);
 app.patch('/logout', UserMiddleware.verifyToken, UsersController.logout);
+app.get('/', getUsers);
 
 export default app;
 

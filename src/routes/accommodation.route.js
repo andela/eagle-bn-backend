@@ -30,7 +30,7 @@ app.get('/search', AccommodationsController.getAccommodationsByFilter);
 app.get('/bookmarks', checkToken, AccommodationsController.getBookmarkedAccommodations);
 app.get('/:accommodationId', AccommodationsController.getAccommodationById);
 app.post('/:accommodationId/like', checkToken, LikingsController.addLikeAccommdation);
-app.get('/:accommodationId/like', checkToken, LikingsController.getAccommdationLikes);
+app.get('/:accommodationId/like', LikingsController.getAccommdationLikes);
 app.post('/:accommodationId/bookmarks', checkToken, valid.validateAccommodationId, accommodationExists, AccommodationsController.bookmarkAccommodation);
 app.delete('/:accommodationId/bookmarks', checkToken, valid.validateAccommodationId, accommodationExists, AccommodationsController.undoBookmark);
 export default app;

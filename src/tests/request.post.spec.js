@@ -15,7 +15,6 @@ describe('create request and new request notifications', () => {
       .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
       .send(requests[0])
       .end((err, res) => {
-        console.log(res.body);
         expect(res.status).to.equal(201);
         done();
       });

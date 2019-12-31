@@ -102,6 +102,11 @@ const User = {
     const condition = { id: req.user.userId };
     await UserService.updateUser(data, condition);
     sendResult(res, 200, 'Logout successful');
+  },
+
+  async getUsers(req, res) {
+    const users = await UserService.getAllUsers();
+    sendResult(res, 200, 'all users', users);
   }
 
 };
