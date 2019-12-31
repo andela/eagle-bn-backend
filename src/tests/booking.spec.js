@@ -135,6 +135,15 @@ describe('review accomodation', () => {
         done();
       });
   });
+  it('it should return 200 when getting all bookings', (done) => {
+    chai.request(app)
+      .get('/api/v1/bookings')
+      .set('Authorization', helper.createToken(3, 'requester@gmail.com', true, 'requester'))
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        done();
+      });
+  });
   it('it should return 404 when booking does not exist', (done) => {
     chai.request(app)
       .get('/api/v1/bookings/100')

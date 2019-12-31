@@ -52,6 +52,7 @@ const Request = {
       modelId: Req.id,
       type: 'new_request',
       userId: lineManager,
+      description: `You have a new trip request from ${request.country} to ${Trips.length > 1 ? `${Trips[0].country}, ${Trips[0].city}` : `${Trips[0].country}, ${Trips[0].city} and ${Trips.length - 1} more destinations`}`
     });
     NotificationUtil.echoNotification(req, notification, 'new_request', lineManager);
     // CHECK IF MANAGER IS SUBSCRIBED TO EMAIL NOTIFICATION

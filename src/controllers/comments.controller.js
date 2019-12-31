@@ -21,6 +21,7 @@ const CommentsController = {
       modelId: newComment.id,
       type: 'new_comment',
       userId,
+      description: 'You have a new comment on your requests'
     });
     // EMITTING ECHO FOR NEW NOTIFICATION
     NotificationUtil.echoNotification(req, notification, 'new_comment', userId);

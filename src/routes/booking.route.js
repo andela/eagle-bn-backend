@@ -9,7 +9,7 @@ const app = express.Router();
 
 const { checkToken } = UserMiddleware;
 const { checkUserBooking, bookingExist } = BookingMiddleware;
-const { setAccommodationRating, createBooking, getBooking } = BookingsController;
+const { setAccommodationRating, createBooking, getBooking, getAllBooking } = BookingsController;
 const {
   reviewDateValidation, reviewValidation, validateBooking, getBookingValidation
 } = Validation;
@@ -22,5 +22,6 @@ app.post(
   createBooking
 );
 app.get('/:id', checkToken, getBookingValidation, bookingExist, checkUserBooking, getBooking);
+app.get('/', checkToken, getAllBooking);
 
 export default app;

@@ -11,6 +11,18 @@ const BookingService = {
     return result;
   },
 
+  async getAllBooking(UserId) {
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodation = { model: db.Accommodations, include: image, attributes: { exclude: ['id', 'createdAt', 'updatedAt'] } };
+    const rating = { model: db.Ratings, attributes: { exclude: ['id', 'createdAt', 'updatedAt'] } };
+
+    const result = await db.Bookings.findAll({
+      where: { UserId },
+      include: [accommodation, rating],
+    });
+    return result;
+  },
+
   async createBooking(booking) {
     const result = await db.Bookings.create(booking, { raw: true });
     return result.get({ plain: true });

@@ -46,6 +46,11 @@ const BookingsController = {
     delete result.AccommodationId;
     delete result.UserId;
     return sendResult(res, 200, result);
+  },
+  async getAllBooking(req, res) {
+    const { userId } = req.userData;
+    const bookings = await BookingService.getAllBooking(userId);
+    return sendResult(res, 200, 'bookings', bookings);
   }
 };
 
