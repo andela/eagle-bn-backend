@@ -22,8 +22,7 @@ const uploadfile = fileUpload({
 
 const { verifyToken, cloudUpload, getUserbyEmail, getUserById, isUserVerified } = UserMiddleware;
 const {
-  updateProfile, getProfile, userSubscription, signup, login, verifyEmail, OauthLogin,
-  OauthFaceLogin, getUsers,
+  updateProfile, getProfile, userSubscription, signup, login, verifyEmail, OauthLogin, getUsers,
 } = UsersController;
 const { checkAdmin } = RoleMiddleware;
 
@@ -41,7 +40,7 @@ app.get('/google', passport.authenticate('google', {
 }));
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), OauthLogin);
 
-app.post('/auth/facebook', passport.authenticate('facebook-token'), OauthFaceLogin);
+app.post('/auth/facebook', passport.authenticate('facebook-token'), OauthLogin);
 // app.post('/auth/google', passport.authenticate('google-plus-token'), OauthLogin);
 app.get('/:id/profile', valid.idValidate, getUserById, getProfile);
 app.patch('/profile', uploadfile, verifyToken, valid.profile, cloudUpload, updateProfile);

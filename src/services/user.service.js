@@ -18,7 +18,7 @@ const UserService = {
 
   getAllUsersRole() {
     return db.Users.findAll({
-      attributes: ['id', 'fullname', 'email'],
+      attributes: ['id', 'fullname', 'email', 'avatar'],
       include: [{ model: db.Roles, attributes: { exclude: ['createdAt', 'updatedAt'] } }] });
   },
 
