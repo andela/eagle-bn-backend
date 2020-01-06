@@ -55,7 +55,7 @@ const User = {
       return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
     }
   },
-  async OauthFaceLogin(req, res) {
+  async  OauthLogin(req, res) {
     const {
       id, fullname, email, isverified, rememberMe
     } = await UserService.findOrCreateUser(req.user, req.user.email);
@@ -66,14 +66,6 @@ const User = {
       token: helpers.createToken(id, email, isverified, rememberMe, fullname)
     });
   },
-  async OauthLogin(req, res) {
-    const {
-      id, fullname, email, isverified, rememberMe
-    } = await UserService.findOrCreateUser(req.user, req.user.email);
-    const token = helpers.createToken(id, email, isverified, rememberMe, fullname);
-    return res.redirect(`${process.env.FRONTEND_BASE_URL}/login?token=${token}&status=ok`);
-  },
-
 
   async updateProfile(req, res) {
     const { email, role, ...updateData } = {
