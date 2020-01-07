@@ -44,14 +44,14 @@ const validator = {
 
   accommodation(req, res, next) {
     try {
-      new Check({ name: req }).str().req().min(5);
+      new Check({ name: req }).str().req().min(1);
       new Check({ description: req }).str().req().min(5);
       new Check({ address: req }).str().req().min(5);
       new Check({ availableSpace: req }).str().req().min(5);
       new Check({ cost: req }).req().double();
       new Check({ currency: req }).str().eql(3);
       new Check({ services: req }).str().req().min(5);
-      new Check({ amenities: req }).str().req().min(5);
+      new Check({ amenities: req }).str().req().min(3);
       req.body.cost = parseFloat(req.body.cost);
       if (req.body.currency) {
         const found = Object.keys(currencies)
