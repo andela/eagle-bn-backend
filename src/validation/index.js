@@ -1,10 +1,9 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-prototype-builtins */
-import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
-import { checkStringInArray, checkDate } from './trips';
+import { checkDate } from './trips';
 import currencies from '../utils/currencies.json';
 import validatePlaces from '../utils/placeValidation';
 
@@ -87,16 +86,10 @@ const validator = {
   async request(req, res, next) {
     req.error = {};
     try {
-      new Check({ timeZone: req }).str().req().min(1);
       new Check({ trips: req }).array().req().min(1);
       new Check({ country: req }).str().req().min(2);
       new Check({ city: req }).str().req().min(1);
-      // VALIDATE USER'S TIMEZONE
-      const validTZ = checkStringInArray(moment.tz.names(), req.body.timeZone, 10);
-      if (validTZ instanceof Array) {
-        req.error.timeZone = JSON.stringify(['did you mean?', validTZ]);
-        throw new Error();
-      }
+
       // VALIDATE RETURNTIME
       if (req.body.returnDate) {
         checkDate(req, req.body.returnDate, req.body.timeZone);
@@ -220,10 +213,6 @@ const validator = {
   },
 
   updateRequest(req, res, next) {
-    const { returnTime, trip } = req.body;
-    const { departureTime, reason } = trip;
-    req.body.departureTime = departureTime;
-    req.body.reason = reason;
     try {
       new Check({ timeZone: req }).str().min(1);
       new Check({ trips: req }).array().min(1);
@@ -231,12 +220,7 @@ const validator = {
       new Check({ city: req }).str().min(1);
       new Check({ requestId: req }).num().min(1);
       new Check({ tripId: req }).num().min(1);
-      new Check({ returnTime: req }).date();
-      new Check({ departureTime: req }).date();
       new Check({ reason: req }).alpha();
-      if (returnTime || departureTime) {
-        req.body.timeZone = new Date(returnTime || departureTime).toString().split('(')[1].replace(/[\(\)]/g, '');
-      }
       next();
     } catch (err) {
       return sendResult(res, 400, err.message);
