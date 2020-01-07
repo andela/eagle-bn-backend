@@ -74,6 +74,14 @@ const Request = {
       const newRequest = await RequestService.updateRequest({ status }, { id: request.id });
       req.user = await UserService.getUser({ id: newRequest.UserId });
       await EmailService.sendRequestedStatusUpdatedEmail(req, newRequest);
+      const notification = await NotificationService.createNotification({
+        modelName: 'Requests',
+        modelId: request.id,
+        type: `request_${status}`,
+        userId: newRequest.UserId,
+        description: `Your request from ${request.country}, ${request.city} has been ${status}`
+      });
+      NotificationUtil.echoNotification(req, notification, `request_${status}`, newRequest.UserId);
       return sendResult(res, 200, 'updated successfully', newRequest);
     }
     return sendResult(res, 403, 'this request is already approved/rejected');

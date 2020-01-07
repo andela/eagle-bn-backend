@@ -40,7 +40,7 @@ describe('Update/delete an accommodation tests', () => {
         expect(res.body.data.cost).to.equal(200000);
         expect(res.body.data.description).to.equal('the first hotel in region');
         expect(res.body.data.name).to.equal('hotel');
-        expect(res.body.data.availableSpace).to.equal('rooms and pool');
+        expect(res.body.data.availableSpace).to.equal('3');
         expect(res.body.data.services).to.equal('gym, breakfast');
         expect(res.body.data.amenities).to.equal('wifi, tv');
         done();
@@ -54,7 +54,7 @@ describe('Update/delete an accommodation tests', () => {
       .field('name', 'hotel')
       .field('description', 'the first hotel in region')
       .field('cost', '200000')
-      .field('availableSpace', 'rooms and pool')
+      .field('availableSpace', '3')
       .field('services', 'gym, breakfast')
       .field('amenities', 'wifi, tv')
       .attach('images', wrongFile, 'profile.js')
