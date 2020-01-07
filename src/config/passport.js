@@ -20,7 +20,7 @@ passport.use(
     name: 'google',
     clientID: config.google.clientID,
     clientSecret: config.google.clientSecret,
-    callbackURL: '/api/v1/users/auth/google/callback'
+    callbackURL: `${process.env.FRONTEND_BASE_URL}/login`
   }, OAuthCallback)
 );
 
