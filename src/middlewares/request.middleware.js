@@ -53,13 +53,12 @@ const requestMidd = {
   },
 
   async checkIfTripExists(req, res, next) {
-    const condition = { id: req.params.tripId || req.body.TripId };
-    const trip = await RequestService.getOnetrip(condition);
-    if (trip) {
-      req.trip = trip;
-      return next();
-    }
-    return sendResult(res, 404, 'no trip with a given id found');
+    req.request.Trips.map(async trip => {
+      const condition = { id: trip.id };
+      const singleTrip = await RequestService.getOnetrip(condition);
+      if (!singleTrip) return sendResult(res, 404, 'no trip with a given id found');
+    });
+    return next();
   },
 
   async checkIfReqExist(req, res, next) {
