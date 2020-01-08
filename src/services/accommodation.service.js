@@ -67,6 +67,13 @@ const AccommodationService = {
   },
   async checkAccommodationAvailability(id) {
     return db.Accommodations.findOne({ where: { id, isAvailable: true }, raw: true });
+  },
+  async getSupplierAccommodation(userid) {
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodations = await db.Accommodations.findAll({
+      where: { userid },
+      include: image, });
+    return accommodations;
   }
 };
 export default AccommodationService;
