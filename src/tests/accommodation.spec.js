@@ -48,7 +48,26 @@ describe('accommodation tests', () => {
         done();
       });
   });
-
+  it('should return 200 status and all supplier accommodations', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/supplier')
+      .set('Authorization', Utoken)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('my accommodations');
+        done();
+      });
+  });
+  it('should return 200 status and all supplier accommodations bookings', (done) => {
+    chai.request(app)
+      .get('/api/v1/bookings/supplier')
+      .set('Authorization', Utoken)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('bookings');
+        done();
+      });
+  });
   it('should return 201 status and accommodation data when upload multiple images', (done) => {
     chai.request(app)
       .post('/api/v1/accommodations')

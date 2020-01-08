@@ -15,7 +15,7 @@ export const checkStringInArray = (array, string, n) => ((array.find(element => 
 
 export const checkDate = (req, date, timeZone, index) => {
   const parseDate = moment(date, 'M/D/YYYY h:mm a').toDate();
-  if (!(parseDate.getMonth()) || moment().toDate() > parseDate) throw new Error(`Invalid Date in trip ${index + 1}. Allowed format: M/D/YYYY h:mm a, e.g: 10/25/2019 10:55 pm`);
+  if (!(parseDate.getMonth() + 1) || moment().toDate() > parseDate) throw new Error(`Invalid Date in trip ${index + 1}. it should not be in the past`);
 };
 
 const checkString = (req, string, min, message) => {

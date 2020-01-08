@@ -4,12 +4,14 @@ import BookingMiddleware from '../middlewares/booking.middleware';
 import UserMiddleware from '../middlewares/user.middleware';
 import Validation from '../validation';
 import AccommodationMiddleware from '../middlewares/accommodation.middleware';
+import RoleMiddleware from '../middlewares/role.middleware';
 
 const app = express.Router();
 
 const { checkToken } = UserMiddleware;
 const { checkUserBooking, bookingExist } = BookingMiddleware;
-const { setAccommodationRating, createBooking, getBooking, getAllBooking } = BookingsController;
+const { setAccommodationRating, createBooking, getBooking, getAllBooking,
+  getSupplierBookings } = BookingsController;
 const {
   reviewDateValidation, reviewValidation, validateBooking, getBookingValidation
 } = Validation;
@@ -21,6 +23,7 @@ app.post(
   accommodationExists, isAccommodationAvailable,
   createBooking
 );
+app.get('/supplier', checkToken, RoleMiddleware.checkHostOrTAdmin, getSupplierBookings);
 app.get('/:id', checkToken, getBookingValidation, bookingExist, checkUserBooking, getBooking);
 app.get('/', checkToken, getAllBooking);
 
