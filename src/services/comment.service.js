@@ -19,18 +19,24 @@ const CommentService = {
   },
   async getReplies(id) {
     const replies = await db.Comments.findAll({
-      where: { parent: id },
+      where: { parent: id, deletedAt: null },
       attributes: { exclude: ['updatedAt', 'requestId', 'deletedAt', 'parent'] },
       include: [{ model: db.Users, attributes: ['RoleId', 'fullname'] }],
+      order: [
+        ['createdAt', 'DESC'],
+      ],
       raw: true
     });
     return replies;
   },
   async getComments(requestId) {
     const result = await db.Comments.findAll({
-      where: { requestId, parent: null },
+      where: { requestId, parent: null, deletedAt: null },
       attributes: { exclude: ['updatedAt', 'requestId', 'deletedAt', 'parent'] },
       include: [{ model: db.Users, attributes: ['RoleId', 'fullname'] }],
+      order: [
+        ['createdAt', 'DESC'],
+      ],
       raw: true
     });
     for (const [key, value] of Object.entries(result)) {
