@@ -46,7 +46,7 @@ const validator = {
       new Check({ name: req }).str().req().min(1);
       new Check({ description: req }).str().req().min(5);
       new Check({ address: req }).str().req().min(5);
-      new Check({ availableSpace: req }).str().req().min(5);
+      new Check({ availableSpace: req }).integer();
       new Check({ cost: req }).req().double();
       new Check({ currency: req }).str().eql(3);
       new Check({ services: req }).str().req().min(5);
@@ -89,10 +89,9 @@ const validator = {
       new Check({ trips: req }).array().req().min(1);
       new Check({ country: req }).str().req().min(2);
       new Check({ city: req }).str().req().min(1);
-
       // VALIDATE RETURNTIME
       if (req.body.returnDate) {
-        checkDate(req, req.body.returnDate, req.body.timeZone);
+        checkDate(req, req.body.returnDate);
       }
       // VALIDATE COUNTRY
       // eslint-disable-next-line max-len
@@ -146,10 +145,10 @@ const validator = {
 
   editAccommodation(req, res, next) {
     try {
-      new Check({ name: req }).str().min(5);
+      new Check({ name: req }).str().min(2);
       new Check({ description: req }).str().min(5);
       new Check({ address: req }).str().min(5);
-      new Check({ availableSpace: req }).str().min(5);
+      new Check({ availableSpace: req }).str().integer();
       new Check({ cost: req }).double();
       new Check({ services: req }).str().min(5);
       new Check({ amenities: req }).str().min(5);
@@ -214,7 +213,6 @@ const validator = {
 
   updateRequest(req, res, next) {
     try {
-      new Check({ timeZone: req }).str().min(1);
       new Check({ trips: req }).array().min(1);
       new Check({ country: req }).str().min(2);
       new Check({ city: req }).str().min(1);

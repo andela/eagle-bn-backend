@@ -5,7 +5,6 @@ module.exports = {
       UserId: 3,
       country: 'RW',
       city: 'kigali-ngali',
-      timeZone: 'africa/kigali',
       returnTime: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
@@ -14,7 +13,6 @@ module.exports = {
     UserId: 3,
     country: 'RW',
     city: 'kigali-ngali',
-    timeZone: 'africa/kigali',
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -22,7 +20,6 @@ module.exports = {
     UserId: 3,
     country: 'RW',
     city: 'kigali-ngali',
-    timeZone: 'africa/kigali',
     createdAt: new Date(),
     updatedAt: new Date()
   }])

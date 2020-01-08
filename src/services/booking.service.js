@@ -22,7 +22,6 @@ const BookingService = {
     });
     return result;
   },
-
   async createBooking(booking) {
     const result = await db.Bookings.create(booking, { raw: true });
     return result.get({ plain: true });
