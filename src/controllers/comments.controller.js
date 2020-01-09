@@ -18,7 +18,7 @@ const CommentsController = {
     const userId = (lineManager === req.userData.userId) ? id : lineManager;
     const notification = await NotificationService.createNotification({
       modelName: 'Comments',
-      modelId: newComment.id,
+      modelId: req.params.requestId,
       type: 'new_comment',
       userId,
       description: `${req.userData.fullname} : ${comment}`
