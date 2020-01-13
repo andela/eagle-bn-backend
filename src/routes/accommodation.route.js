@@ -27,6 +27,7 @@ app.post('/', fUpload, checkToken, RoleMiddleware.checkHostOrTAdmin, valid.accom
 app.get('/', AccommodationsController.getAccommodations);
 app.get('/:accommodationId/rating', valid.validateAccommodationId, BookingsController.getRating);
 app.get('/search', AccommodationsController.getAccommodationsByFilter);
+app.get('/supplier', checkToken, RoleMiddleware.checkHostOrTAdmin, AccommodationsController.getSupplierAccommodations);
 app.get('/bookmarks', checkToken, AccommodationsController.getBookmarkedAccommodations);
 app.get('/:accommodationId', AccommodationsController.getAccommodationById);
 app.post('/:accommodationId/like', checkToken, LikingsController.addLikeAccommdation);

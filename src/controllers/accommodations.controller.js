@@ -115,6 +115,12 @@ const Accommodation = {
     const { userId } = req.userData;
     const result = await BookmarkService.getBookmarkedAccommodation(userId);
     return sendResult(res, 200, 'bookmarked accommodations', result);
+  },
+
+  async getSupplierAccommodations(req, res) {
+    const { userId } = req.userData;
+    const result = await AccommodationService.getSupplierAccommodation(userId);
+    return sendResult(res, 200, 'my accommodations', result);
   }
 };
 export default Accommodation;

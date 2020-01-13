@@ -51,6 +51,11 @@ const BookingsController = {
     const { userId } = req.userData;
     const bookings = await BookingService.getAllBooking(userId);
     return sendResult(res, 200, 'bookings', bookings);
+  },
+  async getSupplierBookings(req, res) {
+    const { userId } = req.userData;
+    const result = await BookingService.getSupplierBooking(userId);
+    return sendResult(res, 200, 'bookings', result);
   }
 };
 

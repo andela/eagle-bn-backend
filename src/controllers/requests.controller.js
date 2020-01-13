@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-restricted-syntax */
 import moment from 'moment';
@@ -74,6 +75,14 @@ const Request = {
       const newRequest = await RequestService.updateRequest({ status }, { id: request.id });
       req.user = await UserService.getUser({ id: newRequest.UserId });
       await EmailService.sendRequestedStatusUpdatedEmail(req, newRequest);
+      const notification = await NotificationService.createNotification({
+        modelName: 'Requests',
+        modelId: request.id,
+        type: `request_${status}`,
+        userId: newRequest.UserId,
+        description: `Your request from ${request.country}, ${request.city} has been ${status}`
+      });
+      NotificationUtil.echoNotification(req, notification, `request_${status}`, newRequest.UserId);
       return sendResult(res, 200, 'updated successfully', newRequest);
     }
     return sendResult(res, 403, 'this request is already approved/rejected');
@@ -126,37 +135,33 @@ const Request = {
     const days = new Date(moment().subtract('1', 'days'));
     const weeks = new Date(moment().subtract('7', 'days'));
     const months = new Date(moment().subtract('1', 'months'));
-    const lastMonth = await RequestService.findAllTrips(req.reqCondition, {
-      departureTime: { [Op.gte]: months }
-    });
-    const lastWweek = await RequestService.findAllTrips(req.reqCondition, {
-      departureTime: { [Op.gte]: weeks }
-    });
-    const yestarday = await RequestService.findAllTrips(req.reqCondition, {
-      departureTime: { [Op.gte]: days }
-    });
-
-    return sendResult(res, 200, 'all trip statistics', { days: {
-      period_name: 'days',
-      period_num: '1',
-      num_trips: yestarday.length || 0,
-      period_from: days,
-      period_to: new Date()
-    },
-    weeks: {
-      period_name: 'weeks',
-      period_num: '1',
-      num_trips: lastWweek.length || 0,
-      period_from: weeks,
-      period_to: new Date()
-    },
-    months: {
-      period_name: 'months',
-      period_num: '1',
-      num_trips: lastMonth.length || 0,
-      period_from: months,
-      period_to: new Date()
-    }
+    const allTrips = await RequestService.findAllTrips(req.reqCondition);
+    const lastMonth = await RequestService.findAllTrips({ ...req.reqCondition, createdAt: { [Op.gte]: months } });
+    const lastWweek = await RequestService.findAllTrips({ ...req.reqCondition, createdAt: { [Op.gte]: weeks } });
+    const yestarday = await RequestService.findAllTrips({ ...req.reqCondition, createdAt: { [Op.gte]: days } });
+    return sendResult(res, 200, 'all trip statistics', {
+      allTrips: allTrips.length,
+      days: {
+        period_name: 'days',
+        period_num: '1',
+        num_trips: yestarday.length || 0,
+        period_from: days,
+        period_to: new Date()
+      },
+      weeks: {
+        period_name: 'weeks',
+        period_num: '1',
+        num_trips: lastWweek.length || 0,
+        period_from: weeks,
+        period_to: new Date()
+      },
+      months: {
+        period_name: 'months',
+        period_num: '1',
+        num_trips: lastMonth.length || 0,
+        period_from: months,
+        period_to: new Date()
+      }
     });
   }
 };

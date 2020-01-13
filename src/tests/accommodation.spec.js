@@ -37,7 +37,7 @@ describe('accommodation tests', () => {
       .field('description', 'great house')
       .field('name', 'hotel')
       .field('cost', '40000')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .attach('images', img, 'preview.png')
@@ -48,7 +48,26 @@ describe('accommodation tests', () => {
         done();
       });
   });
-
+  it('should return 200 status and all supplier accommodations', (done) => {
+    chai.request(app)
+      .get('/api/v1/accommodations/supplier')
+      .set('Authorization', Utoken)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('my accommodations');
+        done();
+      });
+  });
+  it('should return 200 status and all supplier accommodations bookings', (done) => {
+    chai.request(app)
+      .get('/api/v1/bookings/supplier')
+      .set('Authorization', Utoken)
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body.msg).to.equals('bookings');
+        done();
+      });
+  });
   it('should return 201 status and accommodation data when upload multiple images', (done) => {
     chai.request(app)
       .post('/api/v1/accommodations')
@@ -58,7 +77,7 @@ describe('accommodation tests', () => {
       .field('description', 'great house')
       .field('name', 'hotel')
       .field('cost', '40000')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .attach('images', img, 'preview.png')
@@ -100,7 +119,7 @@ describe('accommodation tests', () => {
       .field('description', 'great house')
       .field('name', 'hotel')
       .field('cost', '40000')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .attach('images', img, 'preview.png')
@@ -120,7 +139,7 @@ describe('accommodation tests', () => {
       .field('description', 'great house')
       .field('name', 'hotel')
       .field('cost', 'llllll')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .attach('images', img, 'preview.png')
@@ -140,7 +159,7 @@ describe('accommodation tests', () => {
       .field('description', 'great house')
       .field('name', 'hotel')
       .field('cost', '40000')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .end((err, res) => {
@@ -159,7 +178,7 @@ describe('accommodation tests', () => {
       .field('description', 'great house')
       .field('name', 'hotel')
       .field('cost', '40000')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .attach('images', wrongFile, 'email.js')
@@ -251,7 +270,7 @@ describe('accommodation tests', () => {
       .field('name', 'hotel')
       .field('cost', '40000')
       .field('currency', 'man')
-      .field('availableSpace', '2 rooms')
+      .field('availableSpace', '3')
       .field('services', 'swimming pool')
       .field('amenities', 'free wifi')
       .attach('images', img, 'preview.png')
