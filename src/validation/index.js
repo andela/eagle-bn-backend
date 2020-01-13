@@ -172,8 +172,8 @@ const validator = {
   addCommentValidation: async (req, res, next) => {
     const { requestId } = req.params;
     try {
-      new Check({ comment: req }).str().req().min(5);
-      new Check({ parent: req }).num().min(1);
+      new Check({ comment: req }).str().req().min(1);
+    //  new Check({ parent: req }).num().min(1);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }

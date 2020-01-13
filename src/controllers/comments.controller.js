@@ -24,7 +24,8 @@ const CommentsController = {
       description: `${req.userData.fullname} : ${comment}`
     });
     // EMITTING ECHO FOR NEW NOTIFICATION
-    NotificationUtil.echoNotification(req, notification, 'new_comment', userId);
+    console.log({ ...notification.get({ plain: true }), data: newComment });
+    NotificationUtil.echoNotification(req, { ...notification.get({ plain: true }), data: newComment }, 'new_comment', userId);
     if (parent) {
       return sendResult(res, 201, `reply to comment ${parent}`, newComment);
     }
