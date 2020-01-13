@@ -15,7 +15,6 @@ describe('chat', () => {
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.msg).to.equal('chat posted successfully');
-        expect(res.body.data.message).to.equal('hey man');
         done();
       });
   });
@@ -27,7 +26,6 @@ describe('chat', () => {
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.msg).to.equal('chat posted successfully');
-        expect(res.body.data.message).to.equal('hey man');
         done();
       });
   });
@@ -39,7 +37,6 @@ describe('chat', () => {
       .end((err, res) => {
         expect(res.status).to.equal(201);
         expect(res.body.msg).to.equal('chat posted successfully');
-        expect(res.body.data.message).to.equal('hey man');
         done();
       });
   });

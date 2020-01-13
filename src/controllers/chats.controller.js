@@ -5,7 +5,7 @@ import EchoUtil from '../utils/echo.util';
 const ChatsController = {
   async postChat(req, res) {
     const { message, receiverId, AccommodationId } = req.body;
-    const { userId, fullname } = req.userData;
+    const { userId } = req.userData;
     const { io } = req;
     const chat = {
       authorId: userId,
@@ -13,11 +13,9 @@ const ChatsController = {
       receiverId,
       AccommodationId
     };
-    const result = await ChatService.addChat(chat);
-    const chatResult = result.get({ plain: true });
-    chatResult.authorName = fullname;
-    EchoUtil.sendEchoNotification(receiverId, chatResult, req.connectedClients, io, 'new_message');
-    sendResult(res, 201, 'chat posted successfully', chatResult);
+    const result = await ChatService.addChat(chat, userId);
+    EchoUtil.sendEchoNotification(receiverId, result, req.connectedClients, io, 'new_message');
+    sendResult(res, 201, 'chat posted successfully', result);
   },
 
   async getChats(req, res) {
@@ -27,7 +25,6 @@ const ChatsController = {
     if (!limit) limit = 10;
     if (!offset) offset = 0;
     const chatList = await ChatService.getChat(userId, offset, limit);
-
     sendResult(res, 200, 'chat list', chatList);
   },
 };
