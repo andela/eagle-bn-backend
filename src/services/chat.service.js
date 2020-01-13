@@ -20,9 +20,14 @@ const getContacts = (chats, userId) => {
 };
 
 const ChatService = {
-  async addChat(chat) {
-    const newChat = await db.Chats.create(chat);
-    return newChat;
+  async addChat(obj, userId) {
+    const include = [{ model: db.Users, attributes: ['fullname', 'id'], as: 'receiver' },
+      { model: db.Users, attributes: ['fullname', 'id'], as: 'author' },
+      { model: db.Accommodations, attributes: ['name', 'id', 'userid'], as: 'accommodation' },
+    ];
+    const newChat = await db.Chats.create(obj);
+    const chat = await db.Chats.findAll({ where: newChat.id, include });
+    return groupBy(getContacts(chat, userId), 'contactId');
   },
 
   async getChat(userId, offset, limit) {
@@ -36,7 +41,7 @@ const ChatService = {
       },
       include: [{ model: db.Users, attributes: ['fullname', 'id'], as: 'receiver' },
         { model: db.Users, attributes: ['fullname', 'id'], as: 'author' },
-        { model: db.Accommodations, attributes: ['name', 'id'], as: 'accommodation' },
+        { model: db.Accommodations, attributes: ['name', 'id', 'userid'], as: 'accommodation' },
       ],
       offset,
       limit,
