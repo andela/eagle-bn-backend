@@ -104,10 +104,10 @@ describe('Oauthentication CallBack', () => {
         isverified: true
       }
     };
-    const res = { status() {}, json() {}, };
-    sinon.stub(res, 'status').returnsThis();
+    const res = { status() {}, json() {}, redirect() {}, };
+    sinon.stub(res, 'redirect').returnsThis();
     await User.OauthLogin(req, res);
-    expect(res.status).to.have.been.calledWith(201);
+    expect(res.redirect).to.have.been.called;
   });
 
   it('OAuthCallback should return User object', async (done) => {
