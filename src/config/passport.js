@@ -23,7 +23,7 @@ passport.use(
     name: 'google',
     clientID: config.google.clientID,
     clientSecret: config.google.clientSecret,
-    callbackURL: 'http://localhost:3000/api/v1/users/auth/google/callback'
+    callbackURL: '/api/v1/users/auth/google/callback'
   }, OAuthCallback)
 );
 

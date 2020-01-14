@@ -59,8 +59,7 @@ const User = {
     const {
       id, fullname, email, isverified, rememberMe
     } = await UserService.findOrCreateUser(req.user, req.user.email);
-    const token = helpers.createToken(id, email, isverified, rememberMe, fullname);
-    return res.redirect(`${process.env.FRONTEND_BASE_URL}/dashboard?token=${token}&status=ok`);
+    return res.redirect(`${process.env.FRONTEND_BASE_URL}/login?token=${helpers.createToken(id, email, isverified, rememberMe, fullname)}`);
   },
 
   async updateProfile(req, res) {
