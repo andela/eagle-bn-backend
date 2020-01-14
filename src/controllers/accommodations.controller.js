@@ -16,15 +16,22 @@ const uploadImages = (req, res, data, msg) => {
   if (!req.imageArray) return sendResult(res, 200, msg, data);
   const numberofImages = req.imageArray.length;
   data.images = [];
-  req.imageArray.forEach((element) => {
-    cloudinary.uploader.upload(element.tempFilePath, async (result, error) => {
-      if (error) { failure += 1; checkIfAllUploaded(numberofImages, res, data, msg); }
-
-      const imageRes = await AccommodationService.createAccommodationImage(result.url, data.id);
+  req.imageArray.forEach(async (element) => {
+    if (process.env.NODE_ENV === 'test') {
+      const imageRes = await AccommodationService
+        .createAccommodationImage(element.tempFilePath, data.id);
       data.images.push(imageRes.imageurl);
       success += 1;
       checkIfAllUploaded(numberofImages, res, data, msg);
-    });
+    } else {
+      cloudinary.uploader.upload(element.tempFilePath, async (result, error) => {
+        if (error) { failure += 1; checkIfAllUploaded(numberofImages, res, data, msg); }
+        const imageRes = await AccommodationService.createAccommodationImage(result.url, data.id);
+        data.images.push(imageRes.imageurl);
+        success += 1;
+        checkIfAllUploaded(numberofImages, res, data, msg);
+      });
+    }
   });
 };
 
@@ -108,6 +115,12 @@ const Accommodation = {
     const { userId } = req.userData;
     const result = await BookmarkService.getBookmarkedAccommodation(userId);
     return sendResult(res, 200, 'bookmarked accommodations', result);
+  },
+
+  async getSupplierAccommodations(req, res) {
+    const { userId } = req.userData;
+    const result = await AccommodationService.getSupplierAccommodation(userId);
+    return sendResult(res, 200, 'my accommodations', result);
   }
 };
 export default Accommodation;

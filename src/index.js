@@ -33,7 +33,6 @@ const server = app.listen(process.env.PORT || 3000, () => {
 });
 
 setupSwagger(app, server.address().port);
-
 const connectedClients = {};
 const io = socketIo(server);
 io.use((socket, next) => {

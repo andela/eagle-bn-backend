@@ -11,6 +11,28 @@ const BookingService = {
     return result;
   },
 
+  async getAllBooking(UserId) {
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodation = { model: db.Accommodations, include: image, attributes: { exclude: ['id', 'createdAt', 'updatedAt'] } };
+    const rating = { model: db.Ratings, attributes: { exclude: ['id', 'createdAt', 'updatedAt'] } };
+
+    const result = await db.Bookings.findAll({
+      where: { UserId },
+      include: [accommodation, rating],
+    });
+    return result;
+  },
+
+  async getSupplierBooking(UserId) {
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodation = { model: db.Accommodations, where: { userid: UserId }, include: image, attributes: { exclude: ['id', 'createdAt', 'updatedAt'] } };
+    const rating = { model: db.Ratings, attributes: { exclude: ['id', 'createdAt', 'updatedAt'] } };
+
+    const result = await db.Bookings.findAll({
+      include: [accommodation, rating],
+    });
+    return result;
+  },
   async createBooking(booking) {
     const result = await db.Bookings.create(booking, { raw: true });
     return result.get({ plain: true });
@@ -45,17 +67,20 @@ const BookingService = {
   async getAccommodationFeedback(AccommodationId) {
     const result = await db.Ratings.findAll({
       attributes: ['feedback', 'id'],
-      include: [{ model: db.Bookings,
-        where: { AccommodationId },
-        attributes: ['UserId'],
-        include: [
-          { model: db.Users, attributes: ['fullname'] }
-        ] }],
+      include: [
+        {
+          model: db.Bookings,
+          where: { AccommodationId },
+          attributes: ['UserId'],
+          include: [{ model: db.Users, attributes: ['fullname', 'avatar'] }]
+        }
+      ]
     });
     const formatedResult = result.map(element => ({
       feedbackId: element.id,
       feedback: element.feedback,
       author: element.Booking.User.fullname,
+      avatar: element.Booking.User.avatar,
       authorId: element.Booking.UserId
     }));
     return formatedResult;

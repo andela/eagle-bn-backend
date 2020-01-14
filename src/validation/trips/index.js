@@ -5,7 +5,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-await-in-loop */
 import moment from 'moment';
-import 'moment-timezone';
 import { allScores, highScores } from '../../services';
 import resSend from '../../utils/sendResult';
 import validatePlaces from '../../utils/placeValidation';
@@ -15,8 +14,8 @@ export const checkStringInArray = (array, string, n) => ((array.find(element => 
     || highScores(allScores(array, string), n));
 
 export const checkDate = (req, date, timeZone, index) => {
-  const parseDate = moment.tz(date, 'M/D/YYYY h:mm a', timeZone).toDate();
-  if (!(parseDate.getMonth()) || moment().toDate() > parseDate) throw new Error(`Invalid Date in trip ${index + 1}. Allowed format: M/D/YYYY h:mm a, e.g: 10/25/2019 10:55 pm`);
+  const parseDate = moment(date, 'M/D/YYYY h:mm a').toDate();
+  if (!(parseDate.getMonth() + 1) || moment().toDate() > parseDate) throw new Error(`Invalid Date in trip ${index + 1}. it should not be in the past`);
 };
 
 const checkString = (req, string, min, message) => {

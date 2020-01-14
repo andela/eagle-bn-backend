@@ -1,10 +1,9 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-prototype-builtins */
-import moment from 'moment-timezone';
 import Check from '../utils/validator';
 import sendResult from '../utils/sendResult';
-import { checkStringInArray, checkDate } from './trips';
+import { checkDate } from './trips';
 import currencies from '../utils/currencies.json';
 import validatePlaces from '../utils/placeValidation';
 
@@ -44,14 +43,14 @@ const validator = {
 
   accommodation(req, res, next) {
     try {
-      new Check({ name: req }).str().req().min(5);
+      new Check({ name: req }).str().req().min(1);
       new Check({ description: req }).str().req().min(5);
       new Check({ address: req }).str().req().min(5);
-      new Check({ availableSpace: req }).str().req().min(5);
+      new Check({ availableSpace: req }).integer();
       new Check({ cost: req }).req().double();
       new Check({ currency: req }).str().eql(3);
       new Check({ services: req }).str().req().min(5);
-      new Check({ amenities: req }).str().req().min(5);
+      new Check({ amenities: req }).str().req().min(3);
       req.body.cost = parseFloat(req.body.cost);
       if (req.body.currency) {
         const found = Object.keys(currencies)
@@ -87,19 +86,12 @@ const validator = {
   async request(req, res, next) {
     req.error = {};
     try {
-      new Check({ timeZone: req }).str().req().min(1);
       new Check({ trips: req }).array().req().min(1);
       new Check({ country: req }).str().req().min(2);
       new Check({ city: req }).str().req().min(1);
-      // VALIDATE USER'S TIMEZONE
-      const validTZ = checkStringInArray(moment.tz.names(), req.body.timeZone, 10);
-      if (validTZ instanceof Array) {
-        req.error.timeZone = JSON.stringify(['did you mean?', validTZ]);
-        throw new Error();
-      }
       // VALIDATE RETURNTIME
       if (req.body.returnDate) {
-        checkDate(req, req.body.returnDate, req.body.timeZone);
+        checkDate(req, req.body.returnDate);
       }
       // VALIDATE COUNTRY
       // eslint-disable-next-line max-len
@@ -153,10 +145,10 @@ const validator = {
 
   editAccommodation(req, res, next) {
     try {
-      new Check({ name: req }).str().min(5);
+      new Check({ name: req }).str().min(2);
       new Check({ description: req }).str().min(5);
       new Check({ address: req }).str().min(5);
-      new Check({ availableSpace: req }).str().min(5);
+      new Check({ availableSpace: req }).str().integer();
       new Check({ cost: req }).double();
       new Check({ services: req }).str().min(5);
       new Check({ amenities: req }).str().min(5);
@@ -179,8 +171,8 @@ const validator = {
   addCommentValidation: async (req, res, next) => {
     const { requestId } = req.params;
     try {
-      new Check({ comment: req }).str().req().min(5);
-      new Check({ parent: req }).num().min(1);
+      new Check({ comment: req }).str().req().min(1);
+    //  new Check({ parent: req }).num().min(1);
     } catch (error) {
       return sendResult(res, 400, error.message);
     }
@@ -220,23 +212,13 @@ const validator = {
   },
 
   updateRequest(req, res, next) {
-    const { returnTime, trip } = req.body;
-    const { departureTime, reason } = trip;
-    req.body.departureTime = departureTime;
-    req.body.reason = reason;
     try {
-      new Check({ timeZone: req }).str().min(1);
       new Check({ trips: req }).array().min(1);
       new Check({ country: req }).str().min(2);
       new Check({ city: req }).str().min(1);
       new Check({ requestId: req }).num().min(1);
       new Check({ tripId: req }).num().min(1);
-      new Check({ returnTime: req }).date();
-      new Check({ departureTime: req }).date();
       new Check({ reason: req }).alpha();
-      if (returnTime || departureTime) {
-        req.body.timeZone = new Date(returnTime || departureTime).toString().split('(')[1].replace(/[\(\)]/g, '');
-      }
       next();
     } catch (err) {
       return sendResult(res, 400, err.message);
@@ -294,7 +276,6 @@ const validator = {
   validateBooking(req, res, next) {
     try {
       new Check({ accommodationId: req }).num().req();
-      new Check({ tripId: req }).num().req();
       new Check({ numberOfSpace: req }).num().req();
       new Check({ start: req }).dateGreaterThan(Date.now()).req();
       new Check({ end: req }).dateGreaterThan(new Date(req.body.start)).req();

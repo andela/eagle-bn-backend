@@ -55,7 +55,7 @@ const User = {
       return sendResult(res, 500, `it is not you, it is us\n${error.message}`);
     }
   },
-  async OauthLogin(req, res) {
+  async  OauthLogin(req, res) {
     const {
       id, fullname, email, isverified, rememberMe
     } = await UserService.findOrCreateUser(req.user, req.user.email);
@@ -89,6 +89,11 @@ const User = {
     const condition = { id: req.user.userId };
     await UserService.updateUser(data, condition);
     sendResult(res, 200, 'Logout successful');
+  },
+
+  async getUsers(req, res) {
+    const users = await UserService.getAllUsers();
+    sendResult(res, 200, 'all users', users);
   }
 
 };

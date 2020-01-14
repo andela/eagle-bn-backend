@@ -38,11 +38,10 @@ const RequestService = {
     return UserId;
   },
 
-  async findAllTrips(reqCondition, tripCondition) {
+  async findAllTrips(reqCondition) {
     const trip = await db.Requests.findAll({
       where: reqCondition,
       raw: true,
-      include: [{ model: db.Trips, where: tripCondition, required: true }],
     });
     return trip;
   },

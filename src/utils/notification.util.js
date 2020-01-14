@@ -2,7 +2,10 @@ import EchoUtil from './echo.util';
 
 const NotificationUtil = {
   echoNotification(req, notification, type, receiverId) {
-    notification = notification.get({ plain: true });
+    try {
+      notification = notification.get({ plain: true });
+    // eslint-disable-next-line no-empty
+    } catch (e) {}
     EchoUtil.sendEchoNotification(receiverId, notification, req.connectedClients, req.io, type);
   }
 };

@@ -16,9 +16,8 @@ const LikingService = {
   },
 
   async getLikes(accommodationId) {
-    const countLikes = await db.Likings
-      .count({ where: { accommodationId, isLiked: true }, raw: false });
-    return countLikes;
+    return db.Likings
+      .findAll({ where: { accommodationId, isLiked: true }, raw: true });
   }
 };
 export default LikingService;

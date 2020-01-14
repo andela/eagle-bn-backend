@@ -9,7 +9,6 @@ module.exports = {
       AccommodationId: 1,
       start: new Date('09/02/2019'),
       end: new Date('09/02/2019'),
-      TripId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     }]),
@@ -18,7 +17,6 @@ module.exports = {
         AccommodationId: 1,
         start: new Date('09/02/2019'),
         end: new Date('09/02/2019'),
-        TripId: 2,
         createdAt: new Date(),
         updatedAt: new Date()
       }]),
@@ -27,7 +25,6 @@ module.exports = {
         AccommodationId: 1,
         start: tomorrow,
         end: tomorrow,
-        TripId: 3,
         createdAt: new Date(),
         updatedAt: new Date()
       }])

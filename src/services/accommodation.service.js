@@ -20,7 +20,7 @@ const AccommodationService = {
   },
 
   async getAllAccommodationsByFilter(req) {
-    const { isAvailable, address, name, costLessOr, costGreaterOr, services } = req.query;
+    const { isAvailable, address, name, costLessOr, costGreaterOr, services, amenitie } = req.query;
     const condition = {};
     if (isAvailable) condition.isAvailable = isAvailable;
     if (address) condition.address = { [Op.iLike]: `%${address}%` };
@@ -28,6 +28,7 @@ const AccommodationService = {
     if (name) condition.name = { [Op.iLike]: `%${name}%` };
     if (costLessOr) condition.cost = { [Op.lte]: costLessOr };
     if (costGreaterOr) condition.cost = { [Op.gte]: costGreaterOr };
+    if (amenitie) condition.amenities = { [Op.iLike]: `%${amenitie}%` };
 
     const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
     const accommodations = await db.Accommodations.findAll({
@@ -67,6 +68,13 @@ const AccommodationService = {
   },
   async checkAccommodationAvailability(id) {
     return db.Accommodations.findOne({ where: { id, isAvailable: true }, raw: true });
+  },
+  async getSupplierAccommodation(userid) {
+    const image = [{ model: db.AccommodationImages, attributes: { exclude: ['id', 'accommodationid', 'createdAt', 'updatedAt'] } }];
+    const accommodations = await db.Accommodations.findAll({
+      where: { userid },
+      include: image, });
+    return accommodations;
   }
 };
 export default AccommodationService;
