@@ -23,6 +23,7 @@ const CommentsController = {
       userId,
       description: `${req.userData.fullname} : ${comment}`
     });
+    newComment['User.fullname'] = req.userData.fullname;
     // EMITTING ECHO FOR NEW NOTIFICATION
     NotificationUtil.echoNotification(req, { ...notification.get({ plain: true }), data: newComment }, 'new_comment', userId);
     if (parent) {

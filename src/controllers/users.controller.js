@@ -59,7 +59,18 @@ const User = {
     const {
       id, fullname, email, isverified, rememberMe
     } = await UserService.findOrCreateUser(req.user, req.user.email);
-    return res.redirect(`${process.env.FRONTEND_BASE_URL}/login?token=${helpers.createToken(id, email, isverified, rememberMe, fullname)}`);
+    return res.redirect(`${process.env.FRONTEND_BASE_URL}/login?token=${helpers.createToken(id, email, isverified, 'requester', rememberMe, fullname)}`);
+  },
+  async  OauthLoginFacebook(req, res) {
+    const {
+      id, fullname, email, isverified, rememberMe
+    } = await UserService.findOrCreateUser(req.user, req.user.email);
+    return sendResult(res, 201, 'User logged successfully', {
+      id,
+      fullname,
+      email,
+      token: helpers.createToken(id, email, isverified, 'requester', rememberMe, fullname)
+    });
   },
 
   async updateProfile(req, res) {
