@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (Sequelize, DataTypes) => {
   const Notifications = Sequelize.define('Notifications', {
-    modelId: { type: DataTypes.INTEGER, allowNull: false },
+    modelId: { type: DataTypes.STRING, allowNull: false },
     modelName: {
       type: DataTypes.STRING,
       allowNull: false,
