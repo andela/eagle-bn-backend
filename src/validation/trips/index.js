@@ -4,7 +4,6 @@
 /* eslint-disable max-len */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-await-in-loop */
-import moment from 'moment';
 import { allScores, highScores } from '../../services';
 import resSend from '../../utils/sendResult';
 import validatePlaces from '../../utils/placeValidation';
@@ -14,8 +13,7 @@ export const checkStringInArray = (array, string, n) => ((array.find(element => 
     || highScores(allScores(array, string), n));
 
 export const checkDate = (req, date, timeZone, index) => {
-  const parseDate = moment(date, 'M/D/YYYY h:mm a').toDate();
-  if (!(parseDate.getMonth() + 1) || moment().toDate() > parseDate) throw new Error(`Invalid Date in trip ${index + 1}. it should not be in the past`);
+  if (!(new Date(date) > new Date())) { throw new Error(`Invalid Date in trip ${index + 1}. it should not be in the past`); }
 };
 
 const checkString = (req, string, min, message) => {
