@@ -20,7 +20,7 @@ const CommentService = {
   async getReplies(id) {
     const replies = await db.Comments.findAll({
       where: { parent: id, deletedAt: null },
-      attributes: { exclude: ['updatedAt', 'requestId', 'deletedAt', 'parent'] },
+      attributes: { exclude: ['requestId', 'deletedAt'] },
       include: [{ model: db.Users, attributes: ['RoleId', 'fullname'] }],
       order: [
         ['createdAt', 'DESC'],
@@ -32,7 +32,7 @@ const CommentService = {
   async getComments(requestId) {
     const result = await db.Comments.findAll({
       where: { requestId, parent: null, deletedAt: null },
-      attributes: { exclude: ['updatedAt', 'requestId', 'deletedAt', 'parent'] },
+      attributes: { exclude: ['requestId', 'deletedAt', 'parent'] },
       include: [{ model: db.Users, attributes: ['RoleId', 'fullname'] }],
       order: [
         ['createdAt', 'DESC'],
