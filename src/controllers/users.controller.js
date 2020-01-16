@@ -74,11 +74,20 @@ const User = {
   },
 
   async updateProfile(req, res) {
-    const { email, role, ...updateData } = {
-      ...req.body, avatar: req.imgLink, password: helpers.hashPassword(req.body.password)
-    };
-    const user = await UserService.updateUser(updateData, { email: req.user.email });
-    const { password, ...data } = user;
+    const updateData = {};
+    const { body, imgLink, user } = req;
+    if (imgLink) updateData.avatar = imgLink;
+    if (body.fullname) updateData.fullname = body.fullname;
+    if (body.password) updateData.password = helpers.hashPassword(body.password);
+    if (body.gender) updateData.gender = body.gender;
+    if (body.state) updateData.state = body.state;
+    if (body.city) updateData.city = body.city;
+    if (body.phone) updateData.phone = body.phone;
+    if (body.address) updateData.address = body.address;
+    if (body.dob) updateData.dob = body.dob;
+
+    const resp = await UserService.updateUser(updateData, { email: user.email });
+    const { password, ...data } = resp;
     return sendResult(res, 200, 'Profile updated successfully', data);
   },
 

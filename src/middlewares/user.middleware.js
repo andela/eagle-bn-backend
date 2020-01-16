@@ -64,7 +64,7 @@ const User = {
   },
 
   cloudUpload(req, res, next) {
-    if (req.files || req.files !== null) {
+    if (req.files && req.files.avatar) {
       if (!req.files.avatar.mimetype.match(/image/g)) {
         return sendResult(res, 400, 'avatar image fomart is invalid');
       }

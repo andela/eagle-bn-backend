@@ -15,14 +15,14 @@ const isNumeric = (num, name, res, next) => {
 const validator = {
   profile(req, res, next) {
     try {
-      new Check({ fullname: req }).str().alphaNum();
-      new Check({ password: req }).str().withSpec().confirm();
+      new Check({ fullname: req }).str().min(1);
+      new Check({ password: req }).str().withSpec();
       new Check({ gender: req }).str().gender();
       new Check({ dob: req }).str().date();
-      new Check({ address: req }).str().min(2);
-      new Check({ city: req }).str().alpha();
-      new Check({ state: req }).str().alpha();
-      new Check({ department: req }).str().alpha();
+      new Check({ address: req }).str().min(1);
+      new Check({ city: req }).str().min(1);
+      new Check({ state: req }).str().min(1);
+      new Check({ phone: req }).str().integer();
       next();
     } catch (error) {
       return sendResult(res, 400, error.message);

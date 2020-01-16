@@ -91,7 +91,7 @@ class Validate {
   }
 
   gender() {
-    if (this.val && !this.val.match(/^(Male|Female|MALE|FEMALE|male|female)$/)) {
+    if (this.val && !this.val.match(/^(male|female|M|F)$/i)) {
       this.status = 400;
       throw new Error(`${this.key} is invalid`);
     }
